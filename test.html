@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title> Test</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    #gui {
+      position: absolute;
+      top: 10px; left: 10px;
+      z-index: 10;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 10px;
+      border-radius: 8px;
+    }
+    button {
+      padding: 8px 12px;
+      margin: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="gui">
+    <button onclick="wearShirt()">Wear Shirt</button>
+    <button onclick="wearShirt2()">Wear Shirt2</button>
+    <button onclick="wearPants()">Wear Pants</button>
+    <button onclick="wearPants2()">Wear Pants2</button>
+  </div>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./three.module.js"
+      }
+    }
+  </script>
+  <script type="module" src="test.js"></script>
+</body>
+</html>
