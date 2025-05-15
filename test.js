@@ -82,10 +82,7 @@ mtlLoader.load('./A-pose HP.mtl', (materials) => {
             material.originalMap = material.map;
             material.originalBumpMap = material.bumpMap;
             material.originalNormalMap = material.normalMap;
-            material.originalEmissiveMap = material.emissiveMap;
-            material.originalRoughnessMap = material.roughnessMap;
-            material.originalMetalnessMap = material.metalnessMap;
-            material.originalAlphaMap = material.alphaMap;
+     
           }
         };
     
@@ -132,10 +129,7 @@ window.wearShirt = function () {
           if (mat.originalMap) mat.map = mat.originalMap;
           if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
           if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
-          if (mat.originalEmissiveMap) mat.emissiveMap = mat.originalEmissiveMap;
-          if (mat.originalRoughnessMap) mat.roughnessMap = mat.originalRoughnessMap;
-          if (mat.originalMetalnessMap) mat.metalnessMap = mat.originalMetalnessMap;
-          if (mat.originalAlphaMap) mat.alphaMap = mat.originalAlphaMap;
+     
           
           child.visible = true;
           mat.transparent = false;
@@ -158,10 +152,8 @@ window.wearShirt2 = function () {
           if (mat.originalMap) mat.map = mat.originalMap;
           if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
           if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
-          if (mat.originalEmissiveMap) mat.emissiveMap = mat.originalEmissiveMap;
-          if (mat.originalRoughnessMap) mat.roughnessMap = mat.originalRoughnessMap;
-          if (mat.originalMetalnessMap) mat.metalnessMap = mat.originalMetalnessMap;
-          if (mat.originalAlphaMap) mat.alphaMap = mat.originalAlphaMap;
+         
+          
           
           child.visible = true;
           mat.transparent = false;
@@ -183,10 +175,7 @@ window.wearPants = function () {
           if (mat.originalMap) mat.map = mat.originalMap;
           if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
           if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
-          if (mat.originalEmissiveMap) mat.emissiveMap = mat.originalEmissiveMap;
-          if (mat.originalRoughnessMap) mat.roughnessMap = mat.originalRoughnessMap;
-          if (mat.originalMetalnessMap) mat.metalnessMap = mat.originalMetalnessMap;
-          if (mat.originalAlphaMap) mat.alphaMap = mat.originalAlphaMap;
+        
           
           child.visible = true;
           mat.transparent = false;
