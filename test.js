@@ -3,13 +3,26 @@ import { OrbitControls } from './OrbitControls.js';
 import { MTLLoader } from './MTLLoader.js';
 import { OBJLoader } from './OBJLoader.js';
 
+// Page Navigation
+const startButton = document.getElementById('start-button');
+const landingPage = document.getElementById('landing-page');
+const editorPage = document.getElementById('editor-page');
+
+startButton.addEventListener('click', () => {
+  landingPage.classList.add('hidden');
+  editorPage.classList.remove('hidden');
+  init();
+});
+
+function init() {
+const canvas = document.getElementById('three-canvas');
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0xf0f0f0);
 
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0, 1.6, 3);
 
-const renderer = new THREE.WebGLRenderer({ antialias: true });
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
@@ -234,3 +247,4 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
+}
