@@ -9,8 +9,13 @@ const landingPage = document.getElementById('landing-page');
 const editorPage = document.getElementById('editor-page');
 
 startButton.addEventListener('click', () => {
-  landingPage.classList.add('hidden');
-  editorPage.classList.remove('hidden');
+  landingPage.style.transform = 'translateY(-100%)'; // Slide out
+  landingPage.style.opacity = '0'; // Fade out
+
+  setTimeout(() => {
+    landingPage.classList.add('hidden'); // Add hidden class after transition
+    editorPage.classList.remove('hidden'); // Show editor page
+  }, 800);
   init();
 });
 
@@ -20,7 +25,7 @@ function init() {
   scene.background = new THREE.Color(0x333333);
 
   const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.set(0, 1.6, 3);
+  camera.position.set(0, 2.5, 15);
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
