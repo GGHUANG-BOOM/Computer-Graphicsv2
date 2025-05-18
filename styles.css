@@ -81,7 +81,7 @@ body {
 
 #gui.animate {
     animation: slideDown 0.8s ease-out forwards;
-    animation-delay: 0.8s;
+    animation-delay: 2s;
 }
 
 
@@ -115,3 +115,55 @@ body {
     background-color: #252929;
 }
 
+.side-card {
+    position: absolute;
+    right: -300px; /* Start position outside viewport */
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(37, 41, 41, 0.9);
+    border: 1px solid #ffffff;
+    border-radius: 8px 0 0 8px;
+    padding: 20px 40px 20px 20px;
+    width: 250px;
+    transition: right 0.5s ease-in-out;
+    color: #ffffff;
+}
+
+.side-card:hover {
+    right: 0; /* Slide in on hover */
+}
+
+.side-card .arrow {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ffffff;
+    font-size: 24px;
+    animation: bounceArrow 2s infinite;
+}
+
+.side-content {
+    margin-left: 30px;
+}
+
+.side-content h3 {
+    margin: 0 0 10px 0;
+    font-family: input-mono-narrow, monospace;
+    font-size: 1.2em;
+}
+
+.side-content p {
+    margin: 5px 0;
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+@keyframes bounceArrow {
+    0%, 100% {
+        transform: translateY(-50%) translateX(0);
+    }
+    50% {
+        transform: translateY(-50%) translateX(-10px);
+    }
+}
