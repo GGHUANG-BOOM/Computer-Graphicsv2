@@ -167,3 +167,16 @@ body {
         transform: translateY(-50%) translateX(-10px);
     }
 }
+
+.lil-gui {
+    --background-color: #252929;
+    --text-color: #ffffff;
+    --title-background-color: #252929;
+    --title-text-color: #ffffff;
+    --widget-color: #252929;
+    --hover-color: #3a3f3f;
+    --focus-color: #454a4a;
+    --number-color: #2cc9ff;
+    --font-family: input-mono-narrow, monospace;
+    --font-size: 16px;
+}

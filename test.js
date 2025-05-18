@@ -2,6 +2,7 @@ import * as THREE from './three.module.js';
 import { OrbitControls } from './OrbitControls.js';
 import { MTLLoader } from './MTLLoader.js';
 import { OBJLoader } from './OBJLoader.js';
+import GUI from './lil-gui.module.min.js';
 
 // Page Navigation
 const startButton = document.getElementById('start-button');
@@ -33,7 +34,7 @@ function init() {
   scene.background = new THREE.Color(0x333333);
 
   const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.set(0, 1.6, 5);
+  camera.position.set(0, 2, 5);
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -58,6 +59,62 @@ function init() {
   ground.rotation.x = -Math.PI / 2;
   scene.add(ground);
 
+  const gui = new GUI();
+  
+  // Folders for clothing categories
+  const torsoFolder = gui.addFolder('Torso');
+  const pantsFolder = gui.addFolder('Pants');
+  
+  // Clothing options
+  const clothingOptions = {
+    torso: {
+      currentWear: 'none',
+      items: {
+        none: null,
+        'Tank Top': 'converted_tank_top',
+        'Tank Top Rolling': 'converted_tank_top_rolling_',
+        'Hoodie': 'converted_hoodie_mill',
+        'T-Shirt': 'converted_t_shirts_champ',
+        'Long Sleeve': 'converted_long_sleeve_hd'
+      }
+    },
+    pants: {
+      currentWear: 'none',
+      items: {
+        none: null,
+        'Jeans': 'converted_jeans',
+        'Adidas Pants': 'converted_pants_adidas',
+        'White Lace Pants': 'converted_laces_pants_white',
+        'Red Lace Pants': 'converted_laces_pants_red',
+        'Long Shorts': 'converted_shorts_long',
+        'Champ Shorts': 'converted_shorts_champ'
+      }
+    }
+  };
+
+  torsoFolder.add(clothingOptions.torso, 'currentWear', clothingOptions.torso.items)
+    .name('Style')
+    .onChange(value => {
+      if (value === null) {
+        removeClothing('torso');
+      } else {
+        wearShirt(value);
+      }
+  });
+
+  pantsFolder.add(clothingOptions.pants, 'currentWear', clothingOptions.pants.items)
+    .name('Style')
+    .onChange(value => {
+      if (value === null) {
+        removeClothing('pants');
+      } else {
+        wearPants(value);
+      }
+  });
+
+  gui.domElement.style.position = 'absolute';
+  gui.domElement.style.top = '20px';
+  gui.domElement.style.right = '10px';
 
   let mannequin;
 
@@ -79,6 +136,43 @@ function init() {
       "converted_laces",
     ].includes(name);
   }
+
+  function removeClothing(type) {
+  if (!mannequin) return;
+
+  mannequin.traverse((child) => {
+    if (child.isMesh && child.material) {
+      const materials = Array.isArray(child.material) ? child.material : [child.material];
+      materials.forEach((mat) => {
+        if (!mat.name) return;
+        
+        const name = mat.name.toLowerCase();
+        if (type === 'torso' && 
+            (name.includes('converted_tank_top') || 
+             name.includes('converted_hoodie') ||
+             name.includes('converted_t_shirts') ||
+             name.includes('converted_long_sleeve'))) {
+          child.visible = false;
+          mat.map = null;
+          mat.bumpMap = null;
+          mat.normalMap = null;
+          mat.needsUpdate = true;
+        } else if (type === 'pants' && 
+            (name.includes('converted_jeans') ||
+             name.includes('converted_pants') ||
+             name.includes('converted_shorts') ||
+             name.includes('converted_laces_pants'))) {
+          child.visible = false;
+          mat.map = null;
+          mat.bumpMap = null;
+          mat.normalMap = null;
+          mat.needsUpdate = true;
+        }
+      });
+    }
+  });
+  }
+
 
   const mtlLoader = new MTLLoader();
   mtlLoader.load('./A-pose HP.mtl', (materials) => {
