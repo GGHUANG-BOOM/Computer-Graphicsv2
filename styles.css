@@ -2,6 +2,7 @@ body {
     margin: 0;
     font-family: Arial, sans-serif;
     overflow: hidden;
+    background-color: #333;
 }
 
 .page {
@@ -14,12 +15,16 @@ body {
     justify-content: center;
     align-items: center;
     background-color: #333;
-    transition: transform 0.8s ease-in-out;
+    transition: all 0.8s ease-in-out;
+    opacity: 1;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
 }
 
 .hidden {
-    transform: translateY(-100%);
     visibility: hidden;
+    pointer-events: none;
+    position: absolute;
     opacity: 0;
 }
 
@@ -29,9 +34,11 @@ body {
 }
 
 #editor-page {
-    background-color: #333;
+    background-color: transparent;
     position: relative;
     z-index: 1;
+    transform: translateY(100%);
+    opacity: 0;
 }
 
 #logo {
@@ -50,6 +57,17 @@ body {
     z-index: 0;
 }
 
+@keyframes slideDown {
+    from {
+        transform: translateY(-100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
 #gui {
     position: absolute;
     top: 10px;
@@ -57,7 +75,15 @@ body {
     z-index: 10;
     padding: 10px;
     border-radius: 8px;
+    opacity: 0;
+    transform: translateY(-100px);
 }
+
+#gui.animate {
+    animation: slideDown 0.8s ease-out forwards;
+    animation-delay: 0.4s;
+}
+
 
 .btnFrame {
     font-family: input-mono-narrow, monospace;

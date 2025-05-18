@@ -9,14 +9,22 @@ const landingPage = document.getElementById('landing-page');
 const editorPage = document.getElementById('editor-page');
 
 startButton.addEventListener('click', () => {
-  landingPage.style.transform = 'translateY(-100%)'; // Slide out
-  landingPage.style.opacity = '0'; // Fade out
+    landingPage.style.transform = 'translateY(-100%)';
+    landingPage.style.opacity = '0';
+    
+    editorPage.classList.remove('hidden');
+    
+    requestAnimationFrame(() => {
+        editorPage.style.transform = 'translateY(0)';
+        editorPage.style.opacity = '1';
+    });
 
-  setTimeout(() => {
-    landingPage.classList.add('hidden'); // Add hidden class after transition
-    editorPage.classList.remove('hidden'); // Show editor page
-  }, 800);
-  init();
+    setTimeout(() => {
+        landingPage.classList.add('hidden');
+        const gui = document.getElementById('gui');
+        gui.classList.add('animate');
+        init();
+    }, 800);
 });
 
 function init() {
