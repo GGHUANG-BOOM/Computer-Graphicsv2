@@ -13,7 +13,7 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-//const controls = new OrbitControls(camera, renderer.domElement);
+const controls = new OrbitControls(camera, renderer.domElement);
 
 // Lighting
 const light = new THREE.HemisphereLight(0xffffff, 0x444444);
@@ -223,7 +223,7 @@ window.wearPants2 = function () {
 // Animation loop
 function animate() {
   requestAnimationFrame(animate);
-  //controls.update();
+  controls.update();
   renderer.render(scene, camera);
 }
 animate();
