@@ -72,7 +72,6 @@ function init() {
       items: {
         none: null,
         'Tank Top': 'converted_tank_top',
-        'Tank Top Rolling': 'converted_tank_top_rolling_',
         'Hoodie': 'converted_hoodie_mill',
         'T-Shirt': 'converted_t_shirts_champ',
         'Long Sleeve': 'converted_long_sleeve_hd'
@@ -233,7 +232,87 @@ function init() {
     });
   });
 
-
+  window.wearShirt = function (clothingId) {
+    if (!mannequin) return;
+  
+    mannequin.traverse((child) => {
+      if (child.isMesh && child.material) {
+        const materials = Array.isArray(child.material) ? child.material : [child.material];
+        materials.forEach((mat) => {
+          const name = mat.name?.toLowerCase();
+  
+          if (!name) return;
+  
+          const isTorso = name.includes('tank_top') || name.includes('hoodie') ||
+                          name.includes('t_shirts') || name.includes('long_sleeve');
+  
+          if (isTorso) {
+            const shouldShow = name.includes(clothingId);
+            child.visible = shouldShow;
+  
+            if (shouldShow) {
+              if (mat.originalMap) mat.map = mat.originalMap;
+              if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
+              if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
+  
+              mat.transparent = false;
+              mat.needsUpdate = true;
+            } else {
+              mat.map = null;
+              mat.bumpMap = null;
+              mat.normalMap = null;
+              mat.needsUpdate = true;
+            }
+          }
+        });
+      }
+    });
+  };
+  
+  
+  window.wearPants = function (clothingId) {
+    if (!mannequin) return;
+  
+    const idList = {
+      'converted_pants_adidas': ['converted_pants_adidas', 'converted_laces_pants_white'],
+      'converted_shorts_champ': ['converted_shorts_champ', 'converted_laces_pants_red', 'converted_buxiugang'],
+    };
+  
+    const activeIds = idList[clothingId] || [clothingId];
+  
+    mannequin.traverse((child) => {
+      if (child.isMesh && child.material) {
+        const materials = Array.isArray(child.material) ? child.material : [child.material];
+        materials.forEach((mat) => {
+          const name = mat.name?.toLowerCase();
+  
+          if (!name) return;
+  
+          const isPants = name.includes('jeans') || name.includes('pants') || name.includes('shorts') || name.includes('laces');
+  
+          if (isPants) {
+            const shouldShow = activeIds.some(id => name.includes(id));
+            child.visible = shouldShow;
+  
+            if (shouldShow) {
+              if (mat.originalMap) mat.map = mat.originalMap;
+              if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
+              if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
+  
+              mat.transparent = false;
+              mat.needsUpdate = true;
+            } else {
+              mat.map = null;
+              mat.bumpMap = null;
+              mat.normalMap = null;
+              mat.needsUpdate = true;
+            }
+          }
+        });
+      }
+    });
+  };
+  
 
 /*
   window.wearShirt = function () {
@@ -448,66 +527,7 @@ function init() {
     });
   }; */
 
-  window.wearShirt = function (clothingId) {
-    if (!mannequin) return;
   
-    mannequin.traverse((child) => {
-      if (child.isMesh && child.material) {
-        const materials = Array.isArray(child.material) ? child.material : [child.material];
-        materials.forEach((mat) => {
-          const name = mat.name?.toLowerCase();
-          if (name && name.includes(clothingId)) {
-            if (mat.originalMap) mat.map = mat.originalMap;
-            if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
-            if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
-         
-            child.visible = true;
-            mat.transparent = false;
-            mat.needsUpdate = true;
-          } else if (name && isClothing(name) && name.includes("converted_")) {
-            
-            child.visible = false;
-          }
-        });
-      }
-    });
-  };
-  
-  window.wearPants = function (clothingId) {
-    if (!mannequin) return;
-  
-    
-    const idList = {
-      'converted_pants_adidas': ['converted_pants_adidas', 'converted_laces_pants_white'],
-      'converted_shorts_champ':['converted_shorts_champ','converted_laces_pants_red'],
-    };
-  
-    const activeIds = idList[clothingId] || [clothingId];
-  
-    mannequin.traverse((child) => {
-      if (child.isMesh && child.material) {
-        const materials = Array.isArray(child.material) ? child.material : [child.material];
-        materials.forEach((mat) => {
-          const name = mat.name?.toLowerCase();
-  
-          if (name && isClothing(name)) {
-            const shouldShow = activeIds.some(id => name.includes(id));
-  
-            child.visible = shouldShow;
-  
-            if (shouldShow) {
-              if (mat.originalMap) mat.map = mat.originalMap;
-              if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
-              if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
-  
-              mat.transparent = false;
-              mat.needsUpdate = true;
-            }
-          }
-        });
-      }
-    });
-  };
   
   
 
