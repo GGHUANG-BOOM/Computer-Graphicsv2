@@ -2,6 +2,7 @@ import * as THREE from './three.module.js';
 import { OrbitControls } from './OrbitControls.js';
 import { MTLLoader } from './MTLLoader.js';
 import { OBJLoader } from './OBJLoader.js';
+import { GLTFLoader } from './GLTFLoader.js';
 import GUI from './lil-gui.module.min.js';
 
 // Page Navigation
@@ -64,6 +65,8 @@ function init() {
   // Folders for clothing categories
   const torsoFolder = gui.addFolder('Torso');
   const pantsFolder = gui.addFolder('Pants');
+  const hatFolder = gui.addFolder('hat');
+  const shoeFolder = gui.addFolder('shoes');
   
   // Clothing options
   const clothingOptions = {
@@ -89,7 +92,29 @@ function init() {
         'Long Shorts': 'converted_shorts_long',
         'Champ Shorts': 'converted_shorts_champ'
       }
-    }
+      
+    },
+    hat:{
+  currentWear: 'none',
+  items: {
+    none: null,
+    'Hat 1': 'models/Hat1.glb',
+    'Hat 2': 'models/Hat2.glb',
+    'Hat 3': 'models/Hat3.glb',
+ 
+  }
+},
+shoes: {
+  currentWear: 'none',
+  items: {
+    none: null,
+    'Shoe 1': 'models/Shoe1.glb',
+    'Shoe 2': 'models/Shoe2.glb',
+    'Shoe 3': 'models/Shoe3.glb',
+   
+  }
+},
+    
   };
 
   torsoFolder.add(clothingOptions.torso, 'currentWear', clothingOptions.torso.items)
@@ -111,6 +136,25 @@ function init() {
         wearPants(value);
       }
   });
+hatFolder.add(clothingOptions.hat, 'currentWear', clothingOptions.hat.items)
+  .name('Style')
+  .onChange(value => {
+    if (value === null) {
+      removeClothing('headwear');
+    } else {
+      wearHat(value);
+    }
+});
+
+shoeFolder.add(clothingOptions.shoes, 'currentWear', clothingOptions.shoes.items)
+  .name('Style')
+  .onChange(value => {
+    if (value === null) {
+      removeClothing('footwear');
+    } else {
+      wearShoes(value);
+    }
+});
 
   gui.domElement.style.position = 'absolute';
   gui.domElement.style.top = '20px';
@@ -134,6 +178,13 @@ function init() {
       "converted_t_shirts_champ",
       "converted_long_sleeve_hd",
       "converted_laces",
+      "hat1_",
+      "Hat2_",
+    "Hat3_",
+    "shoe1_",
+    "Shoe2_",
+    "Shoe3_",
+  
     ].includes(name);
   }
 
@@ -167,7 +218,28 @@ function init() {
           mat.bumpMap = null;
           mat.normalMap = null;
           mat.needsUpdate = true;
-        }
+             }
+            else if (type === 'headwear' && 
+      (name.includes('hat1') ||
+       name.includes('hat2_') ||
+       name.includes('hat3_'))) {
+    child.visible = false;
+    mat.map = null;
+    mat.bumpMap = null;
+    mat.normalMap = null;
+    mat.needsUpdate = true;
+  }
+  else if (type === 'footwear' && 
+      (name.includes('shoe1_') ||
+       name.includes('shoe2_') ||
+       name.includes('shoe3_'))) {
+    child.visible = false;
+    mat.map = null;
+    mat.bumpMap = null;
+    mat.normalMap = null;
+    mat.needsUpdate = true;
+  }
+        
       });
     }
   });
@@ -338,6 +410,142 @@ function init() {
     });
   };
 
+  window.wearHat = function(modelPath) {
+  removeClothing('hat');
+  if (!modelPath) return;
+  
+  const gltfLoader = new GLTFLoader();
+   gltfLoader.load(modelPath, (gltf) => {
+    const hatObject = gltf.scene;
+    
+    hatObject.userData.type = 'hat';
+    hatObject.scale.set(0.1094, 0.1, 0.12); 
+    hatObject.position.set(-0.04, 1.575, -0.005); 
+    scene.add(hatObject);
+  });
+};
+
+  window.wearHat2 = function(modelPath) {
+  removeClothing('hat');
+  if (!modelPath) return;
+
+  const gltfLoader = new GLTFLoader();
+  gltfLoader.load(modelPath, (gltf) => {
+    const hatObject = gltf.scene;
+    
+    hatObject.userData.type = 'hat';
+  
+    hatObject.scale.set(0.915, 0.9, 1); 
+  hatObject.position.set(-0.04, 1.565, 0.025); 
+    
+    scene.add(hatObject);
+  });
+};
+
+ window.wearHat3 = function(modelPath) {
+ 
+  removeClothing('hat');
+  
+  if (!modelPath) return;
+  
+  const gltfLoader = new GLTFLoader();
+  gltfLoader.load(modelPath, (gltf) => {
+    const hatObject = gltf.scene;
+    hatObject.userData.type = 'hat';
+
+    hatObject.scale.set(0.8, 0.9, 0.8); 
+    hatObject.position.set(-0.04, 1.5675, -0.04);
+    scene.add(hatObject);
+  });
+};
+
+window.wearShoes = function(modelPath) {
+  removeClothing('shoes');
+  
+  if (!modelPath) return;
+  
+  const gltfLoader = new GLTFLoader();
+  gltfLoader.load(modelPath, (gltf) => {
+    const rightShoe = gltf.scene;
+    
+    rightShoe.userData.type = 'shoes';
+    
+    rightShoe.scale.set(0.875, 0.9, 1);
+    rightShoe.position.set(-0.27, 0.035, -0.0135); 
+    rightShoe.rotation.y = Math.PI - 0.3; 
+    
+    
+    const leftShoe = rightShoe.clone();
+    leftShoe.userData.type = 'shoes';
+    leftShoe.scale.set(-0.875 , 0.9, 1);
+    leftShoe.position.set(0.185, 0.035, -0.0135); 
+        leftShoe.rotation.y = - 0.3; 
+
+   
+    scene.add(rightShoe);
+    scene.add(leftShoe);
+  });
+};
+window.wearShoes2 = function(modelPath) {
+  
+  removeClothing('shoes');
+  
+  if (!modelPath) return;
+  
+  const gltfLoader = new GLTFLoader();
+  gltfLoader.load(modelPath, (gltf) => {
+    
+    const rightShoe = gltf.scene;
+    rightShoe.userData.type = 'shoes';
+    rightShoe.scale.set(1.1 , 1.1, 1.1);
+   rightShoe.position.set(0.1675, -0.0225, -0.0135); 
+        rightShoe.rotation.y = 0.2; 
+  
+    
+    
+    const leftShoe = rightShoe.clone();
+    leftShoe.userData.type = 'shoes';
+     leftShoe.scale.set(1.1, 1.1, 1.1);
+    leftShoe.position.set(-0.27, -0.0225, -0.0135); 
+    leftShoe.rotation.y = -0.2; 
+    leftShoe.scale.x *= -1;
+
+   
+    scene.add(rightShoe);
+    scene.add(leftShoe);
+  });
+};
+
+window.wearShoes3 = function(modelPath) {
+  
+  removeClothing('shoes');
+  
+  if (!modelPath) return;
+  
+  const gltfLoader = new GLTFLoader();
+  gltfLoader.load(modelPath, (gltf) => {
+    
+    const rightShoe = gltf.scene;
+    
+    
+    rightShoe.userData.type = 'shoes';
+    
+    
+    rightShoe.scale.set(1.4, 1.3, 1.4);
+    rightShoe.position.set(0.1675, -0.02, 0.022); 
+    rightShoe.rotation.y = 0.2; 
+    
+   const leftShoe = rightShoe.clone();
+    leftShoe.userData.type = 'shoes';
+     leftShoe.scale.set(1.4, 1.3, 1.4);
+    leftShoe.position.set(-0.265, -0.02, 0.022); 
+    leftShoe.rotation.y = -0.2; 
+    leftShoe.scale.x *= -1;
+
+    scene.add(rightShoe);
+    scene.add(leftShoe);
+  });
+};
 
 
   // Animation loop
