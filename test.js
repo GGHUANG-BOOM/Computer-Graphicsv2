@@ -397,6 +397,7 @@ function init() {
             mat.needsUpdate = true;
           }
         });
+        
       }
     });
   };
@@ -412,7 +413,6 @@ function init() {
   let currentHatObject = null;
 
   window.wearHat = function(modelPath) {
-  removeClothing('hat');
   if (!modelPath) return;
 
   if (currentHatPath === modelPath && currentHatObject) {
@@ -445,7 +445,7 @@ function init() {
 };
 
   window.wearHat2 = function(modelPath) {
-  removeClothing('hat');
+ 
   if (!modelPath) return;
 
   if (currentHatPath === modelPath && currentHatObject) {
@@ -479,7 +479,7 @@ function init() {
 
  window.wearHat3 = function(modelPath) {
  
-  removeClothing('hat');
+ 
 if (!modelPath) return;
 
 if (currentHatPath === modelPath && currentHatObject) {
@@ -553,7 +553,7 @@ window.wearShoes = function(modelPath) {
 
 window.wearShoes2 = function(modelPath) {
   
-  removeClothing('shoes');
+ 
   
   if (!modelPath) return;
 
@@ -597,7 +597,7 @@ window.wearShoes2 = function(modelPath) {
 
 window.wearShoes3 = function(modelPath) {
   
-  removeClothing('shoes');
+  
   
   if (!modelPath) return;
 
