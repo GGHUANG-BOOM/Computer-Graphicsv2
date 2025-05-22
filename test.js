@@ -313,13 +313,18 @@ shoeFolder.add(clothingOptions.shoes, 'currentWear', clothingOptions.shoes.items
         const materials = Array.isArray(child.material) ? child.material : [child.material];
         materials.forEach((mat) => {
           if (mat.name && mat.name.toLowerCase().includes("converted_t_shirts_champ")) {
-            if (mat.originalMap) mat.map = mat.originalMap;
-            if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
-            if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
-      
-            
-            child.visible = true;
-            mat.transparent = false;
+            if (child.visible) {
+              child.visible = false;
+              mat.transparent = true;
+            } else {
+              
+              if (mat.originalMap) mat.map = mat.originalMap;
+              if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
+              if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
+  
+              child.visible = true;
+              mat.transparent = false;
+            }
             mat.needsUpdate = true;
           }
         });
@@ -336,14 +341,18 @@ shoeFolder.add(clothingOptions.shoes, 'currentWear', clothingOptions.shoes.items
         const materials = Array.isArray(child.material) ? child.material : [child.material];
         materials.forEach((mat) => {
           if (mat.name && mat.name.toLowerCase().includes("converted_long_sleeve")) {
-            if (mat.originalMap) mat.map = mat.originalMap;
-            if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
-            if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
-          
-            
-            
-            child.visible = true;
-            mat.transparent = false;
+            if (child.visible) {
+              child.visible = false;
+              mat.transparent = true;
+            } else {
+              
+              if (mat.originalMap) mat.map = mat.originalMap;
+              if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
+              if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
+  
+              child.visible = true;
+              mat.transparent = false;
+            }
             mat.needsUpdate = true;
           }
         });
@@ -359,13 +368,18 @@ shoeFolder.add(clothingOptions.shoes, 'currentWear', clothingOptions.shoes.items
         const materials = Array.isArray(child.material) ? child.material : [child.material];
         materials.forEach((mat) => {
           if (mat.name && mat.name.toLowerCase().includes("converted_jeans")) {
-            if (mat.originalMap) mat.map = mat.originalMap;
-            if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
-            if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
-          
-            
-            child.visible = true;
-            mat.transparent = false;
+            if (child.visible) {
+              child.visible = false;
+              mat.transparent = true;
+            } else {
+              
+              if (mat.originalMap) mat.map = mat.originalMap;
+              if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
+              if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
+  
+              child.visible = true;
+              mat.transparent = false;
+            }
             mat.needsUpdate = true;
           }
         });
@@ -384,18 +398,26 @@ shoeFolder.add(clothingOptions.shoes, 'currentWear', clothingOptions.shoes.items
           if (
             name &&
             (
-              name.includes("converted_pants_adidas")
+              name.includes("converted_pants_adidas")||
+              name.includes("converted_laces_pants_white")
               
             )
           ) {
-            if (mat.originalMap) mat.map = mat.originalMap;
-            if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
-            if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
-         
+
+            if (child.visible) {
+              child.visible = false;
+              mat.transparent = true;
+            } else {
+              
+              if (mat.originalMap) mat.map = mat.originalMap;
+              if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
+              if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
   
-            child.visible = true;
-            mat.transparent = false;
+              child.visible = true;
+              mat.transparent = false;
+            }
             mat.needsUpdate = true;
+            
           }
         });
       }
@@ -410,26 +432,27 @@ shoeFolder.add(clothingOptions.shoes, 'currentWear', clothingOptions.shoes.items
         const materials = Array.isArray(child.material) ? child.material : [child.material];
         materials.forEach((mat) => {
           const name = mat.name?.toLowerCase();
-          if (
-            name &&
-            (
-              name.includes("converted_tank_top")
+          if (name && name.includes("converted_tank_top")) {
+            
+            if (child.visible) {
+              child.visible = false;
+              mat.transparent = true;
+            } else {
               
-            )
-          ) {
-            if (mat.originalMap) mat.map = mat.originalMap;
-            if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
-            if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
-          
+              if (mat.originalMap) mat.map = mat.originalMap;
+              if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
+              if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
   
-            child.visible = true;
-            mat.transparent = false;
+              child.visible = true;
+              mat.transparent = false;
+            }
             mat.needsUpdate = true;
           }
         });
       }
     });
   };
+  
   
   window.wearPants3 = function () {
     if (!mannequin) return;
@@ -439,21 +462,24 @@ shoeFolder.add(clothingOptions.shoes, 'currentWear', clothingOptions.shoes.items
         const materials = Array.isArray(child.material) ? child.material : [child.material];
         materials.forEach((mat) => {
           const name = mat.name?.toLowerCase();
-          if (
-            name &&
-            (
-              name.includes("converted_shorts_champ")
-              
-            )
+          if (name &&(name.includes("converted_shorts_champ")|| name.includes("converted_laces_pants_red"))
           ) {
-            if (mat.originalMap) mat.map = mat.originalMap;
-            if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
-            if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
+            if (child.visible) {
+              child.visible = false;
+              mat.transparent = true;
+            } else {
+              
+              if (mat.originalMap) mat.map = mat.originalMap;
+              if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
+              if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
+            
+        
           
   
             child.visible = true;
             mat.transparent = false;
             mat.needsUpdate = true;
+            }
           }
         });
       }
@@ -471,17 +497,22 @@ shoeFolder.add(clothingOptions.shoes, 'currentWear', clothingOptions.shoes.items
           if (
             name &&
             (
-              name.includes("converted_tank_top_rolling_")
+              name.includes("converted_hoodie_mill")
               
             )
           ) {
-            if (mat.originalMap) mat.map = mat.originalMap;
-            if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
-            if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
-         
+            if (child.visible) {
+              child.visible = false;
+              mat.transparent = true;
+            } else {
+              
+              if (mat.originalMap) mat.map = mat.originalMap;
+              if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
+              if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
   
-            child.visible = true;
-            mat.transparent = false;
+              child.visible = true;
+              mat.transparent = false;
+            }
             mat.needsUpdate = true;
           }
         });
@@ -503,13 +534,18 @@ shoeFolder.add(clothingOptions.shoes, 'currentWear', clothingOptions.shoes.items
               
             )
           ) {
-            if (mat.originalMap) mat.map = mat.originalMap;
-            if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
-            if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
-           
+            if (child.visible) {
+              child.visible = false;
+              mat.transparent = true;
+            } else {
+              
+              if (mat.originalMap) mat.map = mat.originalMap;
+              if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
+              if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
   
-            child.visible = true;
-            mat.transparent = false;
+              child.visible = true;
+              mat.transparent = false;
+            }
             mat.needsUpdate = true;
           }
         });
@@ -524,11 +560,26 @@ shoeFolder.add(clothingOptions.shoes, 'currentWear', clothingOptions.shoes.items
   
 
 
- 
+  let currentHatPath = null;
+  let currentHatObject = null;
 
   window.wearHat = function(modelPath) {
   removeClothing('hat');
   if (!modelPath) return;
+
+  if (currentHatPath === modelPath && currentHatObject) {
+    scene.remove(currentHatObject);
+    currentHatPath = null;
+    currentHatObject = null;
+    return;
+  }
+
+  if (currentHatObject) {
+    scene.remove(currentHatObject);
+    currentHatObject = null;
+    currentHatPath = null;
+  }
+
   
   const gltfLoader = new GLTFLoader();
    gltfLoader.load(modelPath, (gltf) => {
@@ -538,12 +589,30 @@ shoeFolder.add(clothingOptions.shoes, 'currentWear', clothingOptions.shoes.items
     hatObject.scale.set(0.1094, 0.1, 0.12); 
     hatObject.position.set(-0.04, 1.575, -0.005); 
     scene.add(hatObject);
+
+
+    currentHatObject = hatObject;
+    currentHatPath = modelPath;
   });
 };
 
   window.wearHat2 = function(modelPath) {
   removeClothing('hat');
   if (!modelPath) return;
+
+  if (currentHatPath === modelPath && currentHatObject) {
+    scene.remove(currentHatObject);
+    currentHatPath = null;
+    currentHatObject = null;
+    return;
+  }
+
+  if (currentHatObject) {
+    scene.remove(currentHatObject);
+    currentHatObject = null;
+    currentHatPath = null;
+  }
+
 
   const gltfLoader = new GLTFLoader();
   gltfLoader.load(modelPath, (gltf) => {
@@ -555,6 +624,8 @@ shoeFolder.add(clothingOptions.shoes, 'currentWear', clothingOptions.shoes.items
   hatObject.position.set(-0.04, 1.565, 0.025); 
     
     scene.add(hatObject);
+    currentHatObject = hatObject;
+    currentHatPath = modelPath;
   });
 };
 
