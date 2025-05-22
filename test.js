@@ -66,8 +66,9 @@ function init() {
 
   function isClothing(name) {
     if (!name) return false;
-    name = name.trim().toLowerCase();
-    return [
+    const cleanName = name.trim().toLowerCase();
+  
+    const clothingNames = [
       "converted_jeans",
       "converted_pants_adidas",
       "converted_laces_pants_white",
@@ -80,14 +81,16 @@ function init() {
       "converted_tank_top_rolling_",
       "converted_laces",
       "hat1_",
-      "Hat2_",
-    "Hat3_",
-    "shoe1_",
-    "Shoe2_",
-    "Shoe3_",
+      "hat2_",
+      "hat3_",
+      "shoe1_",
+      "shoe2_",
+      "shoe3_",
+    ];
   
-    ].includes(name);
+    return clothingNames.includes(cleanName);
   }
+  
 
 
   const mtlLoader = new MTLLoader();
