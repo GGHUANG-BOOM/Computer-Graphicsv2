@@ -396,10 +396,6 @@ shoeFolder.add(clothingOptions.shoes, 'currentWear', clothingOptions.shoes.items
             if (mat.originalMap) mat.map = mat.originalMap;
             if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
             if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
-            if (mat.originalEmissiveMap) mat.emissiveMap = mat.originalEmissiveMap;
-            if (mat.originalRoughnessMap) mat.roughnessMap = mat.originalRoughnessMap;
-            if (mat.originalMetalnessMap) mat.metalnessMap = mat.originalMetalnessMap;
-            if (mat.originalAlphaMap) mat.alphaMap = mat.originalAlphaMap;
 
             child.visible = true;
             mat.transparent = false;
