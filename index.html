@@ -27,17 +27,37 @@
   <!-- Editor Page -->
   <div id="editor-page" class="page hidden">
     <div id="gui">
-      <button class="btnGUI" onclick="wearShirt()">Wear Shirt</button>
-      <button class="btnGUI" onclick="wearShirt2()">Wear Shirt 2</button>
-      <button class="btnGUI" onclick="wearPants()">Wear Pants</button>
-      <button class="btnGUI" onclick="wearPants2()">Wear Pants 2</button>
+      <details open>
+        <summary> Shirts</summary>
+        <button class="btnGUI" onclick="wearShirt()">Wear Shirt</button>
+        <button class="btnGUI" onclick="wearShirt2()">Wear Shirt 2</button>
+        <button class="btnGUI" onclick="wearShirt3()">Wear Shirt 3</button>
+        <button class="btnGUI" onclick="wearShirt4()">Wear Shirt 4</button>
+      </details>
+    
+      <details>
+        <summary> Pants</summary>
+        <button class="btnGUI" onclick="wearPants()">Wear Pants</button>
+        <button class="btnGUI" onclick="wearPants2()">Wear Pants 2</button>
+        <button class="btnGUI" onclick="wearPants3()">Wear Pants 3</button>
+        <button class="btnGUI" onclick="wearPants4()">Wear Pants 4</button>
+      </details>
+    
+      <details>
+        <summary> Hats</summary>
         <button class="btnGUI" onclick="wearHat('models/Hat1.glb')">Wear Hat 1</button>
         <button class="btnGUI" onclick="wearHat2('models/Hat2.glb')">Wear Hat 2</button>
-         <button class="btnGUI" onclick="wearHat3('models/Hat3.glb')">Wear Hat 3</button>
-  <button class="btnGUI" onclick="wearShoes('models/Shoe1.glb')">Wear Shoe 1</button>
-  <button class="btnGUI" onclick="wearShoes2('models/Shoe2.glb')">Wear Shoe 2</button>
-  <button class="btnGUI" onclick="wearShoes3('models/Shoe3.glb')">Wear Shoe 3</button>
+        <button class="btnGUI" onclick="wearHat3('models/Hat3.glb')">Wear Hat 3</button>
+      </details>
+    
+      <details>
+        <summary> Shoes</summary>
+        <button class="btnGUI" onclick="wearShoes('models/Shoe1.glb')">Wear Shoe 1</button>
+        <button class="btnGUI" onclick="wearShoes2('models/Shoe2.glb')">Wear Shoe 2</button>
+        <button class="btnGUI" onclick="wearShoes3('models/Shoe3.glb')">Wear Shoe 3</button>
+      </details>
     </div>
+    
     <canvas id="three-canvas"></canvas>
   </div>
   <script type="importmap">
