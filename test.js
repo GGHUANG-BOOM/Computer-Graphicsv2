@@ -87,8 +87,6 @@ function init() {
         none: null,
         'Jeans': 'converted_jeans',
         'Adidas Pants': 'converted_pants_adidas',
-        'White Lace Pants': 'converted_laces_pants_white',
-        'Red Lace Pants': 'converted_laces_pants_red',
         'Long Shorts': 'converted_shorts_long',
         'Champ Shorts': 'converted_shorts_champ'
       }

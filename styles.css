@@ -75,9 +75,13 @@ body {
     z-index: 10;
     padding: 10px;
     border-radius: 8px;
-    opacity: 0;
-    transform: translateY(-100px);
-}
+    display: flex;
+    flex-direction: column; 
+    gap: 8px; 
+    opacity: 1; 
+    transform: translateY(0); 
+  }
+  
 
 #gui.animate {
     animation: slideDown 0.8s ease-out forwards;
