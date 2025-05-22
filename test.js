@@ -462,7 +462,8 @@ shoeFolder.add(clothingOptions.shoes, 'currentWear', clothingOptions.shoes.items
         const materials = Array.isArray(child.material) ? child.material : [child.material];
         materials.forEach((mat) => {
           const name = mat.name?.toLowerCase();
-          if (name &&(name.includes("converted_shorts_champ")|| name.includes("converted_laces_pants_red"))
+          if (
+            name &&(name.includes("converted_shorts_champ")|| name.includes("converted_laces_pants_red"))
           ) {
             if (child.visible) {
               child.visible = false;
@@ -632,8 +633,20 @@ shoeFolder.add(clothingOptions.shoes, 'currentWear', clothingOptions.shoes.items
  window.wearHat3 = function(modelPath) {
  
   removeClothing('hat');
-  
-  if (!modelPath) return;
+if (!modelPath) return;
+
+if (currentHatPath === modelPath && currentHatObject) {
+  scene.remove(currentHatObject);
+  currentHatPath = null;
+  currentHatObject = null;
+  return;
+}
+
+if (currentHatObject) {
+  scene.remove(currentHatObject);
+  currentHatObject = null;
+  currentHatPath = null;
+}
   
   const gltfLoader = new GLTFLoader();
   gltfLoader.load(modelPath, (gltf) => {
@@ -643,41 +656,71 @@ shoeFolder.add(clothingOptions.shoes, 'currentWear', clothingOptions.shoes.items
     hatObject.scale.set(0.8, 0.9, 0.8); 
     hatObject.position.set(-0.04, 1.5675, -0.04);
     scene.add(hatObject);
+    currentHatObject = hatObject;
+    currentHatPath = modelPath;
   });
 };
 
+
+let currentShoesPath = null;
+let currentShoeObjects = [];
+
 window.wearShoes = function(modelPath) {
-  removeClothing('shoes');
-  
   if (!modelPath) return;
+
   
+  if (currentShoesPath === modelPath && currentShoeObjects.length > 0) {
+    currentShoeObjects.forEach(obj => scene.remove(obj));
+    currentShoesPath = null;
+    currentShoeObjects = [];
+    return;
+  }
+
+  
+  currentShoeObjects.forEach(obj => scene.remove(obj));
+  currentShoeObjects = [];
+  currentShoesPath = null;
+
   const gltfLoader = new GLTFLoader();
   gltfLoader.load(modelPath, (gltf) => {
     const rightShoe = gltf.scene;
-    
     rightShoe.userData.type = 'shoes';
-    
     rightShoe.scale.set(0.875, 0.9, 1);
-    rightShoe.position.set(-0.27, 0.035, -0.0135); 
-    rightShoe.rotation.y = Math.PI - 0.3; 
-    
-    
+    rightShoe.position.set(-0.27, 0.035, -0.0135);
+    rightShoe.rotation.y = Math.PI - 0.3;
+
     const leftShoe = rightShoe.clone();
     leftShoe.userData.type = 'shoes';
-    leftShoe.scale.set(-0.875 , 0.9, 1);
-    leftShoe.position.set(0.185, 0.035, -0.0135); 
-        leftShoe.rotation.y = - 0.3; 
+    leftShoe.scale.set(-0.875, 0.9, 1);
+    leftShoe.position.set(0.185, 0.035, -0.0135);
+    leftShoe.rotation.y = -0.3;
 
-   
     scene.add(rightShoe);
     scene.add(leftShoe);
+
+    
+    currentShoeObjects = [rightShoe, leftShoe];
+    currentShoesPath = modelPath;
   });
 };
+
 window.wearShoes2 = function(modelPath) {
   
   removeClothing('shoes');
   
   if (!modelPath) return;
+
+  if (currentShoesPath === modelPath && currentShoeObjects.length > 0) {
+    currentShoeObjects.forEach(obj => scene.remove(obj));
+    currentShoesPath = null;
+    currentShoeObjects = [];
+    return;
+  }
+
+  
+  currentShoeObjects.forEach(obj => scene.remove(obj));
+  currentShoeObjects = [];
+  currentShoesPath = null;
   
   const gltfLoader = new GLTFLoader();
   gltfLoader.load(modelPath, (gltf) => {
@@ -700,6 +743,8 @@ window.wearShoes2 = function(modelPath) {
    
     scene.add(rightShoe);
     scene.add(leftShoe);
+    currentShoeObjects = [rightShoe, leftShoe];
+    currentShoesPath = modelPath;
   });
 };
 
@@ -708,6 +753,18 @@ window.wearShoes3 = function(modelPath) {
   removeClothing('shoes');
   
   if (!modelPath) return;
+
+  if (currentShoesPath === modelPath && currentShoeObjects.length > 0) {
+    currentShoeObjects.forEach(obj => scene.remove(obj));
+    currentShoesPath = null;
+    currentShoeObjects = [];
+    return;
+  }
+
+  
+  currentShoeObjects.forEach(obj => scene.remove(obj));
+  currentShoeObjects = [];
+  currentShoesPath = null;
   
   const gltfLoader = new GLTFLoader();
   gltfLoader.load(modelPath, (gltf) => {
@@ -731,6 +788,8 @@ window.wearShoes3 = function(modelPath) {
 
     scene.add(rightShoe);
     scene.add(leftShoe);
+    currentShoeObjects = [rightShoe, leftShoe];
+    currentShoesPath = modelPath;
   });
 };
 
