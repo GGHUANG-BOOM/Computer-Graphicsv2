@@ -66,9 +66,9 @@ function init() {
 
   function isClothing(name) {
     if (!name) return false;
-    const cleanName = name.trim().toLowerCase();
   
-    const clothingNames = [
+    const cleanName = name.trim().toLowerCase();
+      const clothingNames = [
       "converted_jeans",
       "converted_pants_adidas",
       "converted_laces_pants_white",
@@ -90,6 +90,7 @@ function init() {
   
     return clothingNames.includes(cleanName);
   }
+  
   
 
 
