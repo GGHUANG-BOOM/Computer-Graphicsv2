@@ -60,103 +60,7 @@ function init() {
   ground.rotation.x = -Math.PI / 2;
   scene.add(ground);
 
-  const gui = new GUI();
-  
-  // Folders for clothing categories
-  const torsoFolder = gui.addFolder('Torso');
-  const pantsFolder = gui.addFolder('Pants');
-  const hatFolder = gui.addFolder('hat');
-  const shoeFolder = gui.addFolder('shoes');
-  
-  // Clothing options
-  const clothingOptions = {
-    torso: {
-      currentWear: 'none',
-      items: {
-        none: null,
-        'Tank Top': 'converted_tank_top',
-        'Tank Top Rolling': 'converted_tank_top_rolling_',
-        'Hoodie': 'converted_hoodie_mill',
-        'T-Shirt': 'converted_t_shirts_champ',
-        'Long Sleeve': 'converted_long_sleeve_hd'
-      }
-    },
-    pants: {
-      currentWear: 'none',
-      items: {
-        none: null,
-        'Jeans': 'converted_jeans',
-        'Adidas Pants': 'converted_pants_adidas',
-        'Long Shorts': 'converted_shorts_long',
-        'Champ Shorts': 'converted_shorts_champ'
-      }
-      
-    },
-    hat:{
-  currentWear: 'none',
-  items: {
-    none: null,
-    'Hat 1': 'models/Hat1.glb',
-    'Hat 2': 'models/Hat2.glb',
-    'Hat 3': 'models/Hat3.glb',
- 
-  }
-},
-shoes: {
-  currentWear: 'none',
-  items: {
-    none: null,
-    'Shoe 1': 'models/Shoe1.glb',
-    'Shoe 2': 'models/Shoe2.glb',
-    'Shoe 3': 'models/Shoe3.glb',
-   
-  }
-},
-    
-  };
 
-  torsoFolder.add(clothingOptions.torso, 'currentWear', clothingOptions.torso.items)
-    .name('Style')
-    .onChange(value => {
-      if (value === null) {
-        removeClothing('torso');
-      } else {
-        wearShirt(value);
-      }
-  });
-
-  pantsFolder.add(clothingOptions.pants, 'currentWear', clothingOptions.pants.items)
-    .name('Style')
-    .onChange(value => {
-      if (value === null) {
-        removeClothing('pants');
-      } else {
-        wearPants(value);
-      }
-  });
-hatFolder.add(clothingOptions.hat, 'currentWear', clothingOptions.hat.items)
-  .name('Style')
-  .onChange(value => {
-    if (value === null) {
-      removeClothing('headwear');
-    } else {
-      wearHat(value);
-    }
-});
-
-shoeFolder.add(clothingOptions.shoes, 'currentWear', clothingOptions.shoes.items)
-  .name('Style')
-  .onChange(value => {
-    if (value === null) {
-      removeClothing('footwear');
-    } else {
-      wearShoes(value);
-    }
-});
-
-  gui.domElement.style.position = 'absolute';
-  gui.domElement.style.top = '20px';
-  gui.domElement.style.right = '10px';
 
   let mannequin;
 
@@ -170,11 +74,10 @@ shoeFolder.add(clothingOptions.shoes, 'currentWear', clothingOptions.shoes.items
       "converted_laces_pants_red",
       "converted_shorts_long",
       "converted_shorts_champ",
-      "converted_tank_top",
-      "converted_tank_top_rolling_",
       "converted_hoodie_mill",
       "converted_t_shirts_champ",
       "converted_long_sleeve_hd",
+      "converted_tank_top_rolling_",
       "converted_laces",
       "hat1_",
       "Hat2_",
@@ -184,63 +87,6 @@ shoeFolder.add(clothingOptions.shoes, 'currentWear', clothingOptions.shoes.items
     "Shoe3_",
   
     ].includes(name);
-  }
-
-  function removeClothing(type) {
-  if (!mannequin) return;
-
-  mannequin.traverse((child) => {
-    if (child.isMesh && child.material) {
-      const materials = Array.isArray(child.material) ? child.material : [child.material];
-      materials.forEach((mat) => {
-        if (!mat.name) return;
-        
-        const name = mat.name.toLowerCase();
-        if (type === 'torso' && 
-            (name.includes('converted_tank_top') || 
-             name.includes('converted_hoodie') ||
-             name.includes('converted_t_shirts') ||
-             name.includes('converted_long_sleeve'))) {
-          child.visible = false;
-          mat.map = null;
-          mat.bumpMap = null;
-          mat.normalMap = null;
-          mat.needsUpdate = true;
-        } else if (type === 'pants' && 
-            (name.includes('converted_jeans') ||
-             name.includes('converted_pants') ||
-             name.includes('converted_shorts') ||
-             name.includes('converted_laces_pants'))) {
-          child.visible = false;
-          mat.map = null;
-          mat.bumpMap = null;
-          mat.normalMap = null;
-          mat.needsUpdate = true;
-             }
-            else if (type === 'headwear' && 
-      (name.includes('hat1') ||
-       name.includes('hat2_') ||
-       name.includes('hat3_'))) {
-    child.visible = false;
-    mat.map = null;
-    mat.bumpMap = null;
-    mat.normalMap = null;
-    mat.needsUpdate = true;
-  }
-  else if (type === 'footwear' && 
-      (name.includes('shoe1_') ||
-       name.includes('shoe2_') ||
-       name.includes('shoe3_'))) {
-    child.visible = false;
-    mat.map = null;
-    mat.bumpMap = null;
-    mat.normalMap = null;
-    mat.needsUpdate = true;
-  }
-        
-      });
-    }
-  });
   }
 
 
@@ -432,7 +278,7 @@ shoeFolder.add(clothingOptions.shoes, 'currentWear', clothingOptions.shoes.items
         const materials = Array.isArray(child.material) ? child.material : [child.material];
         materials.forEach((mat) => {
           const name = mat.name?.toLowerCase();
-          if (name && name.includes("converted_tank_top")) {
+          if (name && name.includes("converted_tank_top_rolling")) {
             
             if (child.visible) {
               child.visible = false;
@@ -463,7 +309,8 @@ shoeFolder.add(clothingOptions.shoes, 'currentWear', clothingOptions.shoes.items
         materials.forEach((mat) => {
           const name = mat.name?.toLowerCase();
           if (
-            name &&(name.includes("converted_shorts_champ")|| name.includes("converted_laces_pants_red"))
+            name &&(name.includes("converted_shorts_champ")|| 
+            name.includes("converted_laces_pants_red"))
           ) {
             if (child.visible) {
               child.visible = false;
