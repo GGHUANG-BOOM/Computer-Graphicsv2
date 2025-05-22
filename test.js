@@ -3,7 +3,6 @@ import { OrbitControls } from './OrbitControls.js';
 import { MTLLoader } from './MTLLoader.js';
 import { OBJLoader } from './OBJLoader.js';
 import { GLTFLoader } from './GLTFLoader.js';
-import GUI from './lil-gui.module.min.js';
 
 // Page Navigation
 const startButton = document.getElementById('start-button');
@@ -66,6 +65,7 @@ function init() {
 
   function isClothing(name) {
     if (!name) return false;
+   
   
     const cleanName = name.trim().toLowerCase();
       const clothingNames = [
@@ -371,7 +371,9 @@ function init() {
       }
     });
   };
-  window.wearPants4 = function () {
+  window.pantsAreOn = false;
+
+  window.wearPants4 = function () { 
     if (!mannequin) return;
   
     mannequin.traverse((child) => {
@@ -379,18 +381,11 @@ function init() {
         const materials = Array.isArray(child.material) ? child.material : [child.material];
         materials.forEach((mat) => {
           const name = mat.name?.toLowerCase();
-          if (
-            name &&
-            (
-              name.includes("converted_shorts_long")
-              
-            )
-          ) {
-            if (child.visible) {
+          if (name && name.includes("converted_shorts_long")) {
+            if (window.pantsAreOn) {
               child.visible = false;
               mat.transparent = true;
             } else {
-              
               if (mat.originalMap) mat.map = mat.originalMap;
               if (mat.originalBumpMap) mat.bumpMap = mat.originalBumpMap;
               if (mat.originalNormalMap) mat.normalMap = mat.originalNormalMap;
@@ -401,10 +396,13 @@ function init() {
             mat.needsUpdate = true;
           }
         });
-        
       }
     });
+  
+    window.pantsAreOn = !window.pantsAreOn;
   };
+  
+  
 
 
  
