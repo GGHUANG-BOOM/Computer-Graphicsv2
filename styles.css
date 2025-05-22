@@ -101,7 +101,11 @@ body {
     width: 100%;        
     box-sizing: border-box;
   }
-  
+  #gui details > button:hover {
+    background-color: #3a3f3f; 
+    transform: translateY(-2px); 
+    cursor: pointer;
+  }
 
 #gui.animate {
     animation: slideDown 0.8s ease-out forwards;
