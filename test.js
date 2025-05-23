@@ -98,8 +98,27 @@ function init() {
   mtlLoader.load('./A-pose HP.mtl', (materials) => {
     materials.preload();
 
+    for (const materialName in materials.materials) {
+      const mat = materials.materials[materialName];
+  
+      if (mat.map) {
+        mat.map.wrapS = THREE.RepeatWrapping;
+        mat.map.wrapT = THREE.RepeatWrapping;
+        mat.map.repeat.set(1, 1); // You can tweak to 0.5 or 2 for different results
+      }
+  
+      if (mat.bumpMap) {
+        mat.bumpMap.wrapS = THREE.RepeatWrapping;
+        mat.bumpMap.wrapT = THREE.RepeatWrapping;
+        mat.bumpMap.repeat.set(1, 1);
+        mat.bumpScale = 0.05;
+      }
+    } 
+  
+    
     const objLoader = new OBJLoader();
     objLoader.setMaterials(materials);
+
     objLoader.load('./A-pose HP.obj', (object) => {
       const box3 = new THREE.Box3().setFromObject(object);
       const center = new THREE.Vector3();
