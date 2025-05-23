@@ -89,7 +89,7 @@ const sandBump = textureLoader.load('beach Scene/SandG_001_b.jpg');
    
   
   
-    /*const sandTexture = new THREE.TextureLoader().load('beach Scene/SandG_001.jpg');
+    const sandTexture = new THREE.TextureLoader().load('beach Scene/SandG_001.jpg');
     const sandBump = new THREE.TextureLoader().load('beach Scene/SandG_001_b.jpg');
   
     sandTexture.wrapS = sandTexture.wrapT = THREE.RepeatWrapping;
@@ -113,22 +113,11 @@ const sandBump = textureLoader.load('beach Scene/SandG_001_b.jpg');
     sandMesh.position.set(5, 0.005, center.z); 
     sandMesh.receiveShadow = true;
     
-    scene.add(sandMesh);*/
-    const mtlLoader = new MTLLoader();
-    mtlLoader.load('beach Scene/sand_envi_034.mtl', function (materials) {
-      materials.preload();
+    scene.add(sandMesh);
     
-      const objLoader = new OBJLoader();
-      objLoader.setMaterials(materials);
-      objLoader.load('beach Scene/sand_envi_034.obj', function (object) {
-        // Optional: scale and position
-        object.scale.set(0.05, 0.05, 0.05); // Adjust based on your scene size
-        object.position.set(0, -0.5, 0); // Ground level
-    
-        scene.add(object);
+   
       });
-    });
-  });
+   
   
 
   
