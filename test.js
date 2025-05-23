@@ -104,14 +104,14 @@ function init() {
       if (mat.map) {
         mat.map.wrapS = THREE.RepeatWrapping;
         mat.map.wrapT = THREE.RepeatWrapping;
-        mat.map.repeat.set(1, 1); // You can tweak to 0.5 or 2 for different results
+        mat.map.repeat.set(1, 1); 
       }
   
       if (mat.bumpMap) {
         mat.bumpMap.wrapS = THREE.RepeatWrapping;
         mat.bumpMap.wrapT = THREE.RepeatWrapping;
         mat.bumpMap.repeat.set(1, 1);
-        mat.bumpScale = 0.05;
+        mat.bumpScale = 0;
       }
     } 
   

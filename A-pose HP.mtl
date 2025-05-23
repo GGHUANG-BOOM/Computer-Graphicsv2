@@ -12,7 +12,7 @@ newmtl Converted_PVC_FurnGrad_Charcoal_Gray
 	Kd 0.0392 0.0392 0.0392
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_bump -bm 0.0200 Textures\BM_Noise.png
+	
 
 newmtl Converted_jeans
 	Ns 10.0000
