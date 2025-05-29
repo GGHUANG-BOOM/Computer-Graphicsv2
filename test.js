@@ -55,74 +55,14 @@ const sandBump = textureLoader.load('beach Scene/SandG_001_b.jpg');
   dirLight.position.set(1, 3, 2);
   scene.add(dirLight);
 
-  const loader = new GLTFLoader();
-  loader.load('beach Scene/uploads_files_5954063_beach+scene.glb', function (gltf) {
-    const beachScene = gltf.scene;
-  
-    // Get bounding box and scale the scene
-    const bbox = new THREE.Box3().setFromObject(beachScene);
-    const size = new THREE.Vector3();
-    bbox.getSize(size);
-  
-    const targetSize = 20;
-    const maxDimension = Math.max(size.x, size.y, size.z);
-    const scaleFactor = targetSize / maxDimension;
-    beachScene.scale.setScalar(scaleFactor);
-  
-    // Recalculate center and reposition
-    bbox.setFromObject(beachScene); 
-    const center = new THREE.Vector3();
-    bbox.getCenter(center);
-    beachScene.position.sub(center); 
-    beachScene.position.y = 0; 
-    beachScene.position.x = 5;
-
-
-    beachScene.traverse((child) => {
-      if (child.isMesh && child.name === 'Plane001') {
-        child.visible = false;
-      }
-    });
-  
-    scene.add(beachScene);
-  
+  const ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(10, 10),
+    new THREE.MeshStandardMaterial({ color: 0x333333 })
+  );
+  ground.rotation.x = -Math.PI / 2;
+  scene.add(ground);
    
   
-  
-    const sandTexture = new THREE.TextureLoader().load('beach Scene/SandG_001.jpg');
-    const sandBump = new THREE.TextureLoader().load('beach Scene/SandG_001_b.jpg');
-  
-    sandTexture.wrapS = sandTexture.wrapT = THREE.RepeatWrapping;
-    sandBump.wrapS = sandBump.wrapT = THREE.RepeatWrapping;
-    sandTexture.repeat.set(10, 10);
-    sandBump.repeat.set(10, 10);
-  
-    const sandMaterial = new THREE.MeshStandardMaterial({
-      map: sandTexture,
-      bumpMap: sandBump,
-      bumpScale: 0.1,
-    }); 
-
-   
-    
-  
-    
-    const sandGeometry = new THREE.PlaneGeometry(12, 12);
-    const sandMesh = new THREE.Mesh(sandGeometry, sandMaterial);
-    sandMesh.rotation.x = -Math.PI / 2;
-    sandMesh.position.set(5, 0.005, center.z); 
-    sandMesh.receiveShadow = true;
-    
-    scene.add(sandMesh);
-    
-   
-      });
-   
-  
-
-  
-
-
   let mannequin;
 
   function isClothing(name) {
