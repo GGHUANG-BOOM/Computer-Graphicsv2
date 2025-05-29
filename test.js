@@ -42,81 +42,96 @@ function init() {
 
   const controls = new OrbitControls(camera, renderer.domElement);
 
-  const textureLoader = new THREE.TextureLoader();
-const sandTexture = textureLoader.load('beach Scene/SandG_001.jpg');
-const sandBump = textureLoader.load('beach Scene/SandG_001_b.jpg');
+ 
 
-  // Lighting
-  const light = new THREE.HemisphereLight(0xffffff, 0x444444);
-  light.position.set(0, 2, 0);
-  scene.add(light);
-
-  const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-  dirLight.position.set(1, 3, 2);
-  scene.add(dirLight);
-
-  const loader = new GLTFLoader();
-  loader.load('beach Scene/uploads_files_5954063_beach+scene.glb', function (gltf) {
-    const beachScene = gltf.scene;
   
-    // Get bounding box and scale the scene
-    const bbox = new THREE.Box3().setFromObject(beachScene);
-    const size = new THREE.Vector3();
-    bbox.getSize(size);
-  
-    const targetSize = 20;
-    const maxDimension = Math.max(size.x, size.y, size.z);
-    const scaleFactor = targetSize / maxDimension;
-    beachScene.scale.setScalar(scaleFactor);
-  
-    // Recalculate center and reposition
-    bbox.setFromObject(beachScene); 
-    const center = new THREE.Vector3();
-    bbox.getCenter(center);
-    beachScene.position.sub(center); 
-    beachScene.position.y = 0; 
-    beachScene.position.x = 5;
+  // Enable shadows
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
+// Hemisphere light (sky + ground)
+const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
+hemiLight.position.set(0, 20, 0);
+scene.add(hemiLight);
 
-    beachScene.traverse((child) => {
-      if (child.isMesh && child.name === 'Plane001') {
+// Directional light (sunlight)
+const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+dirLight.position.set(10, 20, 10);
+dirLight.castShadow = true;
+dirLight.shadow.mapSize.width = 2048;
+dirLight.shadow.mapSize.height = 2048;
+dirLight.shadow.camera.left = -15;
+dirLight.shadow.camera.right = 15;
+dirLight.shadow.camera.top = 15;
+dirLight.shadow.camera.bottom = -15;
+dirLight.shadow.camera.near = 1;
+dirLight.shadow.camera.far = 40;
+scene.add(dirLight);
+
+// Load GLTF scene
+const loader = new GLTFLoader();
+loader.load('beach Scene/uploads_files_5954063_beach+scene.glb', function (gltf) {
+  const beachScene = gltf.scene;
+
+  // Scale and center the scene
+  const bbox = new THREE.Box3().setFromObject(beachScene);
+  const size = new THREE.Vector3();
+  bbox.getSize(size);
+  const targetSize = 20;
+  const maxDimension = Math.max(size.x, size.y, size.z);
+  const scaleFactor = targetSize / maxDimension;
+  beachScene.scale.setScalar(scaleFactor);
+
+  bbox.setFromObject(beachScene);
+  const center = new THREE.Vector3();
+  bbox.getCenter(center);
+  beachScene.position.sub(center);
+ 
+  beachScene.position.set(4,0,0);
+
+  // Enable shadows and hide Plane001
+  beachScene.traverse((child) => {
+    if (child.isMesh) {
+      child.castShadow = true;
+      child.receiveShadow = true;
+      if (child.name === 'Plane001') {
         child.visible = false;
       }
-    });
-  
-    scene.add(beachScene);
-  
-   
-  
-  
-    const sandTexture = new THREE.TextureLoader().load('beach Scene/SandG_001.jpg');
-    const sandBump = new THREE.TextureLoader().load('beach Scene/SandG_001_b.jpg');
-  
-    sandTexture.wrapS = sandTexture.wrapT = THREE.RepeatWrapping;
-    sandBump.wrapS = sandBump.wrapT = THREE.RepeatWrapping;
-    sandTexture.repeat.set(10, 10);
-    sandBump.repeat.set(10, 10);
-  
-    const sandMaterial = new THREE.MeshStandardMaterial({
-      map: sandTexture,
-      bumpMap: sandBump,
-      bumpScale: 0.1,
-    }); 
+    }
+  });
 
-   
-    
-  
-    
-    const sandGeometry = new THREE.PlaneGeometry(12, 12);
-    const sandMesh = new THREE.Mesh(sandGeometry, sandMaterial);
-    sandMesh.rotation.x = -Math.PI / 2;
-    sandMesh.position.set(5, 0.005, center.z); 
-    sandMesh.receiveShadow = true;
-    
-    scene.add(sandMesh);
-    
-   
-      });
+  scene.add(beachScene);
+
+  // Load sand textures
+  const sandTexture = new THREE.TextureLoader().load('beach Scene/SandG_001.jpg');
+  const sandBump = new THREE.TextureLoader().load('beach Scene/SandG_001_b.jpg');
+
+  sandTexture.wrapS = sandTexture.wrapT = THREE.RepeatWrapping;
+  sandBump.wrapS = sandBump.wrapT = THREE.RepeatWrapping;
+  sandTexture.repeat.set(10, 10);
+  sandBump.repeat.set(10, 10);
+
+  // Create realistic sand material
+  const sandMaterial = new THREE.MeshPhysicalMaterial({
+    map: sandTexture,
+    bumpMap: sandBump,
+    bumpScale: 0.08,
+    roughness: 1.0,
+    reflectivity: 0.1,
+    clearcoat: 0.2,
+    clearcoatRoughness: 0.6,
+  });
+
+  // Create sand mesh
+   const sandGeometry = new THREE.PlaneGeometry(11, 11);
+  const sandMesh = new THREE.Mesh(sandGeometry, sandMaterial);
+  sandMesh.rotation.x = -Math.PI / 2;
+  sandMesh.position.set(5, 0.005, center.z);
+  sandMesh.receiveShadow = true;
+
+  scene.add(sandMesh);
+});
+
    
   
 
@@ -230,7 +245,7 @@ const sandBump = textureLoader.load('beach Scene/SandG_001_b.jpg');
           }
         }
       });
-  object.position.set(0,-0.02,0);
+  object.position.set(0,-0.02,1);
   object.rotation.y= -Math.PI/2;
       scene.add(object);
       mannequin = object; 
