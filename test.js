@@ -1,8 +1,9 @@
 import * as THREE from './three.module.js';
-import { OrbitControls } from './OrbitControls.js';
+//import { OrbitControls } from './OrbitControls.js';
 import { MTLLoader } from './MTLLoader.js';
 import { OBJLoader } from './OBJLoader.js';
 import { GLTFLoader } from './GLTFLoader.js';
+//import { mannequincontrols } from './mannequincontrols.js';
 
 // Page Navigation
 const startButton = document.getElementById('start-button');
@@ -29,19 +30,21 @@ startButton.addEventListener('click', () => {
 });
 
 function init() {
+  
   const canvas = document.getElementById('three-canvas');
   const scene = new THREE.Scene();
   scene.background = new THREE.Color(0x333333);
 
   const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.set(0, 2, 5);
+  camera.position.set(0, 5, 10);
+camera.lookAt(new THREE.Vector3(0, 0, 0));
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  const controls = new OrbitControls(camera, renderer.domElement);
-
+  //const controls = new OrbitControls(camera, renderer.domElement);
+  
  
 
   
@@ -739,6 +742,44 @@ window.wearShoes3 = function(modelPath) {
     currentShoesPath = modelPath;
   });
 };
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+let isDragging = false;
+let prevX = 0;
+let canRotate = false; 
+
+renderer.domElement.addEventListener('mousedown', (event) => {
+  
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  
+  raycaster.setFromCamera(mouse, camera);
+  
+  
+  const intersects = raycaster.intersectObject(mannequin, true);
+
+  if (intersects.length > 0) {
+    canRotate = true;
+    isDragging = true;
+    prevX = event.clientX;
+  }
+});
+
+renderer.domElement.addEventListener('mouseup', () => {
+  isDragging = false;
+  canRotate = false;
+});
+
+renderer.domElement.addEventListener('mousemove', (event) => {
+  if (isDragging && canRotate && mannequin) {
+    const deltaX = event.clientX - prevX;
+    mannequin.rotation.y += deltaX * 0.01;
+    prevX = event.clientX;
+  }
+});
+
+
 
 
 
@@ -746,7 +787,7 @@ window.wearShoes3 = function(modelPath) {
   // Animation loop
   function animate() {
     requestAnimationFrame(animate);
-    controls.update();
+    //controls.update();
     renderer.render(scene, camera);
   }
   animate();
