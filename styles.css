@@ -57,13 +57,24 @@ body {
     z-index: 0;
 }
 
-@keyframes slideDown {
+@keyframes slideInLeft {
     from {
-        transform: translateY(-100px);
+        transform: translateX(-100%);
         opacity: 0;
     }
     to {
-        transform: translateY(0);
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
         opacity: 1;
     }
 }
@@ -71,16 +82,66 @@ body {
 #gui {
     position: absolute;
     top: 10px;
-    left: 10px;
     z-index: 10;
     padding: 10px;
     border-radius: 8px;
-    opacity: 0;
-    transform: translateY(-100px);
+    width: 120px;
+    display: flex;
+    flex-direction: column; 
+    gap: 8px; 
+    opacity: 1; 
+  }
+
+  #gui details {
+    background-color: #252929;
+    color: #ffffff;
+    border: 1px solid #ffffff;
+    border-radius: 8px;
+    padding: 10px;
+    width: 100%;
+    font-family: input-mono-narrow, monospace;
+    font-size: 12px;
+    transition: background-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 8px; 
+  }
+
+  #gui details summary {
+    width: 100%;
+    box-sizing: border-box;
+  } 
+
+  #gui details > button {
+    display: block;
+    width: 100%;        
+    box-sizing: border-box;
+    font-size: 12px;
+  }
+
+  #gui details > button:hover {
+    background-color: #3a3f3f; 
+    transform: translateY(-2px); 
+    cursor: pointer;
+  }
+
+.gui-left {
+    left: 10px;
+    transform: translateX(-120%);
 }
 
-#gui.animate {
-    animation: slideDown 0.8s ease-out forwards;
+.gui-right {
+    right: 32px;
+    transform: translateX(120%);
+}
+
+.gui-left.animate {
+    animation: slideInLeft 0.8s ease-out forwards;
+    animation-delay: 2s;
+}
+
+.gui-right.animate {
+    animation: slideInRight 0.8s ease-out forwards;
     animation-delay: 2s;
 }
 
@@ -117,7 +178,7 @@ body {
 
 .side-card {
     position: absolute;
-    right: -300px; /* Start position outside viewport */
+    right: -300px;
     top: 50%;
     transform: translateY(-50%);
     background-color: rgba(37, 41, 41, 0.9);
@@ -130,7 +191,7 @@ body {
 }
 
 .side-card:hover {
-    right: 0; /* Slide in on hover */
+    right: 0;
 }
 
 .side-card .arrow {
