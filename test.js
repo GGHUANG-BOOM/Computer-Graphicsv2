@@ -4,7 +4,8 @@ import { MTLLoader } from './MTLLoader.js';
 import { OBJLoader } from './OBJLoader.js';
 import { GLTFLoader } from './GLTFLoader.js';
 //import { mannequincontrols } from './mannequincontrols.js';
-import { Water } from '/objects/Water2.js';
+import { Water } from './objects/Water2.js';
+import { Sky } from './objects/Sky.js';
 
 // Page Navigation
 const startButton = document.getElementById('start-button');
@@ -34,43 +35,52 @@ function init() {
   
   const canvas = document.getElementById('three-canvas');
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x333333);
+  scene.background = new THREE.Color(0xbfdfff);
+  
 
   const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(8, 10, 8);  // Positioned diagonally
-camera.lookAt(new THREE.Vector3(5, 0.5, 0));
+camera.position.set(-3, 2, 1); // in front (on -X), a bit above, same Z
+camera.lookAt(new THREE.Vector3(0, 1, 1));
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
-
   const controls = new OrbitControls(camera, renderer.domElement);
   
- 
+const sky = new Sky();
+sky.scale.setScalar(10000);
+scene.add(sky);
 
-  
-  // Enable shadows
+const skyUniforms = sky.material.uniforms;
+skyUniforms['turbidity'].value = 10;          // More haze, warm sky
+skyUniforms['rayleigh'].value = 0.8;           // Less blue, brighter sky
+skyUniforms['mieCoefficient'].value = 0.02;    // More soft sunlight glow
+skyUniforms['mieDirectionalG'].value = 0.85;   // Strong forward scattering
+
+// Position the sun lower on the horizon for warm light
+const sun = new THREE.Vector3();
+const theta = Math.PI * 0.15;   // Lower elevation (near horizon)
+const phi = 2 * Math.PI * 0.25; // Facing east-ish for morning light
+sun.x = Math.cos(phi) * Math.cos(theta);
+sun.y = Math.sin(theta);
+sun.z = Math.sin(phi) * Math.cos(theta);
+
+sky.material.uniforms['sunPosition'].value.copy(sun);
+
+const pmremGenerator = new THREE.PMREMGenerator(renderer);
+scene.background = pmremGenerator.fromScene(sky).texture;
+
+// Enable shadows
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;  // Brighter exposure for sunny feel
 
-// Hemisphere light (sky + ground)
-const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
-hemiLight.position.set(0, 20, 0);
-scene.add(hemiLight);
 
-// Directional light (sunlight)
-const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
-dirLight.position.set(10, 20, 10);
-dirLight.castShadow = true;
-dirLight.shadow.mapSize.width = 2048;
-dirLight.shadow.mapSize.height = 2048;
-dirLight.shadow.camera.left = -15;
-dirLight.shadow.camera.right = 15;
-dirLight.shadow.camera.top = 15;
-dirLight.shadow.camera.bottom = -15;
-dirLight.shadow.camera.near = 1;
-dirLight.shadow.camera.far = 40;
-scene.add(dirLight);
+
+
+
+
 
 // Load GLTF scene
 const loader = new GLTFLoader();
@@ -134,6 +144,61 @@ loader.load('beach Scene/uploads_files_5954063_beach+scene.glb', function (gltf)
   sandMesh.receiveShadow = true;
 
   scene.add(sandMesh);
+
+  const sandWaterCenter = new THREE.Vector3((5 + 20) / 2, 0, (center.z + 1) / 2);
+
+// ☀️ Directional sunlight — bright, slightly warm
+const dirLight = new THREE.DirectionalLight(0xfff6e6, 3); 
+dirLight.position.set(sandWaterCenter.x + 15, 50, sandWaterCenter.z + 15); 
+dirLight.castShadow = true;
+dirLight.shadow.mapSize.set(2048, 2048);
+dirLight.shadow.camera.left = -30;
+dirLight.shadow.camera.right = 30;
+dirLight.shadow.camera.top = 30;
+dirLight.shadow.camera.bottom = -30;
+dirLight.shadow.camera.near = 1;
+dirLight.shadow.camera.far = 100;
+scene.add(dirLight);
+
+// 🌤️ Hemisphere light — simulates sky/sand bounce
+const hemiLight = new THREE.HemisphereLight(0xffffee, 0x88bbff, 1.2); // Warm sky + ocean blue bounce
+hemiLight.position.set(sandWaterCenter.x, 60, sandWaterCenter.z);
+scene.add(hemiLight);
+
+// 💡 Ambient fill — softens shadows
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Light fill for softer shadows
+scene.add(ambientLight);
+
+ const waterGeometry = new THREE.PlaneGeometry(25, 25);
+  const waterNormals = new THREE.TextureLoader().load('Textures/Water_2_M_Normal.jpg', function (texture) {
+    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+    texture.repeat.set(4, 4);
+  });
+
+ const water = new Water(waterGeometry, {
+  textureWidth: 512,
+  textureHeight: 512,
+  waterNormals: waterNormals,
+  sunDirection: dirLight.position.clone().normalize(),
+  sunColor: 0xffffff,
+  waterColor: 0x103050,      
+  distortionScale: 2.0,
+  alpha: 0,                // Slightly less transparent
+  transparent: true,
+});
+
+
+
+  water.rotation.x = -Math.PI / 2;
+  water.position.set(20, 0.01, 1);
+  scene.add(water);
+
+ water.rotation.x = -Math.PI / 2;
+water.position.set(20, 0.01, 1);
+scene.add(water);
+
+const sunDirection = new THREE.Vector3().subVectors(sunPosition, water.position).normalize();
+water.material.uniforms['sunDirection'].value.copy(sunDirection);
 });
 
    
@@ -249,7 +314,7 @@ loader.load('beach Scene/uploads_files_5954063_beach+scene.glb', function (gltf)
           }
         }
       });
-  object.position.set(0,-0.02,1);
+  object.position.set(1,-0.02,1);
   object.rotation.y= -Math.PI/2;
       scene.add(object);
       mannequin = object; 
@@ -257,30 +322,7 @@ loader.load('beach Scene/uploads_files_5954063_beach+scene.glb', function (gltf)
   });
   
 
- const waterGeometry = new THREE.PlaneGeometry(100, 100);
-
-
-const waterNormals = new THREE.TextureLoader().load('Textures/Water_2_M_Normal.jpg', function (texture) {
-  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-});
-
-const water = new Water(waterGeometry, {
-  textureWidth: 512,
-  textureHeight: 512,
-  waterNormals: waterNormals,
-  sunDirection: dirLight.position.clone().normalize(),  // set a direction
-  sunColor: 0xffffff,
-  waterColor: 0x3db8cc,  
-  distortionScale: 2.0,  
-  fog: scene.fog !== undefined,
-  alpha: 0.9,             
-  transparent: true       
-});
-const waterHelper = new THREE.AxesHelper(5);
-water.add(waterHelper);
-water.rotation.x = -Math.PI / 2;
-water.position.set(5, 0.01, -6); // Adjust to align with beach
-scene.add(water);
+ 
 
 
 
