@@ -37,8 +37,8 @@ function init() {
   scene.background = new THREE.Color(0x333333);
 
   const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.set(0, 5, 10);
-camera.lookAt(new THREE.Vector3(0, 0, 0));
+camera.position.set(8, 10, 8);  // Positioned diagonally
+camera.lookAt(new THREE.Vector3(5, 0.5, 0));
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -257,7 +257,8 @@ loader.load('beach Scene/uploads_files_5954063_beach+scene.glb', function (gltf)
   });
   
 
- const waterGeometry = new THREE.PlaneGeometry(50, 50);
+ const waterGeometry = new THREE.PlaneGeometry(100, 100);
+
 
 const waterNormals = new THREE.TextureLoader().load('Textures/Water_2_M_Normal.jpg', function (texture) {
   texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
@@ -267,7 +268,7 @@ const water = new Water(waterGeometry, {
   textureWidth: 512,
   textureHeight: 512,
   waterNormals: waterNormals,
-  sunDirection: new THREE.Vector3(1, 1, 1).normalize(),  // set a direction
+  sunDirection: dirLight.position.clone().normalize(),  // set a direction
   sunColor: 0xffffff,
   waterColor: 0x3db8cc,  
   distortionScale: 2.0,  
@@ -275,9 +276,10 @@ const water = new Water(waterGeometry, {
   alpha: 0.9,             
   transparent: true       
 });
-
+const waterHelper = new THREE.AxesHelper(5);
+water.add(waterHelper);
 water.rotation.x = -Math.PI / 2;
-water.position.set(5, 0.01, 8); // Adjust to align with beach
+water.position.set(5, 0.01, -6); // Adjust to align with beach
 scene.add(water);
 
 
