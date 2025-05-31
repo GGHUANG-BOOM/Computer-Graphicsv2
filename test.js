@@ -63,7 +63,8 @@ function init() {
   scene.background = new THREE.Color(0x333333);
 
   const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.set(0, 2, 5);
+  camera.position.set(-5, 2, 0);
+  
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -694,6 +695,40 @@ window.wearShoes3 = function(modelPath) {
   });
 };
 
+window.setCameraView = function(view) {
+  if (view === 'back') {
+    camera.position.set(5, 2, 0);    
+    camera.lookAt(0, 1.5, 0);
+  } else if (view === 'front') {
+    camera.position.set(-5, 2, 0);   
+    camera.lookAt(0, 1.5, 0);
+  } else if (view === 'side') {
+    camera.position.set(0, 2, 3.5);     
+    camera.lookAt(0, 2, 0);
+  } else if (view === 'top') {
+    camera.position.set(0, 5, 0.1);     
+    camera.lookAt(0, 1.5, 0);
+  }
+  controls.update();
+};
+
+
+let autoRotate = false;
+let cameraRotationAngle = 0;
+const cameraRadius = 5; 
+const cameraHeight = 2; 
+window.toggleAutoRotate = function() {
+  autoRotate = !autoRotate;
+  const btn = document.querySelector('[onclick="toggleAutoRotate()"]');
+  btn.textContent = autoRotate ? 'Stop Rotation' : 'Auto Rotate';
+  
+  if (!autoRotate) {
+  
+    camera.position.set(-3, 2, -2);
+    controls.update();
+  }
+};
+
 
 
 
@@ -711,4 +746,24 @@ window.wearShoes3 = function(modelPath) {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
+
+ function animate() {
+  requestAnimationFrame(animate);
+  
+  if (autoRotate) {
+    cameraRotationAngle += 0.01;
+    camera.position.x = Math.cos(cameraRotationAngle) * cameraRadius;
+    camera.position.z = Math.sin(cameraRotationAngle) * cameraRadius;
+    camera.position.y = cameraHeight;
+    camera.lookAt(0, 1, 0);
+  }
+
+  controls.update();
+  renderer.render(scene, camera);
 }
+
+    controls.update();
+  renderer.render(scene, camera);
+}
+
+

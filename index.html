@@ -69,12 +69,22 @@
         <button class="btnGUI">Studio</button>
         <button class="btnGUI">Room</button>
         <button class="btnGUI">Street</button>
+          <button class="btnGUI" onclick="toggleAutoRotate()">Auto Rotate</button>
+          
       </details>
       <details>
         <summary> Outfit</summary>
         <button class="btnGUI">Save Outfit</button>
         <button class="btnGUI">Load Outfit</button>
+        <button class="btnGUI" onclick="randomOutfit()">Random Outfit</button>
       </details>
+      <details>
+    <summary> Camera Views</summary>
+    <button class="btnGUI" onclick="setCameraView('front')">Front View</button>
+    <button class="btnGUI" onclick="setCameraView('side')">Side View</button>
+    <button class="btnGUI" onclick="setCameraView('back')">Back View</button>
+    <button class="btnGUI" onclick="setCameraView('top')">Top View</button>
+  
     </div>
 
     <canvas id="three-canvas"></canvas>
