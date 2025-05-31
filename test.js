@@ -257,25 +257,29 @@ loader.load('beach Scene/uploads_files_5954063_beach+scene.glb', function (gltf)
   });
   
 
-  const waterGeometry = new THREE.PlaneGeometry(50, 50);
-  const waterNormals = new THREE.TextureLoader().load('Textures/Water_2_M_Normal.jpg', function (texture) {
-    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-  });
-  
-  const water = new Water(waterGeometry, {
-    textureWidth: 512,
-    textureHeight: 512,
-    waterNormals: waterNormals,
-    sunDirection: new THREE.Vector3(),
-    sunColor: 0xffffff,
-    waterColor: 0x001e0f,
-    distortionScale: 3.7,
-    fog: scene.fog !== undefined
-  });
-  
-  water.rotation.x = -Math.PI / 2;
-  water.position.set(5, 0.01, 8); // Adjust to align with beach
-  scene.add(water);
+ const waterGeometry = new THREE.PlaneGeometry(50, 50);
+
+const waterNormals = new THREE.TextureLoader().load('Textures/Water_2_M_Normal.jpg', function (texture) {
+  texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+});
+
+const water = new Water(waterGeometry, {
+  textureWidth: 512,
+  textureHeight: 512,
+  waterNormals: waterNormals,
+  sunDirection: new THREE.Vector3(1, 1, 1).normalize(),  // set a direction
+  sunColor: 0xffffff,
+  waterColor: 0x3db8cc,  
+  distortionScale: 2.0,  
+  fog: scene.fog !== undefined,
+  alpha: 0.9,             
+  transparent: true       
+});
+
+water.rotation.x = -Math.PI / 2;
+water.position.set(5, 0.01, 8); // Adjust to align with beach
+scene.add(water);
+
 
 
 
