@@ -8,6 +8,8 @@ import { GLTFLoader } from './GLTFLoader.js';
 const startButton = document.getElementById('start-button');
 const landingPage = document.getElementById('landing-page');
 const editorPage = document.getElementById('editor-page');
+window.moveCameraToPosition = null;
+
 
 startButton.addEventListener('click', () => {
     landingPage.style.transform = 'translateY(-100%)';
@@ -33,9 +35,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const rightDetails = document.querySelectorAll('.gui-right details');
     
     leftDetails.forEach((detail) => {
+        detail.addEventListener('toggle', (e) => {
+            if (!detail.open) {
+                moveCameraToPosition('default');
+                return;
+            }
+
+            const section = detail.querySelector('summary').textContent.trim().toLowerCase();
+            switch(section) {
+                case 'shirts':
+                    moveCameraToPosition('shirts');
+                    break;
+                case 'pants':
+                    moveCameraToPosition('pants');
+                    break;
+                case 'hats':
+                    moveCameraToPosition('hats');
+                    break;
+                case 'shoes':
+                    moveCameraToPosition('shoes');
+                    break;
+            }
+        });
+
+
         detail.addEventListener('click', (e) => {
             if (e.target.nodeName !== 'SUMMARY') return;
-
             leftDetails.forEach((otherDetail) => {
                 if (otherDetail !== detail) {
                     otherDetail.removeAttribute('open');
@@ -63,7 +88,6 @@ function init() {
   scene.background = new THREE.Color(0x333333);
 
   const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-  camera.position.set(-5, 2, 0);
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
@@ -71,9 +95,63 @@ function init() {
 
   const controls = new OrbitControls(camera, renderer.domElement);
 
+  const cameraPositions = {
+    default: {
+      position: new THREE.Vector3(-5, 2, 0),
+      target: new THREE.Vector3(0, 1, 0)
+    },
+    shirts: {
+      position: new THREE.Vector3(-2, 1.2, 0),
+      target: new THREE.Vector3(0, 1.2, 0)
+    },
+    pants: {
+      position: new THREE.Vector3(-2, 0.5, 0),
+      target: new THREE.Vector3(0, 0.5, 0)
+    },
+    hats: {
+      position: new THREE.Vector3(-1.5, 1.5, 0),
+      target: new THREE.Vector3(0, 1.5, 0)
+    },
+    shoes: {
+      position: new THREE.Vector3(-1.5, 0.2, 0),
+      target: new THREE.Vector3(0, 0, 0)
+    }
+  };
+
+  camera.position.copy(cameraPositions.default.position);
+  controls.target.copy(cameraPositions.default.target);
+  controls.update();
+
+  window.moveCameraToPosition = function(positionKey, duration = 1000) {
+    const targetPosition = cameraPositions[positionKey].position;
+    const targetLookAt = cameraPositions[positionKey].target;
+    
+    const startPosition = camera.position.clone();
+    const startTarget = controls.target.clone();
+    const startTime = Date.now();
+
+    function updateCamera() {
+      const currentTime = Date.now();
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+
+      const easeProgress = progress * (2 - progress);
+
+      camera.position.lerpVectors(startPosition, targetPosition, easeProgress);
+      controls.target.lerpVectors(startTarget, targetLookAt, easeProgress);
+      controls.update();
+
+      if (progress < 1) {
+        requestAnimationFrame(updateCamera);
+      }
+    }
+
+    updateCamera();
+  }
+
   const textureLoader = new THREE.TextureLoader();
-const sandTexture = textureLoader.load('beach Scene/SandG_001.jpg');
-const sandBump = textureLoader.load('beach Scene/SandG_001_b.jpg');
+  const sandTexture = textureLoader.load('beach Scene/SandG_001.jpg');
+  const sandBump = textureLoader.load('beach Scene/SandG_001_b.jpg');
 
   // Lighting
   const light = new THREE.HemisphereLight(0xffffff, 0x444444);
