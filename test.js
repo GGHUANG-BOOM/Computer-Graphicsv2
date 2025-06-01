@@ -33,7 +33,7 @@ function init() {
   
   const canvas = document.getElementById('three-canvas');
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xbfdfff);
+  scene.background = new THREE.Color(0x333333);
   
 
  const camera = new THREE.PerspectiveCamera(
