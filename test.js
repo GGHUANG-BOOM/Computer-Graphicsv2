@@ -772,6 +772,18 @@ window.wearShoes3 = function(modelPath) {
   });
 };
 
+function showNotification(message) {
+  const notification = document.getElementById('notification');
+  const notificationText = document.getElementById('notification-text');
+  
+  notificationText.textContent = message;
+  notification.classList.add('active');
+  
+  setTimeout(() => {
+    notification.classList.remove('active');
+  }, 2000);
+}
+
 window.saveOutfit = function () {
   if (!mannequin) return;
 
@@ -788,6 +800,7 @@ window.saveOutfit = function () {
 
   localStorage.setItem('savedOutfit', JSON.stringify(outfitData));
   console.log('Outfit saved:', outfitData);
+  showNotification('Outfit saved!');
 };
 
 window.loadOutfit = function () {
@@ -796,6 +809,7 @@ window.loadOutfit = function () {
   const savedData = localStorage.getItem('savedOutfit');
   if (!savedData) {
     console.warn('No outfit saved.');
+    showNotification('No saved outfit found!');
     return;
   }
 
@@ -811,6 +825,7 @@ window.loadOutfit = function () {
   });
 
   console.log('Outfit loaded:', outfitData);
+  showNotification('Outfit loaded!');
 };
 
 
