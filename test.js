@@ -558,7 +558,7 @@ if (currentHatObject) {
     hatObject.userData.type = 'hat';
 
     hatObject.scale.set(0.8, 0.9, 0.8); 
-    hatObject.position.set(-0.04, 1.5675, -0.04);
+    hatObject.position.set(0.033, 1.58, -0.04);
     hatObject.rotation.y = 4.75;
     scene.add(hatObject);
     currentHatObject = hatObject;
