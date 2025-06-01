@@ -197,7 +197,7 @@ mtlLoader.load('beach Scene/uploads_files_3006167_sand+rock2.mtl', function (mat
 
   objLoader.load('beach Scene/uploads_files_3006167_sand+rock2.obj', function (object) {
     object.scale.set(0.5, 0.5, 0.5);
-    object.position.set(3, -1, -7);
+    object.position.set(1, -0.5, -8);
     object.rotation.y = Math.PI / 6;
 
 
