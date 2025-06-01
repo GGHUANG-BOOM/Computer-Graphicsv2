@@ -524,8 +524,9 @@ const sandBump = textureLoader.load('beach Scene/SandG_001_b.jpg');
     hatObject.userData.type = 'hat';
   
     hatObject.scale.set(0.915, 0.9, 1); 
-  hatObject.position.set(-0.04, 1.565, 0.025); 
-    
+  hatObject.position.set(-0.02, 1.565, -0.04); 
+        hatObject.rotation.y = 4.75;
+
     scene.add(hatObject);
     currentHatObject = hatObject;
     currentHatPath = modelPath;
