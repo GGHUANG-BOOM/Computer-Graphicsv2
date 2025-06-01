@@ -57,24 +57,13 @@ body {
     z-index: 0;
 }
 
-@keyframes slideInLeft {
+@keyframes slideDown {
     from {
-        transform: translateX(-100%);
+        transform: translateY(-100px);
         opacity: 0;
     }
     to {
-        transform: translateX(0);
-        opacity: 1;
-    }
-}
-
-@keyframes slideInRight {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
+        transform: translateY(0);
         opacity: 1;
     }
 }
@@ -82,9 +71,11 @@ body {
 #gui {
     position: absolute;
     top: 10px;
+    left: 10px;
     z-index: 10;
     padding: 10px;
     border-radius: 8px;
+<<<<<<< HEAD
     width: 120px;
     display: flex;
     flex-direction: column; 
@@ -128,20 +119,14 @@ body {
 .gui-left {
     left: 5px;
     transform: translateX(-120%);
+=======
+    opacity: 0;
+    transform: translateY(-100px);
+>>>>>>> parent of c23a21b (Merge pull request #3 from GGHUANG-BOOM/main)
 }
 
-.gui-right {
-    right: 32px;
-    transform: translateX(120%);
-}
-
-.gui-left.animate {
-    animation: slideInLeft 0.8s ease-out forwards;
-    animation-delay: 2s;
-}
-
-.gui-right.animate {
-    animation: slideInRight 0.8s ease-out forwards;
+#gui.animate {
+    animation: slideDown 0.8s ease-out forwards;
     animation-delay: 2s;
 }
 
@@ -211,7 +196,7 @@ body {
 
 .side-card {
     position: absolute;
-    right: -300px;
+    right: -300px; /* Start position outside viewport */
     top: 50%;
     transform: translateY(-50%);
     background-color: rgba(37, 41, 41, 0.9);
@@ -224,7 +209,7 @@ body {
 }
 
 .side-card:hover {
-    right: 0;
+    right: 0; /* Slide in on hover */
 }
 
 .side-card .arrow {
