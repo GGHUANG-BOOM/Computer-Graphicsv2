@@ -772,6 +772,46 @@ window.wearShoes3 = function(modelPath) {
   });
 };
 
+window.saveOutfit = function () {
+  if (!mannequin) return;
+
+  const outfitData = [];
+
+  mannequin.traverse((child) => {
+    if (child.isMesh && child.material) {
+      outfitData.push({
+        name: child.name,
+        visible: child.visible
+      });
+    }
+  });
+
+  localStorage.setItem('savedOutfit', JSON.stringify(outfitData));
+  console.log('Outfit saved:', outfitData);
+};
+
+window.loadOutfit = function () {
+  if (!mannequin) return;
+
+  const savedData = localStorage.getItem('savedOutfit');
+  if (!savedData) {
+    console.warn('No outfit saved.');
+    return;
+  }
+
+  const outfitData = JSON.parse(savedData);
+
+  mannequin.traverse((child) => {
+    if (child.isMesh && child.material) {
+      const savedChild = outfitData.find(item => item.name === child.name);
+      if (savedChild) {
+        child.visible = savedChild.visible;
+      }
+    }
+  });
+
+  console.log('Outfit loaded:', outfitData);
+};
 
 
 
