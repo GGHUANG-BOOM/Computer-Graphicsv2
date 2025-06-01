@@ -842,7 +842,8 @@ window.clearOutfit = function () {
     }
   });
 
-  console.log("Outfit cleared .");
+  console.log("Outfit cleared.");
+  showNotification('Outfit cleared!');
 };
 
 
