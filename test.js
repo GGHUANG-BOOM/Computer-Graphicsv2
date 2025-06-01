@@ -48,6 +48,11 @@ function init() {
 camera.position.set(11.8, 1.34, 1.52);  
 camera.lookAt(new THREE.Vector3(0, 0, 0));
 
+<<<<<<< HEAD
+=======
+  const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+  camera.position.set(0, 2, 5);
+>>>>>>> parent of 4bcb0fd (view)
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
