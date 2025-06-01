@@ -2,12 +2,8 @@ import * as THREE from './three.module.js';
 import { OrbitControls } from './OrbitControls.js';
 import { MTLLoader } from './MTLLoader.js';
 import { OBJLoader } from './OBJLoader.js';
-<<<<<<< HEAD
 import { GLTFLoader } from './GLTFLoader.js';
 //import { mannequincontrols } from './mannequincontrols.js';
-=======
-import GUI from './lil-gui.module.min.js';
->>>>>>> parent of c23a21b (Merge pull request #3 from GGHUANG-BOOM/main)
 
 // Page Navigation
 const startButton = document.getElementById('start-button');
@@ -57,7 +53,6 @@ camera.lookAt(new THREE.Vector3(0, 0, 0));
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
   const controls = new OrbitControls(camera, renderer.domElement);
-<<<<<<< HEAD
   
 
 
@@ -69,84 +64,6 @@ renderer.toneMappingExposure = 1.2;  // Brighter exposure for sunny feel
 
 
 let mannequin;
-=======
-
-  // Lighting
-  const light = new THREE.HemisphereLight(0xffffff, 0x444444);
-  light.position.set(0, 2, 0);
-  scene.add(light);
-
-  const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-  dirLight.position.set(1, 3, 2);
-  scene.add(dirLight);
-
-  // Ground
-  const ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(10, 10),
-    new THREE.MeshStandardMaterial({ color: 0x333333 })
-  );
-  ground.rotation.x = -Math.PI / 2;
-  scene.add(ground);
-
-  const gui = new GUI();
-  
-  // Folders for clothing categories
-  const torsoFolder = gui.addFolder('Torso');
-  const pantsFolder = gui.addFolder('Pants');
-  
-  // Clothing options
-  const clothingOptions = {
-    torso: {
-      currentWear: 'none',
-      items: {
-        none: null,
-        'Tank Top': 'converted_tank_top',
-        'Tank Top Rolling': 'converted_tank_top_rolling_',
-        'Hoodie': 'converted_hoodie_mill',
-        'T-Shirt': 'converted_t_shirts_champ',
-        'Long Sleeve': 'converted_long_sleeve_hd'
-      }
-    },
-    pants: {
-      currentWear: 'none',
-      items: {
-        none: null,
-        'Jeans': 'converted_jeans',
-        'Adidas Pants': 'converted_pants_adidas',
-        'White Lace Pants': 'converted_laces_pants_white',
-        'Red Lace Pants': 'converted_laces_pants_red',
-        'Long Shorts': 'converted_shorts_long',
-        'Champ Shorts': 'converted_shorts_champ'
-      }
-    }
-  };
-
-  torsoFolder.add(clothingOptions.torso, 'currentWear', clothingOptions.torso.items)
-    .name('Style')
-    .onChange(value => {
-      if (value === null) {
-        removeClothing('torso');
-      } else {
-        wearShirt(value);
-      }
-  });
-
-  pantsFolder.add(clothingOptions.pants, 'currentWear', clothingOptions.pants.items)
-    .name('Style')
-    .onChange(value => {
-      if (value === null) {
-        removeClothing('pants');
-      } else {
-        wearPants(value);
-      }
-  });
-
-  gui.domElement.style.position = 'absolute';
-  gui.domElement.style.top = '20px';
-  gui.domElement.style.right = '10px';
-
-  let mannequin;
->>>>>>> parent of c23a21b (Merge pull request #3 from GGHUANG-BOOM/main)
 
   function isClothing(name) {
     if (!name) return false;
@@ -259,12 +176,8 @@ let mannequin;
           }
         }
       });
-<<<<<<< HEAD
   object.position.set(9,-0.02,1);
   object.rotation.y= Math.PI/2;
-=======
-  object.position.set(0,-0.02,0);
->>>>>>> parent of c23a21b (Merge pull request #3 from GGHUANG-BOOM/main)
       scene.add(object);
       mannequin = object; 
     });
@@ -390,7 +303,6 @@ let mannequin;
       }
     });
   };
-<<<<<<< HEAD
   window.pantsAreOn = false;
 
   window.wearPants4 = function () { 
@@ -705,8 +617,6 @@ window.loadOutfit = function () {
 
 
 
-=======
->>>>>>> parent of c23a21b (Merge pull request #3 from GGHUANG-BOOM/main)
 
 
 
