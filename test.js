@@ -187,7 +187,23 @@ loader.load('beach Scene/uploads_files_5954063_beach+scene.glb', function (gltf)
 
 
 
+const mtlLoader = new MTLLoader();
 
+mtlLoader.load('beach Scene/uploads_files_3006167_sand+rock2.mtl', function (materials) {
+  materials.preload();
+
+  const objLoader = new OBJLoader();
+  objLoader.setMaterials(materials);
+
+  objLoader.load('beach Scene/uploads_files_3006167_sand+rock2.obj', function (object) {
+    object.scale.set(0.5, 0.5, 0.5);
+    object.position.set(3, -1, -7);
+    object.rotation.y = Math.PI / 6;
+
+
+    scene.add(object);
+  });
+});
 
 
 

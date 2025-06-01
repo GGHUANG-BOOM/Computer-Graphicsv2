@@ -10,7 +10,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Bump texture\\solkaya_DefaultMaterial_Normal.png
-map_Kd texture\\solkaya_DefaultMaterial_BaseColor.png
-map_Ns texture\\solkaya_DefaultMaterial_Roughness.png
-refl texture\\solkaya_DefaultMaterial_Metallic.png
+map_Bump solkaya_DefaultMaterial_Normal.png
+map_Kd solkaya_DefaultMaterial_BaseColor.png
+map_Ns solkaya_DefaultMaterial_Roughness.png
+refl solkaya_DefaultMaterial_Metallic.png
