@@ -54,7 +54,12 @@ camera.lookAt(new THREE.Vector3(0, 0, 0));
   document.body.appendChild(renderer.domElement);
   const controls = new OrbitControls(camera, renderer.domElement);
   
-
+const ground = new THREE.Mesh(
+    new THREE.PlaneGeometry(10, 10),
+    new THREE.MeshStandardMaterial({ color: 0x333333 })
+  );
+  ground.rotation.x = -Math.PI / 2;
+  scene.add(ground);
 
 // Enable shadows
 renderer.shadowMap.enabled = true;
