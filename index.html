@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fashion Model Designer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Landing Page -->
+  <div id="landing-page" class="page">
+    <h1 id="logo">Fashion Model Designer</h1>
+    <button id="start-button" class="btnFrame">Start</button>
+    <div class="side-card">
+        <div class="arrow">←</div>
+        <div class="side-content">
+            <h3>Credits</h3>
+            <p>Gordon Huang:</p>
+            <p>Backend, Models(Mannequin, Shirt, Pants)</p>
+            <br>
+            <p>Tong Ian Hoi Tsun:</p> 
+            <p>Menu Design, User Interface, Animations</p>
+            <br>
+            <p>Kynan Abdul:</p> 
+            <p>Models(Hat, Shoes), Camera, Extra Features</p>
+            <br>
+            <p>© 2025 All Rights Reserved</p>
+        </div>
+    </div>
+  </div>
+
+  <!-- Editor Page -->
+  <div id="editor-page" class="page hidden">
+    <div id="gui" class="gui-left">
+      <details>
+        <summary> Presets</summary>
+        <button class="btnGUI">Preset 1</button>
+        <button class="btnGUI">Preset 2</button>
+      </details>
+      <details>
+        <summary> Shirts</summary>
+        <button class="btnGUI with-preview" onclick="wearShirt()">
+        <img src="thumbs/shirt1.png" alt="T-Shirt" class="preview-img">
+        <span>T-Shirt</span>
+        </button>
+        <button class="btnGUI with-preview" onclick="wearShirt2()">
+        <img src="thumbs/shirt2.png" alt="Long Sleeve" class="preview-img">
+        <span>Long Sleeves</span>
+        </button>
+        <button class="btnGUI with-preview" onclick="wearShirt3()">
+        <img src="thumbs/shirt3.png" alt="Tank Top" class="preview-img">
+        <span>Tank Top</span>
+        </button>
+        <button class="btnGUI with-preview" onclick="wearShirt4()">
+        <img src="thumbs/shirt4.png" alt="Hoodie" class="preview-img">
+        <span>Hoodie</span>
+        </button>
+      </details>
+    
+      <details>
+        <summary> Pants</summary>
+        <button class="btnGUI with-preview" onclick="wearPants()">
+        <img src="thumbs/pant1.png" alt="Jeans" class="preview-img">
+        <span>Jeans</span>
+        </button>
+        <button class="btnGUI with-preview" onclick="wearPants2()">
+        <img src="thumbs/pant2.png" alt="Sporty Pants" class="preview-img">
+        <span>Pants</span>
+        </button>
+        <button class="btnGUI with-preview" onclick="wearPants3()">
+        <img src="thumbs/pant3.png" alt="Sporty Shorts" class="preview-img">
+        <span>Shorts</span>
+        </button>
+        <button class="btnGUI with-preview" onclick="wearPants4()">
+        <img src="thumbs/pant4.png" alt="Camo Shorts" class="preview-img">
+        <span>Shorts 2</span>
+        </button>
+      </details>
+    
+      <details>
+        <summary> Hats</summary>
+        <button class="btnGUI with-preview" onclick="wearHat('models/Hat1.glb')">
+        <img src="thumbs/hat1.png" alt="Black Cap" class="preview-img">
+        <span>Baseball Hat</span>
+        </button>
+        <button class="btnGUI with-preview" onclick="wearHat2('models/Hat2.glb')">
+        <img src="thumbs/hat2.png" alt="White Cap" class="preview-img">
+        <span>Trucker Hat</span>
+        </button>
+        <button class="btnGUI with-preview" onclick="wearHat3('models/Hat3.glb')">
+        <img src="thumbs/hat3.png" alt="Bucket" class="preview-img">
+        <span>Bucket Hat</span>
+        </button>
+      </details>
+    
+      <details>
+        <summary> Shoes</summary>
+        <button class="btnGUI with-preview" onclick="wearShoes('models/Shoe1.glb')">
+        <img src="thumbs/shoe1.png" alt="Clogs" class="preview-img">  
+        <span>Clogs</span>
+        </button>
+        <button class="btnGUI with-preview" onclick="wearShoes2('models/Shoe2.glb')">
+        <img src="thumbs/shoe2.png" alt="Boots" class="preview-img">
+        <span>Boots</span>
+        </button>
+        <button class="btnGUI with-preview" onclick="wearShoes3('models/Shoe3.glb')">
+        <img src="thumbs/shoe3.png" alt="Sneakers" class="preview-img">
+        <span>Sneakers</span>
+        </button>
+      </details>
+    </div>
+    
+    <div id="gui" class="gui-right">
+      <details>
+        <summary> Background</summary>
+        <button class="btnGUI">Beach</button>
+        <button class="btnGUI">Room</button>
+        <button class="btnGUI">Street</button>
+      </details>
+      <details>
+        <summary> Outfit</summary>
+        <button class="btnGUI">Save Outfit</button>
+        <button class="btnGUI">Load Outfit</button>
+      </details>
+    </div>
+
+    <canvas id="three-canvas"></canvas>
+  </div>
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "./three.module.js"
+      }
+    }
+  </script>
+  <script type="module" src="test.js"></script>
+</body>
+</html>
