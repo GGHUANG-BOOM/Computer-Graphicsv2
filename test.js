@@ -3,13 +3,12 @@ import { OrbitControls } from './OrbitControls.js';
 import { MTLLoader } from './MTLLoader.js';
 import { OBJLoader } from './OBJLoader.js';
 import { GLTFLoader } from './GLTFLoader.js';
+//import { mannequincontrols } from './mannequincontrols.js';
 
 // Page Navigation
 const startButton = document.getElementById('start-button');
 const landingPage = document.getElementById('landing-page');
 const editorPage = document.getElementById('editor-page');
-window.moveCameraToPosition = null;
-
 
 startButton.addEventListener('click', () => {
     landingPage.style.transform = 'translateY(-100%)';
@@ -24,153 +23,47 @@ startButton.addEventListener('click', () => {
 
     setTimeout(() => {
         landingPage.classList.add('hidden');
-        document.querySelector('.gui-left').classList.add('animate');
-        document.querySelector('.gui-right').classList.add('animate');
+        const gui = document.getElementById('gui');
+        gui.classList.add('animate');
         init();
     }, 800);
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-    const leftDetails = document.querySelectorAll('.gui-left details');
-    const rightDetails = document.querySelectorAll('.gui-right details');
-    
-    leftDetails.forEach((detail) => {
-        detail.addEventListener('toggle', (e) => {
-            if (!detail.open) {
-                moveCameraToPosition('default');
-                return;
-            }
-
-            const section = detail.querySelector('summary').textContent.trim().toLowerCase();
-            switch(section) {
-                case 'shirts':
-                    moveCameraToPosition('shirts');
-                    break;
-                case 'pants':
-                    moveCameraToPosition('pants');
-                    break;
-                case 'hats':
-                    moveCameraToPosition('hats');
-                    break;
-                case 'shoes':
-                    moveCameraToPosition('shoes');
-                    break;
-            }
-        });
-
-
-        detail.addEventListener('click', (e) => {
-            if (e.target.nodeName !== 'SUMMARY') return;
-            leftDetails.forEach((otherDetail) => {
-                if (otherDetail !== detail) {
-                    otherDetail.removeAttribute('open');
-                }
-            });
-        });
-    });
-
-    rightDetails.forEach((detail) => {
-        detail.addEventListener('click', (e) => {
-            if (e.target.nodeName !== 'SUMMARY') return;
-
-            rightDetails.forEach((otherDetail) => {
-                if (otherDetail !== detail) {
-                    otherDetail.removeAttribute('open');
-                }
-            });
-        });
-    });
-});
-
 function init() {
+  
   const canvas = document.getElementById('three-canvas');
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x333333);
+  scene.background = new THREE.Color(0xbfdfff);
+  
 
-  const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+ const camera = new THREE.PerspectiveCamera(
+  45,
+  window.innerWidth / window.innerHeight,
+  0.1,
+  1000
+
+);
+
+
+camera.position.set(11.8, 1.34, 1.52);  
+camera.lookAt(new THREE.Vector3(0, 0, 0));
+
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
-
   const controls = new OrbitControls(camera, renderer.domElement);
-
-  const cameraPositions = {
-    default: {
-      position: new THREE.Vector3(-5, 2, 0),
-      target: new THREE.Vector3(0, 1, 0)
-    },
-    shirts: {
-      position: new THREE.Vector3(-2, 1.2, 0),
-      target: new THREE.Vector3(0, 1.2, 0)
-    },
-    pants: {
-      position: new THREE.Vector3(-2, 0.5, 0),
-      target: new THREE.Vector3(0, 0.5, 0)
-    },
-    hats: {
-      position: new THREE.Vector3(-1.5, 1.5, 0),
-      target: new THREE.Vector3(0, 1.5, 0)
-    },
-    shoes: {
-      position: new THREE.Vector3(-1.5, 0.2, 0),
-      target: new THREE.Vector3(0, 0, 0)
-    }
-  };
-
-  camera.position.copy(cameraPositions.default.position);
-  controls.target.copy(cameraPositions.default.target);
-  controls.update();
-
-  window.moveCameraToPosition = function(positionKey, duration = 1000) {
-    const targetPosition = cameraPositions[positionKey].position;
-    const targetLookAt = cameraPositions[positionKey].target;
-    
-    const startPosition = camera.position.clone();
-    const startTarget = controls.target.clone();
-    const startTime = Date.now();
-
-    function updateCamera() {
-      const currentTime = Date.now();
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-
-      const easeProgress = progress * (2 - progress);
-
-      camera.position.lerpVectors(startPosition, targetPosition, easeProgress);
-      controls.target.lerpVectors(startTarget, targetLookAt, easeProgress);
-      controls.update();
-
-      if (progress < 1) {
-        requestAnimationFrame(updateCamera);
-      }
-    }
-
-    updateCamera();
-  }
-
-  const textureLoader = new THREE.TextureLoader();
-  const sandTexture = textureLoader.load('beach Scene/SandG_001.jpg');
-  const sandBump = textureLoader.load('beach Scene/SandG_001_b.jpg');
-
-  // Lighting
-  const light = new THREE.HemisphereLight(0xffffff, 0x444444);
-  light.position.set(0, 2, 0);
-  scene.add(light);
-
-  const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-  dirLight.position.set(1, 3, 2);
-  scene.add(dirLight);
-
-  const ground = new THREE.Mesh(
-    new THREE.PlaneGeometry(10, 10),
-    new THREE.MeshStandardMaterial({ color: 0x333333 })
-  );
-  ground.rotation.x = -Math.PI / 2;
-  scene.add(ground);
-   
   
-  let mannequin;
+
+
+// Enable shadows
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;  // Brighter exposure for sunny feel
+
+
+let mannequin;
 
   function isClothing(name) {
     if (!name) return false;
@@ -277,13 +170,31 @@ function init() {
           }
         }
       });
-  object.position.set(0,-0.02,0);
-  object.rotation.y= -Math.PI/2;
+  object.position.set(9,-0.02,1);
+  object.rotation.y= Math.PI/2;
       scene.add(object);
       mannequin = object; 
     });
   });
   
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   window.wearShirt = function () {
     if (!mannequin) return;
@@ -771,6 +682,49 @@ window.wearShoes3 = function(modelPath) {
     currentShoesPath = modelPath;
   });
 };
+
+window.saveOutfit = function () {
+  if (!mannequin) return;
+
+  const outfitData = [];
+
+  mannequin.traverse((child) => {
+    if (child.isMesh && child.material) {
+      outfitData.push({
+        name: child.name,
+        visible: child.visible
+      });
+    }
+  });
+
+  localStorage.setItem('savedOutfit', JSON.stringify(outfitData));
+  console.log('Outfit saved:', outfitData);
+};
+
+window.loadOutfit = function () {
+  if (!mannequin) return;
+
+  const savedData = localStorage.getItem('savedOutfit');
+  if (!savedData) {
+    console.warn('No outfit saved.');
+    return;
+  }
+
+  const outfitData = JSON.parse(savedData);
+
+  mannequin.traverse((child) => {
+    if (child.isMesh && child.material) {
+      const savedChild = outfitData.find(item => item.name === child.name);
+      if (savedChild) {
+        child.visible = savedChild.visible;
+      }
+    }
+  });
+
+  console.log('Outfit loaded:', outfitData);
+};
+
+
 
 
 
