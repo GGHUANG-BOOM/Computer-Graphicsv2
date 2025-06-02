@@ -12,26 +12,78 @@ import { Sky } from './objects/Sky.js';
 const startButton = document.getElementById('start-button');
 const landingPage = document.getElementById('landing-page');
 const editorPage = document.getElementById('editor-page');
+window.moveCameraToPosition = null;
 
 
 startButton.addEventListener('click', () => {
     landingPage.style.transform = 'translateY(-100%)';
     landingPage.style.opacity = '0';
-   
+    
     editorPage.classList.remove('hidden');
-   
+    
     requestAnimationFrame(() => {
         editorPage.style.transform = 'translateY(0)';
         editorPage.style.opacity = '1';
     });
 
-
     setTimeout(() => {
         landingPage.classList.add('hidden');
-        const gui = document.getElementById('gui');
-        gui.classList.add('animate');
+        document.querySelector('.gui-left').classList.add('animate');
+        document.querySelector('.gui-right').classList.add('animate');
         init();
     }, 800);
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const leftDetails = document.querySelectorAll('.gui-left details');
+    const rightDetails = document.querySelectorAll('.gui-right details');
+    
+    leftDetails.forEach((detail) => {
+        detail.addEventListener('toggle', (e) => {
+            if (!detail.open) {
+                moveCameraToPosition('default');
+                return;
+            }
+
+            const section = detail.querySelector('summary').textContent.trim().toLowerCase();
+            switch(section) {
+                case 'shirts':
+                    moveCameraToPosition('shirts');
+                    break;
+                case 'pants':
+                    moveCameraToPosition('pants');
+                    break;
+                case 'hats':
+                    moveCameraToPosition('hats');
+                    break;
+                case 'shoes':
+                    moveCameraToPosition('shoes');
+                    break;
+            }
+        });
+
+
+        detail.addEventListener('click', (e) => {
+            if (e.target.nodeName !== 'SUMMARY') return;
+            leftDetails.forEach((otherDetail) => {
+                if (otherDetail !== detail) {
+                    otherDetail.removeAttribute('open');
+                }
+            });
+        });
+    });
+
+    rightDetails.forEach((detail) => {
+        detail.addEventListener('click', (e) => {
+            if (e.target.nodeName !== 'SUMMARY') return;
+
+            rightDetails.forEach((otherDetail) => {
+                if (otherDetail !== detail) {
+                    otherDetail.removeAttribute('open');
+                }
+            });
+        });
+    });
 });
 
 
