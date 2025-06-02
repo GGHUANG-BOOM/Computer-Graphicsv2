@@ -6,7 +6,7 @@ import { GLTFLoader } from './GLTFLoader.js';
 //import { mannequincontrols } from './mannequincontrols.js';
 import { Water } from './objects/Water2.js';
 import { Sky } from './objects/Sky.js';
-
+import {GUI}  from './lil-gui.module.min.js';
 
 // Page Navigation
 const startButton = document.getElementById('start-button');
@@ -184,16 +184,16 @@ scene.add(sky);
 
 
 const skyUniforms = sky.material.uniforms;
-skyUniforms['turbidity'].value = 15;          // More haze, warm sky
-skyUniforms['rayleigh'].value = 0.2;           // Less blue, brighter sky
-skyUniforms['mieCoefficient'].value = 0.02;    // More soft sunlight glow
-skyUniforms['mieDirectionalG'].value = 0.85;   // Strong forward scattering
+skyUniforms['turbidity'].value = 15;          
+skyUniforms['rayleigh'].value = 0.2;          
+skyUniforms['mieCoefficient'].value = 0.02;    
+skyUniforms['mieDirectionalG'].value = 0.85;   
 
 
-// Position the sun lower on the horizon for warm light
+
 const sun = new THREE.Vector3();
-const theta = Math.PI * 0.8;   // Lower elevation (near horizon)
-const phi =  Math.PI;// Facing east-ish for morning light
+const theta = Math.PI * 0.8;  
+const phi =  Math.PI;
 sun.x = Math.cos(phi) * Math.cos(theta);
 sun.y = Math.sin(theta);
 sun.z = Math.sin(phi) * Math.cos(theta);
@@ -206,11 +206,11 @@ const pmremGenerator = new THREE.PMREMGenerator(renderer);
 scene.background = pmremGenerator.fromScene(sky).texture;
 
 
-// Enable shadows
+
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.2;  // Brighter exposure for sunny feel
+renderer.toneMappingExposure = 1.2;  
 
 
 
@@ -544,11 +544,24 @@ scene.add(cloud3);
   mtlLoader.load('./A-pose HP.mtl', (materials) => {
     materials.preload();
 
+const guiSettings = {
+  modelColor: "#ffffff"
+};
+
+const gui = new GUI();
+gui.addColor(guiSettings, 'modelColor').name('Model Color').onChange((value) => {
+  for (const materialName in materials.materials) {
+    const mat = materials.materials[materialName];
+    mat.color.set(value);
+    mat.needsUpdate = true;
+  }
+});
 
     for (const materialName in materials.materials) {
       const mat = materials.materials[materialName];
 
-       mat.color.set(0xffffff);
+       mat.color.set(guiSettings.modelColor);
+        mat.map = null;
  
       if (mat.map) {
         mat.map.wrapS = THREE.RepeatWrapping;
@@ -584,6 +597,10 @@ scene.add(cloud3);
       object.applyMatrix4(sca);
 
 
+
+
+
+      
       object.traverse((child) => {
         if (child.isMesh) {
           child.castShadow = true;
