@@ -125,11 +125,11 @@ function init() {
       target: new THREE.Vector3(0, 0, 0)
     },
     shirts: {
-      position: new THREE.Vector3(11.8, 1.34, 1.52),
+      position: new THREE.Vector3(11, 1.34, 1.52),
       target: new THREE.Vector3(0, 1.5, 0)
     },
     pants: {
-      position: new THREE.Vector3(-2, 0.5, 0),
+      position: new THREE.Vector3(11, 1, 1.52),
       target: new THREE.Vector3(0, 0.5, 0)
     },
     hats: {
