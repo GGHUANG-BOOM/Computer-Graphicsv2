@@ -547,6 +547,8 @@ scene.add(cloud3);
 
     for (const materialName in materials.materials) {
       const mat = materials.materials[materialName];
+
+       mat.color.set(0xffffff);
  
       if (mat.map) {
         mat.map.wrapS = THREE.RepeatWrapping;
