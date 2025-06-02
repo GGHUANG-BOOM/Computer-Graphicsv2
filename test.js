@@ -87,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 let sky, water, sandMesh, ground;
+let cloudMaterial;
 let beachScene, rockModel;
 let cloud, cloud2, cloud3;
 let currentBackground = "beach";
@@ -108,7 +109,12 @@ function init() {
 
 
 );
-
+scene.background = new THREE.Color(0x333333);
+  const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 });
+  ground = new THREE.Mesh(new THREE.PlaneGeometry(11, 20), groundMaterial);
+  ground.rotation.x = -Math.PI / 2;
+  ground.position.set(7, 0.005, 0);
+  scene.add(ground);
 
 
 
@@ -178,325 +184,7 @@ function init() {
     updateCamera();
   }
  
-sky = new Sky();
-sky.scale.setScalar(10000);
-scene.add(sky);
 
-
-const skyUniforms = sky.material.uniforms;
-skyUniforms['turbidity'].value = 15;          
-skyUniforms['rayleigh'].value = 0.2;          
-skyUniforms['mieCoefficient'].value = 0.02;    
-skyUniforms['mieDirectionalG'].value = 0.85;   
-
-
-
-const sun = new THREE.Vector3();
-const theta = Math.PI * 0.8;  
-const phi =  Math.PI;
-sun.x = Math.cos(phi) * Math.cos(theta);
-sun.y = Math.sin(theta);
-sun.z = Math.sin(phi) * Math.cos(theta);
-
-
-sky.material.uniforms['sunPosition'].value.copy(sun);
-
-
-const pmremGenerator = new THREE.PMREMGenerator(renderer);
-scene.background = pmremGenerator.fromScene(sky).texture;
-
-
-
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.2;  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Load GLTF scene
-const loader = new GLTFLoader();
-loader.load('beach Scene/uploads_files_5954063_beach+scene.glb', function (gltf) {
-   beachScene = gltf.scene;
-
-
-  // Scale and center the scene
-  const bbox = new THREE.Box3().setFromObject(beachScene);
-  const size = new THREE.Vector3();
-  bbox.getSize(size);
-  const targetSize = 20;
-  const maxDimension = Math.max(size.x, size.y, size.z);
-  const scaleFactor = targetSize / maxDimension;
-  beachScene.scale.setScalar(scaleFactor);
-
-
-  bbox.setFromObject(beachScene);
-  const center = new THREE.Vector3();
-  bbox.getCenter(center);
-  beachScene.position.sub(center);
- 
-  beachScene.position.set(6,0,1);
-
-
-  // Enable shadows and hide Plane001
-  beachScene.traverse((child) => {
-    if (child.isMesh) {
-      child.castShadow = true;
-      child.receiveShadow = true;
-      if (child.name === 'Plane001') {
-        child.visible = false;
-      }
-    }
-  });
-
-
-  scene.add(beachScene);
-
-
-  // Load sand textures
-  const sandTexture = new THREE.TextureLoader().load('beach Scene/SandG_001.jpg');
-  const sandBump = new THREE.TextureLoader().load('beach Scene/SandG_001_b.jpg');
-
-
-  sandTexture.wrapS = sandTexture.wrapT = THREE.RepeatWrapping;
-  sandBump.wrapS = sandBump.wrapT = THREE.RepeatWrapping;
-  sandTexture.repeat.set(10, 10);
-  sandBump.repeat.set(10, 10);
-
-
-  // Create realistic sand material
-  const sandMaterial = new THREE.MeshPhysicalMaterial({
-    map: sandTexture,
-    bumpMap: sandBump,
-    bumpScale: 0.08,
-    roughness: 1.0,
-    reflectivity: 0.1,
-    clearcoat: 0.2,
-    clearcoatRoughness: 0.6,
-  });
-
-
-  // Create sand mesh
-   const sandGeometry = new THREE.PlaneGeometry(11, 20);
-   sandMesh = new THREE.Mesh(sandGeometry, sandMaterial);
-  sandMesh.rotation.x = -Math.PI / 2;
-  sandMesh.position.set(7, 0.005, center.z);
-  sandMesh.receiveShadow = true;
-
-
-  scene.add(sandMesh);
-
-
-
-const mtlLoader = new MTLLoader();
-
-mtlLoader.load('beach Scene/uploads_files_3006167_sand+rock2.mtl', function (materials) {
-  materials.preload();
-
-  const objLoader = new OBJLoader();
-  objLoader.setMaterials(materials);
-
-  objLoader.load('beach Scene/uploads_files_3006167_sand+rock2.obj', function (object) {
-    rockModel = object;
-    rockModel.scale.set(0.5, 0.5, 0.5);
-    rockModel.position.set(1, -1, -8);
-    rockModel.rotation.y = Math.PI / 6;
-
-
-    scene.add(rockModel);
-  });
-});
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  const sandWaterCenter = new THREE.Vector3((5 + 20) / 2, 0, (center.z + 1) / 2);
-
-
-
-
-const dirLight = new THREE.DirectionalLight(0xfff6e6, 3);
-dirLight.position.set(sandWaterCenter.x + 15, 50, sandWaterCenter.z + 15);
-dirLight.castShadow = true;
-dirLight.shadow.mapSize.set(2048, 2048);
-dirLight.shadow.camera.left = -30;
-dirLight.shadow.camera.right = 30;
-dirLight.shadow.camera.top = 30;
-dirLight.shadow.camera.bottom = -30;
-dirLight.shadow.camera.near = 1;
-dirLight.shadow.camera.far = 100;
-scene.add(dirLight);
-
-
-
-
-const hemiLight = new THREE.HemisphereLight(0xffffee, 0x88bbff, 1.2); // Warm sky + ocean blue bounce
-hemiLight.position.set(sandWaterCenter.x, 60, sandWaterCenter.z);
-scene.add(hemiLight);
-
-
-
-
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-scene.add(ambientLight);
-
-
- const waterGeometry = new THREE.PlaneGeometry(25, 25);
-  const waterNormals = new THREE.TextureLoader().load('Textures/Water_2_M_Normal.jpg', function (texture) {
-    texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-    texture.repeat.set(4, 4);
-  });
-
-
-  water = new Water(waterGeometry, {
-  textureWidth: 512,
-  textureHeight: 512,
-  waterNormals: waterNormals,
-  sunDirection: dirLight.position.clone().normalize(),
-  sunColor: 0xffffff,
-  waterColor: 0x081830,      
-  distortionScale: 2.5,
-  alpha: 0.3,                
-  transparent: true,
-});
-
-
-
-
-
-
-  water.rotation.x = -Math.PI / 2;
-  water.position.set(-10, 0.01, 1);
-  scene.add(water);
-
-
-
-
-const sunDirection = new THREE.Vector3().subVectors(sunPosition, water.position).normalize();
-water.material.uniforms['sunDirection'].value.copy(sunDirection);
-});
-
-
- const cloudVertexShader = ` varying vec2 vUv;
-  void main() {
-    vUv = uv;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  }
- 
-`;
-
-
-const cloudFragmentShader = `
-uniform float time;
-varying vec2 vUv;
-
-
-float random(vec2 st) {
-    return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453);
-}
-
-
-float noise(vec2 st) {
-    vec2 i = floor(st);
-    vec2 f = fract(st);
-    vec2 u = f * f * (3.0 - 2.0 * f);
-   
-    float a = random(i);
-    float b = random(i + vec2(1.0, 0.0));
-    float c = random(i + vec2(0.0, 1.0));
-    float d = random(i + vec2(1.0, 1.0));
-
-
-    return mix(a, b, u.x) +
-           (c - a) * u.y * (1.0 - u.x) +
-           (d - b) * u.x * u.y;
-}
-
-
-void main() {
-    vec2 st = vUv * 3.0;
-    st.x += time * 0.1;
-    float n = noise(st);
-
-
-    float noiseAlpha = smoothstep(0.4, 0.8, n);  // base puffiness
-
-
-    float dist = distance(vUv, vec2(0.5));
-    float radialFade = smoothstep(0.5, 0.2, dist);
-
-
-    float alpha = noiseAlpha * radialFade;
-
-
-    vec3 cloudColor = vec3(1.0);
-    gl_FragColor = vec4(cloudColor, alpha);
-}
-
-
-
-
-`;
-   
-
-
-const cloudMaterial = new THREE.ShaderMaterial({
-  vertexShader: cloudVertexShader,
-  fragmentShader: cloudFragmentShader,
-  transparent: true,
-  depthWrite: false,
-  depthTest: true,
-  blending: THREE.NormalBlending,
-  side: THREE.DoubleSide,
-  uniforms: {
-    time: { value: 0 }
-  }
-});
-
-
-// Cloud geometry (puffy sphere look)
-const cloudGeometry = new THREE.PlaneGeometry(10, 5);
-const cloudGeometry2 = new THREE.PlaneGeometry(30, 10);// flat cloud shape
- cloud = new THREE.Mesh(cloudGeometry, cloudMaterial);
- cloud2 = new THREE.Mesh(cloudGeometry, cloudMaterial);
- cloud3 = new THREE.Mesh(cloudGeometry2, cloudMaterial);
-
-
-cloud.rotation.y = Math.PI / 2; // face upward
-cloud.position.set(-35, 13, -5);
-cloud2.rotation.y = Math.PI / 2; // face upward
-cloud2.position.set(-35, 14, -7);
-
-
-cloud3.position.set(-35, 15, -30);
-cloud3.rotation.y = Math.PI / 2;
-scene.add(cloud);
-scene.add(cloud2);
-scene.add(cloud3);  
- 
 
 
  
@@ -1294,12 +982,16 @@ window.clearOutfit = function () {
 
   // Animation loop
   function animate(time) {
-    requestAnimationFrame(animate);
-    controls.update();
+  requestAnimationFrame(animate);
+  controls.update();
+
+  if (cloudMaterial) {
     cloudMaterial.uniforms.time.value = time * 0.001;
-    renderer.render(scene, camera);
   }
-  animate();
+
+  renderer.render(scene, camera);
+}
+animate();
 
 
   // Responsive resize
@@ -1324,32 +1016,227 @@ window.Room = function () {
   if (cloud3) scene.remove(cloud3);
 
   // Add room ground
-  scene.background = new THREE.Color(0x333333);
-  const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 });
-  ground = new THREE.Mesh(new THREE.PlaneGeometry(11, 20), groundMaterial);
-  ground.rotation.x = -Math.PI / 2;
-  ground.position.set(7, 0.005, 0);
-  scene.add(ground);
+  
 
   currentBackground = "room";
 };
 
 window.Beach = function () {
   if (currentBackground === "beach") return;
+  currentBackground = "beach";
 
   if (ground) scene.remove(ground);
-  if (sky) scene.add(sky);
-  if (water) scene.add(water);
-  if (sandMesh) scene.add(sandMesh);
-  if (beachScene) scene.add(beachScene);
-  if (rockModel) scene.add(rockModel);
-  if (cloud) scene.add(cloud);
-  if (cloud2) scene.add(cloud2);
-  if (cloud3) scene.add(cloud3);
 
+  // Sky setup
+  sky = new Sky();
+  sky.scale.setScalar(10000);
+  const skyUniforms = sky.material.uniforms;
+  skyUniforms['turbidity'].value = 15;
+  skyUniforms['rayleigh'].value = 0.2;
+  skyUniforms['mieCoefficient'].value = 0.02;
+  skyUniforms['mieDirectionalG'].value = 0.85;
+
+  const sun = new THREE.Vector3();
+  const theta = Math.PI * 0.8;
+  const phi = Math.PI;
+  sun.x = Math.cos(phi) * Math.cos(theta);
+  sun.y = Math.sin(theta);
+  sun.z = Math.sin(phi) * Math.cos(theta);
+  sky.material.uniforms['sunPosition'].value.copy(sun);
+
+  const pmremGenerator = new THREE.PMREMGenerator(renderer);
   scene.background = pmremGenerator.fromScene(sky).texture;
 
-  currentBackground = "beach";
+  // Renderer setup
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.2;
+
+  // Load beach GLB scene
+  const loader = new GLTFLoader();
+  loader.load('beach Scene/uploads_files_5954063_beach+scene.glb', function (gltf) {
+    beachScene = gltf.scene;
+
+    const bbox = new THREE.Box3().setFromObject(beachScene);
+    const size = new THREE.Vector3();
+    bbox.getSize(size);
+    const targetSize = 20;
+    const maxDimension = Math.max(size.x, size.y, size.z);
+    const scaleFactor = targetSize / maxDimension;
+    beachScene.scale.setScalar(scaleFactor);
+    bbox.setFromObject(beachScene);
+    const center = new THREE.Vector3();
+    bbox.getCenter(center);
+    beachScene.position.sub(center);
+    beachScene.position.set(6, 0, 1);
+
+    beachScene.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+        if (child.name === 'Plane001') {
+          child.visible = false;
+        }
+      }
+    });
+    scene.add(beachScene);
+
+    // Sand
+    const sandTexture = new THREE.TextureLoader().load('beach Scene/SandG_001.jpg');
+    const sandBump = new THREE.TextureLoader().load('beach Scene/SandG_001_b.jpg');
+    sandTexture.wrapS = sandTexture.wrapT = THREE.RepeatWrapping;
+    sandBump.wrapS = sandBump.wrapT = THREE.RepeatWrapping;
+    sandTexture.repeat.set(10, 10);
+    sandBump.repeat.set(10, 10);
+
+    const sandMaterial = new THREE.MeshPhysicalMaterial({
+      map: sandTexture,
+      bumpMap: sandBump,
+      bumpScale: 0.08,
+      roughness: 1.0,
+      reflectivity: 0.1,
+      clearcoat: 0.2,
+      clearcoatRoughness: 0.6,
+    });
+
+    const sandGeometry = new THREE.PlaneGeometry(11, 20);
+    sandMesh = new THREE.Mesh(sandGeometry, sandMaterial);
+    sandMesh.rotation.x = -Math.PI / 2;
+    sandMesh.position.set(7, 0.005, center.z);
+    sandMesh.receiveShadow = true;
+    scene.add(sandMesh);
+
+    // Sand rock model
+    const mtlLoader = new MTLLoader();
+    mtlLoader.load('beach Scene/uploads_files_3006167_sand+rock2.mtl', function (materials) {
+      materials.preload();
+      const objLoader = new OBJLoader();
+      objLoader.setMaterials(materials);
+      objLoader.load('beach Scene/uploads_files_3006167_sand+rock2.obj', function (object) {
+        rockModel = object;
+        rockModel.scale.set(0.5, 0.5, 0.5);
+        rockModel.position.set(1, -1, -8);
+        rockModel.rotation.y = Math.PI / 6;
+        scene.add(rockModel);
+      });
+    });
+
+    const sandWaterCenter = new THREE.Vector3((5 + 20) / 2, 0, (center.z + 1) / 2);
+
+    // Lighting
+    const dirLight = new THREE.DirectionalLight(0xfff6e6, 3);
+    dirLight.position.set(sandWaterCenter.x + 15, 50, sandWaterCenter.z + 15);
+    dirLight.castShadow = true;
+    dirLight.shadow.mapSize.set(2048, 2048);
+    dirLight.shadow.camera.left = -30;
+    dirLight.shadow.camera.right = 30;
+    dirLight.shadow.camera.top = 30;
+    dirLight.shadow.camera.bottom = -30;
+    dirLight.shadow.camera.near = 1;
+    dirLight.shadow.camera.far = 100;
+    scene.add(dirLight);
+
+    const hemiLight = new THREE.HemisphereLight(0xffffee, 0x88bbff, 1.2);
+    hemiLight.position.set(sandWaterCenter.x, 60, sandWaterCenter.z);
+    scene.add(hemiLight);
+
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(ambientLight);
+
+    // Water
+    const waterGeometry = new THREE.PlaneGeometry(25, 25);
+    const waterNormals = new THREE.TextureLoader().load('Textures/Water_2_M_Normal.jpg', function (texture) {
+      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
+      texture.repeat.set(4, 4);
+    });
+
+    water = new Water(waterGeometry, {
+      textureWidth: 512,
+      textureHeight: 512,
+      waterNormals: waterNormals,
+      sunDirection: dirLight.position.clone().normalize(),
+      sunColor: 0xffffff,
+      waterColor: 0x081830,
+      distortionScale: 2.5,
+      alpha: 0.3,
+      transparent: true,
+    });
+
+    water.rotation.x = -Math.PI / 2;
+    water.position.set(-10, 0.01, 1);
+    scene.add(water);
+
+    const sunDirection = new THREE.Vector3().subVectors(sun, water.position).normalize();
+    water.material.uniforms['sunDirection'].value.copy(sunDirection);
+  });
+
+  // Cloud shader setup
+  const cloudVertexShader = `
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `;
+
+  const cloudFragmentShader = `
+    uniform float time;
+    varying vec2 vUv;
+    float random(vec2 st) {
+        return fract(sin(dot(st.xy, vec2(12.9898,78.233))) * 43758.5453);
+    }
+    float noise(vec2 st) {
+        vec2 i = floor(st);
+        vec2 f = fract(st);
+        vec2 u = f * f * (3.0 - 2.0 * f);
+        float a = random(i);
+        float b = random(i + vec2(1.0, 0.0));
+        float c = random(i + vec2(0.0, 1.0));
+        float d = random(i + vec2(1.0, 1.0));
+        return mix(a, b, u.x) + (c - a) * u.y * (1.0 - u.x) + (d - b) * u.x * u.y;
+    }
+    void main() {
+        vec2 st = vUv * 3.0;
+        st.x += time * 0.1;
+        float n = noise(st);
+        float noiseAlpha = smoothstep(0.4, 0.8, n);
+        float dist = distance(vUv, vec2(0.5));
+        float radialFade = smoothstep(0.5, 0.2, dist);
+        float alpha = noiseAlpha * radialFade;
+        vec3 cloudColor = vec3(1.0);
+        gl_FragColor = vec4(cloudColor, alpha);
+    }
+  `;
+
+   cloudMaterial = new THREE.ShaderMaterial({
+    vertexShader: cloudVertexShader,
+    fragmentShader: cloudFragmentShader,
+    transparent: true,
+    depthWrite: false,
+    depthTest: true,
+    blending: THREE.NormalBlending,
+    side: THREE.DoubleSide,
+    uniforms: {
+      time: { value: 0 }
+    }
+  });
+
+  const cloudGeometry = new THREE.PlaneGeometry(10, 5);
+  const cloudGeometry2 = new THREE.PlaneGeometry(30, 10);
+  cloud = new THREE.Mesh(cloudGeometry, cloudMaterial);
+  cloud2 = new THREE.Mesh(cloudGeometry, cloudMaterial);
+  cloud3 = new THREE.Mesh(cloudGeometry2, cloudMaterial);
+
+  cloud.rotation.y = Math.PI / 2;
+  cloud.position.set(-35, 13, -5);
+  cloud2.rotation.y = Math.PI / 2;
+  cloud2.position.set(-35, 14, -7);
+  cloud3.position.set(-35, 15, -30);
+  cloud3.rotation.y = Math.PI / 2;
+  scene.add(cloud);
+  scene.add(cloud2);
+  scene.add(cloud3);
 };
   
 }
