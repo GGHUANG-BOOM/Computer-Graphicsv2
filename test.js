@@ -137,7 +137,7 @@ function init() {
       target: new THREE.Vector3(0, 0.5, 0)
     },
     shoes: {
-      position: new THREE.Vector3(-1.5, 0.2, 0),
+      position: new THREE.Vector3(10.5, 0.2, 1.52),
       target: new THREE.Vector3(0, 0, 0)
     }
   };
