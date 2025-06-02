@@ -86,12 +86,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+let sky, water, sandMesh, ground;
+let beachScene, rockModel;
+let cloud, cloud2, cloud3;
+let currentBackground = "beach";
 
 function init() {
+
+ 
  
   const canvas = document.getElementById('three-canvas');
   const scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xbfdfff);
  
 
 
@@ -173,7 +178,7 @@ function init() {
     updateCamera();
   }
  
-const sky = new Sky();
+sky = new Sky();
 sky.scale.setScalar(10000);
 scene.add(sky);
 
@@ -223,7 +228,7 @@ renderer.toneMappingExposure = 1.2;  // Brighter exposure for sunny feel
 // Load GLTF scene
 const loader = new GLTFLoader();
 loader.load('beach Scene/uploads_files_5954063_beach+scene.glb', function (gltf) {
-  const beachScene = gltf.scene;
+   beachScene = gltf.scene;
 
 
   // Scale and center the scene
@@ -284,7 +289,7 @@ loader.load('beach Scene/uploads_files_5954063_beach+scene.glb', function (gltf)
 
   // Create sand mesh
    const sandGeometry = new THREE.PlaneGeometry(11, 20);
-  const sandMesh = new THREE.Mesh(sandGeometry, sandMaterial);
+   sandMesh = new THREE.Mesh(sandGeometry, sandMaterial);
   sandMesh.rotation.x = -Math.PI / 2;
   sandMesh.position.set(7, 0.005, center.z);
   sandMesh.receiveShadow = true;
@@ -303,12 +308,13 @@ mtlLoader.load('beach Scene/uploads_files_3006167_sand+rock2.mtl', function (mat
   objLoader.setMaterials(materials);
 
   objLoader.load('beach Scene/uploads_files_3006167_sand+rock2.obj', function (object) {
-    object.scale.set(0.5, 0.5, 0.5);
-    object.position.set(1, -1, -8);
-    object.rotation.y = Math.PI / 6;
+    rockModel = object;
+    rockModel.scale.set(0.5, 0.5, 0.5);
+    rockModel.position.set(1, -1, -8);
+    rockModel.rotation.y = Math.PI / 6;
 
 
-    scene.add(object);
+    scene.add(rockModel);
   });
 });
 
@@ -365,7 +371,7 @@ scene.add(ambientLight);
   });
 
 
- const water = new Water(waterGeometry, {
+  water = new Water(waterGeometry, {
   textureWidth: 512,
   textureHeight: 512,
   waterNormals: waterNormals,
@@ -474,9 +480,9 @@ const cloudMaterial = new THREE.ShaderMaterial({
 // Cloud geometry (puffy sphere look)
 const cloudGeometry = new THREE.PlaneGeometry(10, 5);
 const cloudGeometry2 = new THREE.PlaneGeometry(30, 10);// flat cloud shape
-const cloud = new THREE.Mesh(cloudGeometry, cloudMaterial);
-const cloud2 = new THREE.Mesh(cloudGeometry, cloudMaterial);
-const cloud3 = new THREE.Mesh(cloudGeometry2, cloudMaterial);
+ cloud = new THREE.Mesh(cloudGeometry, cloudMaterial);
+ cloud2 = new THREE.Mesh(cloudGeometry, cloudMaterial);
+ cloud3 = new THREE.Mesh(cloudGeometry2, cloudMaterial);
 
 
 cloud.rotation.y = Math.PI / 2; // face upward
@@ -1266,8 +1272,6 @@ window.clearOutfit = function () {
 
 
 
-
-
   // Animation loop
   function animate(time) {
     requestAnimationFrame(animate);
@@ -1284,4 +1288,53 @@ window.clearOutfit = function () {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
   });
+
+
+window.Room = function () {
+  if (currentBackground === "room") return;
+
+  // Remove beach stuff
+  if (sky) scene.remove(sky);
+  if (water) scene.remove(water);
+  if (sandMesh) scene.remove(sandMesh);
+  if (beachScene) scene.remove(beachScene);
+  if (rockModel) scene.remove(rockModel);
+  if (cloud) scene.remove(cloud);
+  if (cloud2) scene.remove(cloud2);
+  if (cloud3) scene.remove(cloud3);
+
+  // Add room ground
+  scene.background = new THREE.Color(0x333333);
+  const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 });
+  ground = new THREE.Mesh(new THREE.PlaneGeometry(11, 20), groundMaterial);
+  ground.rotation.x = -Math.PI / 2;
+  ground.position.set(7, 0.005, 0);
+  scene.add(ground);
+
+  currentBackground = "room";
+};
+
+window.Beach = function () {
+  if (currentBackground === "beach") return;
+
+  if (ground) scene.remove(ground);
+  if (sky) scene.add(sky);
+  if (water) scene.add(water);
+  if (sandMesh) scene.add(sandMesh);
+  if (beachScene) scene.add(beachScene);
+  if (rockModel) scene.add(rockModel);
+  if (cloud) scene.add(cloud);
+  if (cloud2) scene.add(cloud2);
+  if (cloud3) scene.add(cloud3);
+
+  scene.background = pmremGenerator.fromScene(sky).texture;
+
+  currentBackground = "beach";
+};
+  
 }
+
+
+
+
+
