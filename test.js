@@ -584,6 +584,7 @@ scene.add(cloud3);
 
       object.traverse((child) => {
         if (child.isMesh) {
+          child.castShadow = true;
           const mat = child.material;
      
           const storeOriginalMaps = (material) => {
