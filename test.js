@@ -1034,10 +1034,10 @@ window.Room = function () {
   if (cloud) scene.remove(cloud);
   if (cloud2) scene.remove(cloud2);
   if (cloud3) scene.remove(cloud3);
-
+   if (ground) scene.add(ground);
   // Add room ground
   
-
+scene.background = new THREE.Color(0x333333);
   currentBackground = "room";
 };
 
