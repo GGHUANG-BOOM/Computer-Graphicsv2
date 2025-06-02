@@ -90,7 +90,7 @@ let sky, water, sandMesh, ground;
 let cloudMaterial;
 let beachScene, rockModel;
 let cloud, cloud2, cloud3;
-let currentBackground = "beach";
+let currentBackground = "room";
 
 function init() {
 
@@ -117,10 +117,30 @@ scene.background = new THREE.Color(0x333333);
   scene.add(ground);
 
 
+const defaultLightCenter = new THREE.Vector3(10, 0, 0); 
+
+const dirLight = new THREE.DirectionalLight(0xfff6e6, 3);
+dirLight.position.set(defaultLightCenter.x + 15, 50, defaultLightCenter.z + 15);
+dirLight.castShadow = true;
+dirLight.shadow.mapSize.set(2048, 2048);
+dirLight.shadow.camera.left = -30;
+dirLight.shadow.camera.right = 30;
+dirLight.shadow.camera.top = 30;
+dirLight.shadow.camera.bottom = -30;
+dirLight.shadow.camera.near = 1;
+dirLight.shadow.camera.far = 100;
+scene.add(dirLight);
+
+const hemiLight = new THREE.HemisphereLight(0xffffee, 0x88bbff, 1.2);
+hemiLight.position.set(defaultLightCenter.x, 60, defaultLightCenter.z);
+scene.add(hemiLight);
+
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+scene.add(ambientLight); 
 
 
 
-//position: new THREE.Vector3(-5, 2, 0),
+
 
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
@@ -1026,6 +1046,7 @@ window.Beach = function () {
   currentBackground = "beach";
 
   if (ground) scene.remove(ground);
+  
 
   // Sky setup
   sky = new Sky();
@@ -1122,27 +1143,9 @@ window.Beach = function () {
       });
     });
 
-    const sandWaterCenter = new THREE.Vector3((5 + 20) / 2, 0, (center.z + 1) / 2);
+   
 
-    // Lighting
-    const dirLight = new THREE.DirectionalLight(0xfff6e6, 3);
-    dirLight.position.set(sandWaterCenter.x + 15, 50, sandWaterCenter.z + 15);
-    dirLight.castShadow = true;
-    dirLight.shadow.mapSize.set(2048, 2048);
-    dirLight.shadow.camera.left = -30;
-    dirLight.shadow.camera.right = 30;
-    dirLight.shadow.camera.top = 30;
-    dirLight.shadow.camera.bottom = -30;
-    dirLight.shadow.camera.near = 1;
-    dirLight.shadow.camera.far = 100;
-    scene.add(dirLight);
-
-    const hemiLight = new THREE.HemisphereLight(0xffffee, 0x88bbff, 1.2);
-    hemiLight.position.set(sandWaterCenter.x, 60, sandWaterCenter.z);
-    scene.add(hemiLight);
-
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(ambientLight);
+   
 
     // Water
     const waterGeometry = new THREE.PlaneGeometry(25, 25);
