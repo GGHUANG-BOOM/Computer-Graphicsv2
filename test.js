@@ -263,7 +263,21 @@ const guiSettings = {
   modelColor: "#ffffff"
 };
 
-const gui = new GUI();
+const gui = new GUI({ 
+  container: document.getElementById('editor-page')
+});
+
+const guiContainer = gui.domElement;
+guiContainer.style.position = 'absolute';
+guiContainer.style.top = '304px';
+guiContainer.style.right = '10px';
+guiContainer.style.zIndex = '10';
+guiContainer.style.fontFamily = 'input-mono-narrow, monospace';
+guiContainer.style.backgroundColor =  '#252929';
+guiContainer.style.fontSize = '12px';
+guiContainer.classList.add('gui-right');
+guiContainer.classList.add('animate');
+
 gui.addColor(guiSettings, 'modelColor').name('Model Color').onChange((value) => {
   for (const name of mannequinMaterials) {
     if (materials.materials[name]) {
