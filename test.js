@@ -263,7 +263,16 @@ const guiSettings = {
   modelColor: "#ffffff"
 };
 
-
+const gui = new GUI();
+gui.addColor(guiSettings, 'modelColor').name('Model Color').onChange((value) => {
+  for (const name of mannequinMaterials) {
+    if (materials.materials[name]) {
+      const mat = materials.materials[name];
+      mat.color.set(value);
+      mat.needsUpdate = true;
+    }
+  }
+});
 
     for (const materialName in materials.materials) {
   const mat = materials.materials[materialName];
@@ -1002,16 +1011,7 @@ window.clearOutfit = function () {
 
 
 
-const gui = new GUI();
-gui.addColor(guiSettings, 'modelColor').name('Model Color').onChange((value) => {
-  for (const name of mannequinMaterials) {
-    if (materials.materials[name]) {
-      const mat = materials.materials[name];
-      mat.color.set(value);
-      mat.needsUpdate = true;
-    }
-  }
-});
+
 
 
 
