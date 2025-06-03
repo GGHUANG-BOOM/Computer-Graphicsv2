@@ -1037,67 +1037,7 @@ function showNotification(message) {
   }, 2000);
 }
 
-window.saveOutfit = function () {
-  if (!mannequin) return;
 
-  const outfitData = [];
-
-  mannequin.traverse((child) => {
-    if (child.isMesh && child.material) {
-      outfitData.push({
-        name: child.name,
-        visible: child.visible
-      });
-    }
-  });
-
-  localStorage.setItem('savedOutfit', JSON.stringify(outfitData));
-  console.log('Outfit saved:', outfitData);
-  showNotification('Outfit saved!');
-};
-
-window.loadOutfit = function () {
-  if (!mannequin) return;
-
-  const savedData = localStorage.getItem('savedOutfit');
-  if (!savedData) {
-    console.warn('No outfit saved.');
-    showNotification('No saved outfit found!');
-    return;
-  }
-
-  const outfitData = JSON.parse(savedData);
-
-  mannequin.traverse((child) => {
-    if (child.isMesh && child.material) {
-      const savedChild = outfitData.find(item => item.name === child.name);
-      if (savedChild) {
-        child.visible = savedChild.visible;
-      }
-    }
-  });
-
-  console.log('Outfit loaded:', outfitData);
-  showNotification('Outfit loaded!');
-};
-
-window.clearOutfit = function () {
-  if (!mannequin) return;
-
-  mannequin.traverse((child) => {
-    if (child.isMesh && child.material) {
-      const materials = Array.isArray(child.material) ? child.material : [child.material];
-      materials.forEach((mat) => {
-        if (mat.name && isClothing(mat.name)) {
-          child.visible = false;
-        }
-      });
-    }
-  });
-
-  console.log("Outfit cleared.");
-  showNotification('Outfit cleared!');
-};
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
