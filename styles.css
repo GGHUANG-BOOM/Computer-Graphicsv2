@@ -283,3 +283,70 @@ body {
     opacity: 1;
     transform: translateY(0);
 }
+
+.lil-gui {
+  --background-color: transparent !important;
+  --text-color: #ffffff !important;
+  --title-background-color: transparent !important;
+  --title-text-color: #ffffff !important;
+  --widget-color: #ffffff !important;
+  --hover-color: #252929 !important;
+  --focus-color: #ffffff !important;
+  --number-color: #ffffff !important;
+  --string-color: #ffffff !important;
+  border: 1px solid #ffffff !important;
+  border-radius: 8px !important;
+  padding: 10px !important;
+  width: 152px !important;
+  font: 12px input-mono-narrow, monospace !important;
+  transform: translateX(120%);
+}
+
+.lil-gui.animate {
+  animation: slideInRight 0.8s ease-out forwards;
+  animation-delay: 2s;
+}
+
+.lil-gui .widget {
+  border: 1px solid #ffffff !important;
+  border-radius: 0 !important;
+  margin: 5px 0 !important;
+}
+
+.lil-gui .color {
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.lil-gui .color .name {
+  width: 100% !important;
+  margin-bottom: 4px !important;
+}
+
+.lil-gui .color .widget {
+  display: flex !important;
+  align-items: center !important;
+  width: 80% !important;
+}
+
+.lil-gui .color .widget input[type="text"] {
+    min-width: 60px !important;
+  background-color: #252929 !important;
+  color: #ffffff !important;
+  border: 1px solid #ffffff !important;
+  border-radius: 0 !important;
+  font-family: input-mono-narrow, monospace !important;
+  padding: 4px 8px !important;
+}
+
+.lil-gui .color .widget input[type="color"] {
+  width: 100% !important;
+  border: 1px solid #ffffff !important;
+}
+
+.lil-gui button {
+  font-family: input-mono-narrow, monospace !important;
+  border: 1px solid #ffffff !important;
+  background: transparent !important;
+  color: #ffffff !important;
+}
