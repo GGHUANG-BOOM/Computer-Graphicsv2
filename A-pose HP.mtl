@@ -12,7 +12,7 @@ newmtl Converted_PVC_FurnGrad_Charcoal_Gray
 	Kd 0.0392 0.0392 0.0392
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	
+	map_bump -bm 0.0200 Textures\BM_Noise.png
 
 newmtl Converted_jeans
 	Ns 10.0000
@@ -99,10 +99,10 @@ newmtl Converted_shorts_long
 	Kd 0.4431 0.4314 0.4078
 	Ks 0.0000 0.0000 0.0000
 	Ke 0.0000 0.0000 0.0000
-	map_Kd Textures/Shorts long mil.jpg
-map_Ka Textures/Shorts long mil.jpg
-map_bump Textures/Shorts long bamp.jpg
-bump Textures/Shorts long bamp.jpg
+	map_Ka Textures\Shorts long mil.jpg
+	map_Kd Textures\Shorts long mil.jpg
+	map_bump Textures\Shorts long bamp.jpg
+	bump Textures\Shorts long bamp.jpg
 
 newmtl Converted_shorts_champ
 	Ns 10.0000

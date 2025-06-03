@@ -101,15 +101,11 @@ function init() {
  
 
 
- const camera = new THREE.PerspectiveCamera(
-  45,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-
-
-);
-scene.background = new THREE.Color(0x333333);
+  const camera = new THREE.PerspectiveCamera(
+   45, window.innerWidth / window.innerHeight, 0.1, 1000
+  );
+  
+  scene.background = new THREE.Color(0x333333);
   const groundMaterial = new THREE.MeshStandardMaterial({ color: 0x333333 });
   ground = new THREE.Mesh(new THREE.PlaneGeometry(11, 20), groundMaterial);
   ground.rotation.x = -Math.PI / 2;
@@ -117,38 +113,32 @@ scene.background = new THREE.Color(0x333333);
   scene.add(ground);
 
 
-const defaultLightCenter = new THREE.Vector3(10, 0, 0); 
+  const defaultLightCenter = new THREE.Vector3(10, 0, 0); 
 
-const dirLight = new THREE.DirectionalLight(0xfff6e6, 3);
-dirLight.position.set(defaultLightCenter.x + 15, 50, defaultLightCenter.z + 15);
-dirLight.castShadow = true;
-dirLight.shadow.mapSize.set(2048, 2048);
-dirLight.shadow.camera.left = -30;
-dirLight.shadow.camera.right = 30;
-dirLight.shadow.camera.top = 30;
-dirLight.shadow.camera.bottom = -30;
-dirLight.shadow.camera.near = 1;
-dirLight.shadow.camera.far = 100;
-scene.add(dirLight);
+  const dirLight = new THREE.DirectionalLight(0xfff6e6, 3);
+  dirLight.position.set(defaultLightCenter.x + 15, 50, defaultLightCenter.z + 15);
+  dirLight.castShadow = true;
+  dirLight.shadow.mapSize.set(2048, 2048);
+  dirLight.shadow.camera.left = -30;
+  dirLight.shadow.camera.right = 30;
+  dirLight.shadow.camera.top = 30;
+  dirLight.shadow.camera.bottom = -30;
+  dirLight.shadow.camera.near = 1;
+  dirLight.shadow.camera.far = 100;
+  scene.add(dirLight);
 
-const hemiLight = new THREE.HemisphereLight(0xffffee, 0x88bbff, 1.2);
-hemiLight.position.set(defaultLightCenter.x, 60, defaultLightCenter.z);
-scene.add(hemiLight);
+  const hemiLight = new THREE.HemisphereLight(0xffffee, 0x88bbff, 1.2);
+  hemiLight.position.set(defaultLightCenter.x, 60, defaultLightCenter.z);
+  scene.add(hemiLight);
 
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-scene.add(ambientLight); 
-
-
-
-
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+  scene.add(ambientLight); 
 
 
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
   const controls = new OrbitControls(camera, renderer.domElement);
-
-
 
   const cameraPositions = {
     default: {
@@ -203,14 +193,6 @@ scene.add(ambientLight);
 
     updateCamera();
   }
- 
-
-
-
- 
-
-
-
 
   let mannequin;
 
@@ -245,74 +227,71 @@ scene.add(ambientLight);
  
  
 
-
-
-
   const mtlLoader = new MTLLoader();
-  mtlLoader.load('./A-pose HP.mtl', (materials) => {
+    mtlLoader.load('./A-pose HP.mtl', (materials) => {
     materials.preload();
 
-const mannequinMaterials = [
-  'Converted_buxiugang',
-  'Converted_PVC_FurnGrad_Charcoal_Gray',
-];
+  const mannequinMaterials = [
+    'Converted_buxiugang',
+    'Converted_PVC_FurnGrad_Charcoal_Gray',
+  ];
 
 
 
-const guiSettings = {
-  modelColor: "#ffffff"
-};
+  const guiSettings = {
+    modelColor: "#ffffff"
+  };
 
-const gui = new GUI({ 
-  container: document.getElementById('editor-page')
-});
+  const gui = new GUI({ 
+    container: document.getElementById('editor-page')
+  });
 
-const guiContainer = gui.domElement;
-guiContainer.style.position = 'absolute';
-guiContainer.style.top = '304px';
-guiContainer.style.right = '10px';
-guiContainer.style.zIndex = '10';
-guiContainer.style.fontFamily = 'input-mono-narrow, monospace';
-guiContainer.style.backgroundColor =  '#252929';
-guiContainer.style.fontSize = '12px';
-guiContainer.classList.add('gui-right');
-guiContainer.classList.add('animate');
+  const guiContainer = gui.domElement;
+  guiContainer.style.position = 'absolute';
+  guiContainer.style.top = '304px';
+  guiContainer.style.right = '10px';
+  guiContainer.style.zIndex = '10';
+  guiContainer.style.fontFamily = 'input-mono-narrow, monospace';
+  guiContainer.style.backgroundColor =  '#252929';
+  guiContainer.style.fontSize = '12px';
+  guiContainer.classList.add('gui-right');
+  guiContainer.classList.add('animate');
 
-gui.addColor(guiSettings, 'modelColor').name('Model Color').onChange((value) => {
-  for (const name of mannequinMaterials) {
-    if (materials.materials[name]) {
-      const mat = materials.materials[name];
-      mat.color.set(value);
-      mat.needsUpdate = true;
+  gui.addColor(guiSettings, 'modelColor').name('Model Color').onChange((value) => {
+    for (const name of mannequinMaterials) {
+      if (materials.materials[name]) {
+        const mat = materials.materials[name];
+        mat.color.set(value);
+        mat.needsUpdate = true;
+      }
     }
-  }
-});
+  });
 
-    for (const materialName in materials.materials) {
-  const mat = materials.materials[materialName];
+  for (const materialName in materials.materials) {
+    const mat = materials.materials[materialName];
 
-  if (mannequinMaterials.includes(materialName)) {
+    if (mannequinMaterials.includes(materialName)) {
 
-    mat.color.set(guiSettings.modelColor);
-    mat.map = null;
-  } else {
+      mat.color.set(guiSettings.modelColor);
+      mat.map = null;
+    } else {
     
-    if (mat.map) {
-      mat.map.wrapS = THREE.RepeatWrapping;
-      mat.map.wrapT = THREE.RepeatWrapping;
-      mat.map.repeat.set(1, 1);
+      if (mat.map) {
+        mat.map.wrapS = THREE.RepeatWrapping;
+        mat.map.wrapT = THREE.RepeatWrapping;
+        mat.map.repeat.set(1, 1);
+      }
+
+      if (mat.bumpMap) {
+        mat.bumpMap.wrapS = THREE.RepeatWrapping;
+        mat.bumpMap.wrapT = THREE.RepeatWrapping;
+        mat.bumpMap.repeat.set(1, 1);
+
+      }
     }
 
-    if (mat.bumpMap) {
-      mat.bumpMap.wrapS = THREE.RepeatWrapping;
-      mat.bumpMap.wrapT = THREE.RepeatWrapping;
-      mat.bumpMap.repeat.set(1, 1);
-  
-    }
+   mat.needsUpdate = true;
   }
-
-  mat.needsUpdate = true;
-}
  
    
     const objLoader = new OBJLoader();
@@ -383,41 +362,7 @@ gui.addColor(guiSettings, 'modelColor').name('Model Color').onChange((value) => 
   });
  
 
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  
 
   window.wearShirt = function () {
     if (!mannequin) return;
@@ -670,15 +615,6 @@ gui.addColor(guiSettings, 'modelColor').name('Model Color').onChange((value) => 
  
  
 
-
-
-
- 
-
-
-
-
- 
 
 
 
@@ -1026,7 +962,79 @@ window.clearOutfit = function () {
 
 
 
+function showNotification(message) {
+  const notification = document.getElementById('notification');
+  const notificationText = document.getElementById('notification-text');
+  
+  notificationText.textContent = message;
+  notification.classList.add('active');
+  
+  setTimeout(() => {
+    notification.classList.remove('active');
+  }, 2000);
+}
 
+window.saveOutfit = function () {
+  if (!mannequin) return;
+
+  const outfitData = [];
+
+  mannequin.traverse((child) => {
+    if (child.isMesh && child.material) {
+      outfitData.push({
+        name: child.name,
+        visible: child.visible
+      });
+    }
+  });
+
+  localStorage.setItem('savedOutfit', JSON.stringify(outfitData));
+  console.log('Outfit saved:', outfitData);
+  showNotification('Outfit saved!');
+};
+
+window.loadOutfit = function () {
+  if (!mannequin) return;
+
+  const savedData = localStorage.getItem('savedOutfit');
+  if (!savedData) {
+    console.warn('No outfit saved.');
+    showNotification('No saved outfit found!');
+    return;
+  }
+
+  const outfitData = JSON.parse(savedData);
+
+  mannequin.traverse((child) => {
+    if (child.isMesh && child.material) {
+      const savedChild = outfitData.find(item => item.name === child.name);
+      if (savedChild) {
+        child.visible = savedChild.visible;
+      }
+    }
+  });
+
+  console.log('Outfit loaded:', outfitData);
+  showNotification('Outfit loaded!');
+};
+
+window.clearOutfit = function () {
+  if (!mannequin) return;
+
+  mannequin.traverse((child) => {
+    if (child.isMesh && child.material) {
+      const materials = Array.isArray(child.material) ? child.material : [child.material];
+      materials.forEach((mat) => {
+        if (mat.name && isClothing(mat.name)) {
+          child.visible = false;
+        }
+      });
+    }
+  });
+
+  console.log("Outfit cleared.");
+  showNotification('Outfit cleared!');
+};
 
 
   // Animation loop
@@ -1272,8 +1280,4 @@ window.Beach = function () {
 };
   
 }
-
-
-
-
 
