@@ -93,6 +93,7 @@ const sandBump = textureLoader.load('beach Scene/SandG_001_b.jpg');
   scene.add(ground);
    
   
+  
   let mannequin;
 
   function isClothing(name) {
@@ -793,6 +794,142 @@ window.clearAllClothing = function() {
     window.pantsAreOn = false;
 };
 
+let spotlight = null;
+let spotlightEnabled = false;
+
+function createSpotlight() {
+  if (spotlight) {
+    scene.remove(spotlight);
+    spotlight = null;
+  }
+  
+  spotlight = new THREE.SpotLight(0xffffff, 2);
+  spotlight.position.set(0, 5, 0);
+  spotlight.target.position.set(0, 0, 0);
+  spotlight.angle = Math.PI / 6; 
+  spotlight.penumbra = 0.3; 
+  spotlight.decay = 1;
+  spotlight.distance = 10;
+  spotlight.castShadow = true;
+  
+  
+  scene.add(spotlight);
+  scene.add(spotlight.target);
+  
+  return spotlight;
+}
+
+window.toggleSpotlight = function() {
+  if (!spotlightEnabled) {
+    if (!spotlight) {
+      createSpotlight();
+    }
+    spotlight.visible = true;
+    spotlightEnabled = true;
+    
+    light.intensity = 0.3;
+    dirLight.intensity = 0.2;
+  } else {
+    if (spotlight) {
+      spotlight.visible = false;
+    }
+    spotlightEnabled = false;
+    
+    light.intensity = 1;
+    dirLight.intensity = 0.8;
+  }
+  
+  const btn = document.querySelector('[onclick="toggleSpotlight()"]');
+  if (btn) {
+    btn.textContent = spotlightEnabled ? 'Spotlight OFF' : 'Spotlight ON';
+  }
+};
+  
+
+window.setBackground = function(backgroundType) {
+  if (currentBackground === backgroundType) return;
+  currentBackground = backgroundType;
+  
+  if (backgroundType === 'bedroom') {
+    if (bedroomModel) {
+      scene.remove(bedroomModel);
+      bedroomModel = null;
+    }
+    
+    if (scene.userData.bedroomLight) {
+      scene.remove(scene.userData.bedroomLight);
+      scene.userData.bedroomLight = null;
+    }
+    if (scene.userData.bedroomCeiling) {
+      scene.remove(scene.userData.bedroomCeiling);
+      scene.userData.bedroomCeiling = null;
+    }
+    
+    const gltfLoader = new GLTFLoader();
+    gltfLoader.load('bedroom.glb', (gltf) => {
+      bedroomModel = gltf.scene;
+      bedroomModel.scale.set(1, 1, 1);
+      bedroomModel.position.set(0, 0, 0);
+      scene.add(bedroomModel);
+    });
+    
+    scene.background = new THREE.Color(0xf0f0f0);
+    light.intensity = 0.6;
+    dirLight.intensity = 0.4;
+    
+    const bedroomCeilingLight = new THREE.SpotLight(0xfff8dc, 1.2);
+    bedroomCeilingLight.position.set(0, 4.5, 0);
+    bedroomCeilingLight.target.position.set(0, 1, 0);
+    bedroomCeilingLight.angle = Math.PI / 4;
+    bedroomCeilingLight.penumbra = 0.3;
+    bedroomCeilingLight.decay = 0.8;
+    bedroomCeilingLight.distance = 8;
+    scene.add(bedroomCeilingLight);
+    scene.add(bedroomCeilingLight.target);
+    scene.userData.bedroomCeiling = bedroomCeilingLight;
+    
+    const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
+    fillLight.position.set(2, 2, 1);
+    scene.add(fillLight);
+    scene.userData.bedroomLight = fillLight;
+    camera.position.set(-3.5, 2, 0);
+    
+  } else {
+    if (bedroomModel) {
+      scene.remove(bedroomModel);
+      bedroomModel = null;
+    }
+    
+    if (scene.userData.bedroomLight) {
+      scene.remove(scene.userData.bedroomLight);
+      scene.userData.bedroomLight = null;
+    }
+    if (scene.userData.bedroomCeiling) {
+      scene.remove(scene.userData.bedroomCeiling);
+      scene.userData.bedroomCeiling = null;
+    }
+    
+    camera.position.set(-5, 2, 0);
+    scene.background = new THREE.Color(0x333333);
+    light.intensity = 1;
+    dirLight.intensity = 0.8;
+    
+    if (backgroundType === 'room') {
+      scene.background = new THREE.Color(0x8B7355);
+    } else if (backgroundType === 'street') {
+      scene.background = new THREE.Color(0x87CEEB);
+    }
+  }
+};
+
+    const ground1 = new THREE.Mesh(
+    new THREE.PlaneGeometry(10, 10),
+    new THREE.MeshStandardMaterial({ color: 0x333333 })
+  );
+  ground1.rotation.x = -Math.PI / 2;
+  scene.add(ground1);
+  let bedroomModel = null;
+  let currentBackground = 'studio';
 
   // Animation loop
   function animate() {
