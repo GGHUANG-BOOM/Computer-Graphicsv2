@@ -265,7 +265,7 @@ body {
 .notification {
     position: fixed;
     bottom: 20px;
-    right: 20px;
+    right: 10px;
     padding: 12px 24px;
     background-color: rgba(37, 41, 41, 0.9);
     color: #ffffff;

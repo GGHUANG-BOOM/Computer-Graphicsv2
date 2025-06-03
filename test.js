@@ -143,23 +143,23 @@ function init() {
   const cameraPositions = {
     default: {
       position: new THREE.Vector3(11.8, 1.34, 1.52),
-      target: new THREE.Vector3(0, 0, 0)
+      target: new THREE.Vector3(9, 1, 1)
     },
     shirts: {
-      position: new THREE.Vector3(11, 1.34, 1.52),
-      target: new THREE.Vector3(0, 1.5, 0)
+      position: new THREE.Vector3(10.5, 1.34, 1.52),
+      target: new THREE.Vector3(9, 1, 1)
     },
     pants: {
-      position: new THREE.Vector3(11, 1, 1.52),
-      target: new THREE.Vector3(0, 0.5, 0)
+      position: new THREE.Vector3(10.5, 1, 1.52),
+      target: new THREE.Vector3(9, 0.5, 1)
     },
     hats: {
-      position: new THREE.Vector3(10.5, 2, 1.52),
-      target: new THREE.Vector3(0, 0.5, 0)
+      position: new THREE.Vector3(10.5, 1.5, 1.52),
+      target: new THREE.Vector3(9, 1.5, 1)
     },
     shoes: {
       position: new THREE.Vector3(10.5, 0.2, 1.52),
-      target: new THREE.Vector3(0, 0, 0)
+      target: new THREE.Vector3(9, 0.1, 1)
     }
   };
 
@@ -957,7 +957,67 @@ window.clearOutfit = function () {
   showNotification('Outfit cleared!');
 };
 
+window.randomOutfit = function() {
+  clearAllClothing();
+  const shirts = [
+     () => wearShirt(),      
+    () => wearShirt2(),     
+    () => wearShirt3(),    
+    () => wearShirt4()      
+  ];
+   const pants = [
+     () => wearPants(),     
+     () => wearPants2(),    
+      () => wearPants3(),     
+        () => wearPants4()      
+  ]; const hats = [
+     () => wearHat('models/Hat1.glb'),   
+      () => wearHat2('models/Hat2.glb'),  
+        () => wearHat3('models/Hat3.glb'),  
+    () => {} 
+  ];
+  const shoes = [
+      () => wearShoes('models/Shoe1.glb'),  
+        () => wearShoes2('models/Shoe2.glb'), 
+          () => wearShoes3('models/Shoe3.glb'), 
+            () => {} 
+  ];
+  const randomShirt = shirts[Math.floor(Math.random() * shirts.length)];
+    const randomPants = pants[Math.floor(Math.random() * pants.length)];
+    const randomHat = hats[Math.floor(Math.random() * hats.length)];
+   const randomShoes = shoes[Math.floor(Math.random() * shoes.length)];
+   setTimeout(randomShirt, 50);
+  setTimeout(randomPants, 100);
+  setTimeout(randomHat, 150);
+  setTimeout(randomShoes, 200);
+};
 
+
+window.clearAllClothing = function() {
+  if (!mannequin) return;
+
+  mannequin.traverse((child) => {
+    if (child.isMesh && child.material) {
+    const materials = Array.isArray(child.material) ? child.material : [child.material];
+    materials.forEach((mat) => {
+    if (isClothing(mat.name)) {   child.visible = false;
+    mat.transparent = true;
+     mat.needsUpdate = true;
+     }
+      });
+    }
+  });
+    if (currentHatObject) {
+    scene.remove(currentHatObject);
+    currentHatObject = null;
+    currentHatPath = null;
+  } if (currentShoeObjects.length > 0) {
+    currentShoeObjects.forEach(obj => scene.remove(obj));
+    currentShoeObjects = [];
+    currentShoesPath = null;
+  }
+    window.pantsAreOn = false;
+};
 
 
 
