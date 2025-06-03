@@ -866,17 +866,17 @@ window.wearShoes3 = function(modelPath) {
     rightShoe.userData.type = 'shoes';
    
    
-    rightShoe.scale.set(1.4, 1.3, 1.4);
-    rightShoe.position.set(0.1675, -0.02, 0.022);
-    rightShoe.rotation.y = 0.2;
+    rightShoe.scale.set(1.4, 1.2, 1.1);
+      rightShoe.position.set(9, -0.02, 1.28);
+     rightShoe.rotation.set(0, Math.PI / 2-0.3, 0);
    
    const leftShoe = rightShoe.clone();
     leftShoe.userData.type = 'shoes';
-     leftShoe.scale.set(1.4, 1.3, 1.4);
-    leftShoe.position.set(-0.265, -0.02, 0.022);
+     leftShoe.scale.set(1.4, 1.2, 1.1);
+    leftShoe.position.set(9, -0.02, 0.82);
     leftShoe.rotation.y = -0.2;
     leftShoe.scale.x *= -1;
-
+    leftShoe.rotation.set(0, Math.PI / 2+0.3, 0); 
 
     scene.add(rightShoe);
     scene.add(leftShoe);
