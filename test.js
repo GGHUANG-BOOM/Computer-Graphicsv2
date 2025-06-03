@@ -162,36 +162,37 @@ function init() {
     }
   };
 
-  camera.position.copy(cameraPositions.default.position);
-  controls.target.copy(cameraPositions.default.target);
-  controls.update();
+  const lookAtTarget = new THREE.Vector3();
+ camera.position.copy(cameraPositions.default.position);
+lookAtTarget.copy(cameraPositions.default.target);
+camera.lookAt(lookAtTarget);
 
-  window.moveCameraToPosition = function(positionKey, duration = 1000) {
-    const targetPosition = cameraPositions[positionKey].position;
-    const targetLookAt = cameraPositions[positionKey].target;
-    
-    const startPosition = camera.position.clone();
-    const startTarget = controls.target.clone();
-    const startTime = Date.now();
+ window.moveCameraToPosition = function(positionKey, duration = 1000) {
+  const targetPosition = cameraPositions[positionKey].position;
+  const targetLookAt = cameraPositions[positionKey].target;
+  
+  const startPosition = camera.position.clone();
+  const startTarget = lookAtTarget.clone();
+  const startTime = Date.now();
 
-    function updateCamera() {
-      const currentTime = Date.now();
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
+  function updateCamera() {
+    const currentTime = Date.now();
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    const easeProgress = progress * (2 - progress); 
 
-      const easeProgress = progress * (2 - progress);
+    camera.position.lerpVectors(startPosition, targetPosition, easeProgress);
+    lookAtTarget.lerpVectors(startTarget, targetLookAt, easeProgress);
+    camera.lookAt(lookAtTarget);
 
-      camera.position.lerpVectors(startPosition, targetPosition, easeProgress);
-      controls.target.lerpVectors(startTarget, targetLookAt, easeProgress);
-      controls.update();
-
-      if (progress < 1) {
-        requestAnimationFrame(updateCamera);
-      }
+    if (progress < 1) {
+      requestAnimationFrame(updateCamera);
     }
-
-    updateCamera();
   }
+
+  updateCamera();
+};
+
 
   let mannequin;
 
@@ -1074,7 +1075,7 @@ renderer.domElement.addEventListener('mousemove', (event) => {
 // Animation loop
   function animate(time) {
   requestAnimationFrame(animate);
-  controls.update();
+  camera.lookAt(lookAtTarget);
 
   if (cloudMaterial) {
     cloudMaterial.uniforms.time.value = time * 0.001;
