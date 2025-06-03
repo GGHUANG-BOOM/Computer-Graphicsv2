@@ -815,16 +815,16 @@ window.wearShoes2 = function(modelPath) {
     const rightShoe = gltf.scene;
     rightShoe.userData.type = 'shoes';
     rightShoe.scale.set(1.1 , 1.1, 1.1);
-  rightShoe.position.set(9, 0.035, 1.25);
-    rightShoe.rotation.set(0, Math.PI / 2, 0);
+  rightShoe.position.set(9, -0.02, 1.27);
+    rightShoe.rotation.set(0, Math.PI / 2-0.3, 0);
  
    
    
     const leftShoe = rightShoe.clone();
     leftShoe.userData.type = 'shoes';
      leftShoe.scale.set(1.1, 1.1, 1.1);
-     leftShoe.position.set(9, 0.035, 0.84);
-    leftShoe.rotation.set(0, Math.PI / 2, 0); 
+     leftShoe.position.set(9, -0.02, 0.82);
+    leftShoe.rotation.set(0, Math.PI / 2+0.3, 0); 
     leftShoe.scale.x *= -1;
 
 
