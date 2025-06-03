@@ -252,38 +252,53 @@ scene.add(ambientLight);
   mtlLoader.load('./A-pose HP.mtl', (materials) => {
     materials.preload();
 
+const mannequinMaterials = [
+  'Converted_buxiugang',
+  'Converted_PVC_FurnGrad_Charcoal_Gray',
+];
+
+
+
 const guiSettings = {
   modelColor: "#ffffff"
 };
 
 const gui = new GUI();
 gui.addColor(guiSettings, 'modelColor').name('Model Color').onChange((value) => {
-  for (const materialName in materials.materials) {
-    const mat = materials.materials[materialName];
-    mat.color.set(value);
-    mat.needsUpdate = true;
+  for (const name of mannequinMaterials) {
+    if (materials.materials[name]) {
+      const mat = materials.materials[name];
+      mat.color.set(value);
+      mat.needsUpdate = true;
+    }
   }
 });
 
     for (const materialName in materials.materials) {
-      const mat = materials.materials[materialName];
+  const mat = materials.materials[materialName];
 
-       mat.color.set(guiSettings.modelColor);
-        mat.map = null;
- 
-      if (mat.map) {
-        mat.map.wrapS = THREE.RepeatWrapping;
-        mat.map.wrapT = THREE.RepeatWrapping;
-        mat.map.repeat.set(1, 1);
-      }
- 
-      if (mat.bumpMap) {
-        mat.bumpMap.wrapS = THREE.RepeatWrapping;
-        mat.bumpMap.wrapT = THREE.RepeatWrapping;
-        mat.bumpMap.repeat.set(1, 1);
-        mat.bumpScale = 0;
-      }
+  if (mannequinMaterials.includes(materialName)) {
+
+    mat.color.set(guiSettings.modelColor);
+    mat.map = null;
+  } else {
+    
+    if (mat.map) {
+      mat.map.wrapS = THREE.RepeatWrapping;
+      mat.map.wrapT = THREE.RepeatWrapping;
+      mat.map.repeat.set(1, 1);
     }
+
+    if (mat.bumpMap) {
+      mat.bumpMap.wrapS = THREE.RepeatWrapping;
+      mat.bumpMap.wrapT = THREE.RepeatWrapping;
+      mat.bumpMap.repeat.set(1, 1);
+  
+    }
+  }
+
+  mat.needsUpdate = true;
+}
  
    
     const objLoader = new OBJLoader();
