@@ -852,40 +852,39 @@ window.setBackground = function(backgroundType) {
   
   if (backgroundType === 'bedroom') {
     if (bedroomModel) {
-      scene.remove(bedroomModel);
+ scene.remove(bedroomModel);
       bedroomModel = null;
     }
     
     if (scene.userData.bedroomLight) {
-      scene.remove(scene.userData.bedroomLight);
-      scene.userData.bedroomLight = null;
+    scene.remove(scene.userData.bedroomLight);
+   scene.userData.bedroomLight = null;
     }
     if (scene.userData.bedroomCeiling) {
-      scene.remove(scene.userData.bedroomCeiling);
-      scene.userData.bedroomCeiling = null;
+   scene.remove(scene.userData.bedroomCeiling);
+  scene.userData.bedroomCeiling = null;
     }
-    
     const gltfLoader = new GLTFLoader();
-    gltfLoader.load('bedroom.glb', (gltf) => {
+     gltfLoader.load('bedroom.glb', (gltf) => {
       bedroomModel = gltf.scene;
-      bedroomModel.scale.set(1, 1, 1);
+        bedroomModel.scale.set(1, 1, 1);
       bedroomModel.position.set(0, 0, 0);
-      scene.add(bedroomModel);
+        scene.add(bedroomModel);
     });
     
-    scene.background = new THREE.Color(0xf0f0f0);
-    light.intensity = 0.6;
-    dirLight.intensity = 0.4;
+       scene.background = new THREE.Color(0xf0f0f0);
+      light.intensity = 0.6;
+        dirLight.intensity = 0.4;
     
     const bedroomCeilingLight = new THREE.SpotLight(0xfff8dc, 1.2);
     bedroomCeilingLight.position.set(0, 4.5, 0);
-    bedroomCeilingLight.target.position.set(0, 1, 0);
-    bedroomCeilingLight.angle = Math.PI / 4;
-    bedroomCeilingLight.penumbra = 0.3;
-    bedroomCeilingLight.decay = 0.8;
-    bedroomCeilingLight.distance = 8;
-    scene.add(bedroomCeilingLight);
-    scene.add(bedroomCeilingLight.target);
+        bedroomCeilingLight.target.position.set(0, 1, 0);
+           bedroomCeilingLight.angle = Math.PI / 4;
+        bedroomCeilingLight.penumbra = 0.3;
+        bedroomCeilingLight.decay = 0.8;
+        bedroomCeilingLight.distance = 8;
+       scene.add(bedroomCeilingLight);
+     scene.add(bedroomCeilingLight.target);
     scene.userData.bedroomCeiling = bedroomCeilingLight;
     
     const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
@@ -895,34 +894,31 @@ window.setBackground = function(backgroundType) {
     camera.position.set(-3.5, 2, 0);
     
   } else {
-    if (bedroomModel) {
-      scene.remove(bedroomModel);
-      bedroomModel = null;
+ if (bedroomModel) {
+   scene.remove(bedroomModel);
+    bedroomModel = null;
     }
-    
     if (scene.userData.bedroomLight) {
       scene.remove(scene.userData.bedroomLight);
       scene.userData.bedroomLight = null;
     }
     if (scene.userData.bedroomCeiling) {
-      scene.remove(scene.userData.bedroomCeiling);
-      scene.userData.bedroomCeiling = null;
+  scene.remove(scene.userData.bedroomCeiling);
+   scene.userData.bedroomCeiling = null;
     }
-    
     camera.position.set(-5, 2, 0);
-    scene.background = new THREE.Color(0x333333);
-    light.intensity = 1;
-    dirLight.intensity = 0.8;
+     scene.background = new THREE.Color(0x333333);
+   light.intensity = 1;
+   dirLight.intensity = 0.8;
     
     if (backgroundType === 'room') {
-      scene.background = new THREE.Color(0x8B7355);
+   scene.background = new THREE.Color(0x8B7355);
     } else if (backgroundType === 'street') {
-      scene.background = new THREE.Color(0x87CEEB);
+    scene.background = new THREE.Color(0x87CEEB);
     }
   }
 };
-
-    const ground1 = new THREE.Mesh(
+  const ground1 = new THREE.Mesh(
     new THREE.PlaneGeometry(10, 10),
     new THREE.MeshStandardMaterial({ color: 0x333333 })
   );
