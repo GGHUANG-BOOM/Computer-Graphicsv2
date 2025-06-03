@@ -623,144 +623,115 @@ camera.lookAt(lookAtTarget);
   let currentHatPath = null;
   let currentHatObject = null;
 
-
-  window.wearHat = function(modelPath) {
+window.wearHat = function(modelPath) {
   if (!modelPath) return;
 
-
   if (currentHatPath === modelPath && currentHatObject) {
-    scene.remove(currentHatObject);
+    mannequin.remove(currentHatObject);
     currentHatPath = null;
     currentHatObject = null;
     return;
   }
 
-
   if (currentHatObject) {
-    scene.remove(currentHatObject);
+    mannequin.remove(currentHatObject);
     currentHatObject = null;
     currentHatPath = null;
   }
 
-
- 
   const gltfLoader = new GLTFLoader();
-   gltfLoader.load(modelPath, (gltf) => {
+  gltfLoader.load(modelPath, (gltf) => {
     const hatObject = gltf.scene;
-   
     hatObject.userData.type = 'hat';
     hatObject.scale.set(0.1094, 0.1, 0.13);
     hatObject.position.set(9, 1.59, 1.04);
-    hatObject.rotation.y=Math.PI/2;
-    scene.add(hatObject);
-
-
-
+    hatObject.rotation.y = Math.PI / 2;
+    mannequin.add(hatObject);
 
     currentHatObject = hatObject;
     currentHatPath = modelPath;
   });
 };
 
-
-  window.wearHat2 = function(modelPath) {
- 
+window.wearHat2 = function(modelPath) {
   if (!modelPath) return;
 
-
   if (currentHatPath === modelPath && currentHatObject) {
-    scene.remove(currentHatObject);
+    mannequin.remove(currentHatObject);
     currentHatPath = null;
     currentHatObject = null;
     return;
   }
 
-
   if (currentHatObject) {
-    scene.remove(currentHatObject);
+    mannequin.remove(currentHatObject);
     currentHatObject = null;
     currentHatPath = null;
   }
 
-
-
-
   const gltfLoader = new GLTFLoader();
   gltfLoader.load(modelPath, (gltf) => {
     const hatObject = gltf.scene;
-   
     hatObject.userData.type = 'hat';
- 
     hatObject.scale.set(0.915, 0.9, 1.15);
-  hatObject.position.set(9.05, 1.57, 1.04);
-   hatObject.rotation.y=Math.PI/2;
-    scene.add(hatObject);
+    hatObject.position.set(9.05, 1.57, 1.04);
+    hatObject.rotation.y = Math.PI / 2;
+    mannequin.add(hatObject);
+
     currentHatObject = hatObject;
     currentHatPath = modelPath;
   });
 };
 
+window.wearHat3 = function(modelPath) {
+  if (!modelPath) return;
 
- window.wearHat3 = function(modelPath) {
- 
- 
-if (!modelPath) return;
+  if (currentHatPath === modelPath && currentHatObject) {
+    mannequin.remove(currentHatObject);
+    currentHatPath = null;
+    currentHatObject = null;
+    return;
+  }
 
+  if (currentHatObject) {
+    mannequin.remove(currentHatObject);
+    currentHatObject = null;
+    currentHatPath = null;
+  }
 
-if (currentHatPath === modelPath && currentHatObject) {
-  scene.remove(currentHatObject);
-  currentHatPath = null;
-  currentHatObject = null;
-  return;
-}
-
-
-if (currentHatObject) {
-  scene.remove(currentHatObject);
-  currentHatObject = null;
-  currentHatPath = null;
-}
- 
   const gltfLoader = new GLTFLoader();
   gltfLoader.load(modelPath, (gltf) => {
     const hatObject = gltf.scene;
     hatObject.userData.type = 'hat';
-
-
     hatObject.scale.set(0.8, 0.9, 1.4);
     hatObject.position.set(8.97, 1.57, 1.04);
-    hatObject.rotation.y=Math.PI/2;
-    scene.add(hatObject);
+    hatObject.rotation.y = Math.PI / 2;
+    mannequin.add(hatObject);
+
     currentHatObject = hatObject;
     currentHatPath = modelPath;
   });
 };
 
-
-
-
+// =================== SHOES ===================
 let currentShoesPath = null;
 let currentShoeObjects = [];
 
+function removeCurrentShoes() {
+  currentShoeObjects.forEach(obj => mannequin.remove(obj));
+  currentShoeObjects = [];
+  currentShoesPath = null;
+}
 
 window.wearShoes = function(modelPath) {
   if (!modelPath) return;
 
-
- 
   if (currentShoesPath === modelPath && currentShoeObjects.length > 0) {
-    currentShoeObjects.forEach(obj => scene.remove(obj));
-    currentShoesPath = null;
-    currentShoeObjects = [];
+    removeCurrentShoes();
     return;
   }
 
-
- 
-  currentShoeObjects.forEach(obj => scene.remove(obj));
-  currentShoeObjects = [];
-  currentShoesPath = null;
-
+  removeCurrentShoes();
 
   const gltfLoader = new GLTFLoader();
   gltfLoader.load(modelPath, (gltf) => {
@@ -770,120 +741,87 @@ window.wearShoes = function(modelPath) {
     rightShoe.position.set(9, 0.035, 1.25);
     rightShoe.rotation.set(0, -Math.PI / 2, 0);
 
-
     const leftShoe = rightShoe.clone();
     leftShoe.userData.type = 'shoes';
     leftShoe.scale.set(-0.875, 0.9, 1);
     leftShoe.position.set(9, 0.035, 0.84);
-    leftShoe.rotation.set(0, -Math.PI / 2, 0); 
+    leftShoe.rotation.set(0, -Math.PI / 2, 0);
 
+    mannequin.add(rightShoe);
+    mannequin.add(leftShoe);
 
-    scene.add(rightShoe);
-    scene.add(leftShoe);
-
-
-   
     currentShoeObjects = [rightShoe, leftShoe];
     currentShoesPath = modelPath;
   });
 };
-
 
 window.wearShoes2 = function(modelPath) {
- 
- 
- 
   if (!modelPath) return;
 
-
   if (currentShoesPath === modelPath && currentShoeObjects.length > 0) {
-    currentShoeObjects.forEach(obj => scene.remove(obj));
-    currentShoesPath = null;
-    currentShoeObjects = [];
+    removeCurrentShoes();
     return;
   }
 
+  removeCurrentShoes();
 
- 
-  currentShoeObjects.forEach(obj => scene.remove(obj));
-  currentShoeObjects = [];
-  currentShoesPath = null;
- 
   const gltfLoader = new GLTFLoader();
   gltfLoader.load(modelPath, (gltf) => {
-   
     const rightShoe = gltf.scene;
     rightShoe.userData.type = 'shoes';
-    rightShoe.scale.set(1.1 , 1.1, 1.1);
-  rightShoe.position.set(9, -0.02, 1.27);
-    rightShoe.rotation.set(0, Math.PI / 2-0.3, 0);
- 
-   
-   
+    rightShoe.scale.set(1.1, 1.1, 1.1);
+    rightShoe.position.set(9, -0.02, 1.27);
+    rightShoe.rotation.set(0, Math.PI / 2 - 0.3, 0);
+
     const leftShoe = rightShoe.clone();
     leftShoe.userData.type = 'shoes';
-     leftShoe.scale.set(1.1, 1.1, 1.1);
-     leftShoe.position.set(9, -0.02, 0.82);
-    leftShoe.rotation.set(0, Math.PI / 2+0.3, 0); 
+    leftShoe.scale.set(1.1, 1.1, 1.1);
+    leftShoe.position.set(9, -0.02, 0.82);
+    leftShoe.rotation.set(0, Math.PI / 2 + 0.3, 0);
     leftShoe.scale.x *= -1;
 
+    mannequin.add(rightShoe);
+    mannequin.add(leftShoe);
 
-   
-    scene.add(rightShoe);
-    scene.add(leftShoe);
     currentShoeObjects = [rightShoe, leftShoe];
     currentShoesPath = modelPath;
   });
 };
 
-
 window.wearShoes3 = function(modelPath) {
- 
- 
- 
   if (!modelPath) return;
 
-
   if (currentShoesPath === modelPath && currentShoeObjects.length > 0) {
-    currentShoeObjects.forEach(obj => scene.remove(obj));
-    currentShoesPath = null;
-    currentShoeObjects = [];
+    removeCurrentShoes();
     return;
   }
 
+  removeCurrentShoes();
 
- 
-  currentShoeObjects.forEach(obj => scene.remove(obj));
-  currentShoeObjects = [];
-  currentShoesPath = null;
- 
   const gltfLoader = new GLTFLoader();
   gltfLoader.load(modelPath, (gltf) => {
-   
     const rightShoe = gltf.scene;
-   
-   
     rightShoe.userData.type = 'shoes';
-   
-   
     rightShoe.scale.set(1.4, 1.2, 1.1);
-      rightShoe.position.set(9, -0.02, 1.28);
-     rightShoe.rotation.set(0, Math.PI / 2-0.3, 0);
-   
-   const leftShoe = rightShoe.clone();
-    leftShoe.userData.type = 'shoes';
-     leftShoe.scale.set(1.4, 1.2, 1.1);
-    leftShoe.position.set(9, -0.02, 0.82);
-    leftShoe.rotation.y = -0.2;
-    leftShoe.scale.x *= -1;
-    leftShoe.rotation.set(0, Math.PI / 2+0.3, 0); 
+    rightShoe.position.set(9, -0.02, 1.28);
+    rightShoe.rotation.set(0, Math.PI / 2 - 0.3, 0);
 
-    scene.add(rightShoe);
-    scene.add(leftShoe);
+    const leftShoe = rightShoe.clone();
+    leftShoe.userData.type = 'shoes';
+    leftShoe.scale.set(1.4, 1.2, 1.1);
+    leftShoe.position.set(9, -0.02, 0.82);
+    leftShoe.rotation.set(0, Math.PI / 2 + 0.3, 0);
+    leftShoe.scale.x *= -1;
+
+    mannequin.add(rightShoe);
+    mannequin.add(leftShoe);
+
     currentShoeObjects = [rightShoe, leftShoe];
     currentShoesPath = modelPath;
   });
 };
+
+
 function showNotification(message) {
   const notification = document.getElementById('notification');
   const notificationText = document.getElementById('notification-text');
