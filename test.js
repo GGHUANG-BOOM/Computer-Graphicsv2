@@ -1,5 +1,5 @@
 import * as THREE from './three.module.js';
-import { OrbitControls } from './OrbitControls.js';
+//import { OrbitControls } from './OrbitControls.js';
 import { MTLLoader } from './MTLLoader.js';
 import { OBJLoader } from './OBJLoader.js';
 import { GLTFLoader } from './GLTFLoader.js';
@@ -41,7 +41,7 @@ camera.lookAt(new THREE.Vector3(0, 0, 0));
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
 
-  const controls = new OrbitControls(camera, renderer.domElement);
+ //const controls = new OrbitControls(camera, renderer.domElement);
 
  
 
@@ -782,7 +782,7 @@ renderer.domElement.addEventListener('mousemove', (event) => {
   // Animation loop
   function animate() {
     requestAnimationFrame(animate);
-    controls.update();
+    //controls.update();
     renderer.render(scene, camera);
   }
   animate();
