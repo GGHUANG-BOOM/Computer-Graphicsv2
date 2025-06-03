@@ -239,7 +239,7 @@ function init() {
 
 
   const guiSettings = {
-    modelColor: "#ffffff"
+    modelColor: "#919191"
   };
 
   const gui = new GUI({ 
