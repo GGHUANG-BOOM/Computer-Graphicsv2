@@ -955,7 +955,6 @@ window.clearOutfit = function () {
   showNotification('Outfit cleared!');
 };
 
-
 window.randomOutfit = function() {
   clearAllClothing();
   const shirts = [
@@ -990,6 +989,8 @@ window.randomOutfit = function() {
   setTimeout(randomHat, 150);
   setTimeout(randomShoes, 200);
 };
+
+
 window.clearAllClothing = function() {
   if (!mannequin) return;
 
