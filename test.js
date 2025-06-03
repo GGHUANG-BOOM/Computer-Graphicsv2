@@ -740,7 +740,42 @@ window.wearShoes3 = function(modelPath) {
     currentShoesPath = modelPath;
   });
 };
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
 
+let isDragging = false;
+let prevX = 0;
+let canRotate = false; 
+
+renderer.domElement.addEventListener('mousedown', (event) => {
+  
+  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  
+  raycaster.setFromCamera(mouse, camera);
+  
+  
+  const intersects = raycaster.intersectObject(mannequin, true);
+
+  if (intersects.length > 0) {
+    canRotate = true;
+    isDragging = true;
+    prevX = event.clientX;
+  }
+});
+
+renderer.domElement.addEventListener('mouseup', () => {
+  isDragging = false;
+  canRotate = false;
+});
+
+renderer.domElement.addEventListener('mousemove', (event) => {
+  if (isDragging && canRotate && mannequin) {
+    const deltaX = event.clientX - prevX;
+    mannequin.rotation.y += deltaX * 0.01;
+    prevX = event.clientX;
+  }
+});
 
 
 
