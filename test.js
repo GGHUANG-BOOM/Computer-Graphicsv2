@@ -248,7 +248,7 @@ function init() {
 
   const guiContainer = gui.domElement;
   guiContainer.style.position = 'absolute';
-  guiContainer.style.top = '304px';
+  guiContainer.style.top = '700px';
   guiContainer.style.right = '10px';
   guiContainer.style.zIndex = '10';
   guiContainer.style.fontFamily = 'input-mono-narrow, monospace';
