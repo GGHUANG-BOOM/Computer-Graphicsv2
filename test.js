@@ -691,8 +691,8 @@ camera.lookAt(lookAtTarget);
    
     hatObject.userData.type = 'hat';
  
-    hatObject.scale.set(0.915, 0.9, 1);
-  hatObject.position.set(9, 1.59, 1.04);
+    hatObject.scale.set(0.915, 0.9, 1.15);
+  hatObject.position.set(9.05, 1.57, 1.04);
    hatObject.rotation.y=Math.PI/2;
     scene.add(hatObject);
     currentHatObject = hatObject;
@@ -727,8 +727,9 @@ if (currentHatObject) {
     hatObject.userData.type = 'hat';
 
 
-    hatObject.scale.set(0.8, 0.9, 0.8);
-    hatObject.position.set(9, 1.59, 1.04);
+    hatObject.scale.set(0.8, 0.9, 1.4);
+    hatObject.position.set(8.97, 1.57, 1.04);
+    hatObject.rotation.y=Math.PI/2;
     scene.add(hatObject);
     currentHatObject = hatObject;
     currentHatPath = modelPath;
@@ -766,15 +767,15 @@ window.wearShoes = function(modelPath) {
     const rightShoe = gltf.scene;
     rightShoe.userData.type = 'shoes';
     rightShoe.scale.set(0.875, 0.9, 1);
-    rightShoe.position.set(-0.27, 0.035, -0.0135);
-    rightShoe.rotation.y = Math.PI - 0.3;
+    rightShoe.position.set(9, 0.035, 1.25);
+    rightShoe.rotation.set(0, -Math.PI / 2, 0);
 
 
     const leftShoe = rightShoe.clone();
     leftShoe.userData.type = 'shoes';
     leftShoe.scale.set(-0.875, 0.9, 1);
-    leftShoe.position.set(0.185, 0.035, -0.0135);
-    leftShoe.rotation.y = -0.3;
+    leftShoe.position.set(9, 0.035, 0.84);
+    leftShoe.rotation.set(0, -Math.PI / 2, 0); 
 
 
     scene.add(rightShoe);
@@ -814,16 +815,16 @@ window.wearShoes2 = function(modelPath) {
     const rightShoe = gltf.scene;
     rightShoe.userData.type = 'shoes';
     rightShoe.scale.set(1.1 , 1.1, 1.1);
-   rightShoe.position.set(0.1675, -0.0225, -0.0135);
-        rightShoe.rotation.y = 0.2;
+  rightShoe.position.set(9, 0.035, 1.25);
+    rightShoe.rotation.set(0, Math.PI / 2, 0);
  
    
    
     const leftShoe = rightShoe.clone();
     leftShoe.userData.type = 'shoes';
      leftShoe.scale.set(1.1, 1.1, 1.1);
-    leftShoe.position.set(-0.27, -0.0225, -0.0135);
-    leftShoe.rotation.y = -0.2;
+     leftShoe.position.set(9, 0.035, 0.84);
+    leftShoe.rotation.set(0, Math.PI / 2, 0); 
     leftShoe.scale.x *= -1;
 
 
