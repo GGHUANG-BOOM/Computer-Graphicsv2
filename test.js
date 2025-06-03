@@ -6,7 +6,7 @@ import { GLTFLoader } from './GLTFLoader.js';
 import { Water } from './objects/Water2.js';
 import { Sky } from './objects/Sky.js';
 import {GUI}  from './lil-gui.module.min.js';
-import { OrbitControls } from './OrbitControls.js';
+
 
 // Page Navigation
 const startButton = document.getElementById('start-button');
@@ -138,7 +138,7 @@ function init() {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
- const controls = new OrbitControls(camera, renderer.domElement);
+ 
 
   const cameraPositions = {
     default: {
@@ -1139,7 +1139,7 @@ renderer.domElement.addEventListener('mousemove', (event) => {
   function animate(time) {
   requestAnimationFrame(animate);
   camera.lookAt(lookAtTarget);
-controls.update();
+
   if (cloudMaterial) {
     cloudMaterial.uniforms.time.value = time * 0.001;
   }
