@@ -1021,7 +1021,64 @@ window.clearAllClothing = function() {
 };
 
 
+let spotlight = null;
+let spotlightEnabled = false;
 
+function createSpotlight() {
+  if (spotlight) {
+    scene.remove(spotlight);
+    scene.remove(spotlight.target);
+    spotlight = null;
+  }
+  
+  spotlight = new THREE.SpotLight(0xffffff, 8);
+  spotlight.position.set(9, 3, -2);
+  spotlight.target.position.set(9, 0, 1);
+  spotlight.angle = Math.PI / 8; 
+  spotlight.penumbra = 0.1; 
+  spotlight.decay = 1;
+  spotlight.distance = 10;
+  spotlight.castShadow = true;
+  
+  spotlight.shadow.mapSize.width = 2048;
+  spotlight.shadow.mapSize.height = 2048;
+  spotlight.shadow.camera.near = 0.1;
+  spotlight.shadow.camera.far = 10
+  spotlight.shadow.focus = 1;
+  
+  scene.add(spotlight);
+  scene.add(spotlight.target);
+  
+  return spotlight;
+}
+
+window.toggleSpotlight = function() {
+  if (!spotlightEnabled) {
+    if (!spotlight) {
+      createSpotlight();
+    }
+    spotlight.visible = true;
+    spotlightEnabled = true;
+    
+    dirLight.intensity = 0.2;
+    hemiLight.intensity = 0.3;
+    ambientLight.intensity = 0.2;
+  } else {
+    if (spotlight) {
+      spotlight.visible = false;
+    }
+    spotlightEnabled = false;
+    
+    dirLight.intensity = 3;
+    hemiLight.intensity = 1.2;
+    ambientLight.intensity = 0.5;
+  }
+  
+  const btn = document.querySelector('[onclick="toggleSpotlight()"]');
+  if (btn) {
+    btn.textContent = spotlightEnabled ? 'Spotlight OFF' : 'Spotlight ON';
+  }
+};
 
 
 
