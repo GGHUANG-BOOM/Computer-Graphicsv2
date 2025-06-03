@@ -6,6 +6,7 @@ import { GLTFLoader } from './GLTFLoader.js';
 import { Water } from './objects/Water2.js';
 import { Sky } from './objects/Sky.js';
 import {GUI}  from './lil-gui.module.min.js';
+import { OrbitControls } from './OrbitControls.js';
 
 // Page Navigation
 const startButton = document.getElementById('start-button');
@@ -137,7 +138,7 @@ function init() {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
- 
+ const controls = new OrbitControls(camera, renderer.domElement);
 
   const cameraPositions = {
     default: {
@@ -648,8 +649,9 @@ camera.lookAt(lookAtTarget);
     const hatObject = gltf.scene;
    
     hatObject.userData.type = 'hat';
-    hatObject.scale.set(0.1094, 0.1, 0.12);
-    hatObject.position.set(-0.04, 1.575, -0.005);
+    hatObject.scale.set(0.1094, 0.1, 0.13);
+    hatObject.position.set(9, 1.59, 1.04);
+    hatObject.rotation.y=Math.PI/2;
     scene.add(hatObject);
 
 
@@ -690,8 +692,8 @@ camera.lookAt(lookAtTarget);
     hatObject.userData.type = 'hat';
  
     hatObject.scale.set(0.915, 0.9, 1);
-  hatObject.position.set(-0.04, 1.565, 0.025);
-   
+  hatObject.position.set(9, 1.59, 1.04);
+   hatObject.rotation.y=Math.PI/2;
     scene.add(hatObject);
     currentHatObject = hatObject;
     currentHatPath = modelPath;
@@ -726,7 +728,7 @@ if (currentHatObject) {
 
 
     hatObject.scale.set(0.8, 0.9, 0.8);
-    hatObject.position.set(-0.04, 1.5675, -0.04);
+    hatObject.position.set(9, 1.59, 1.04);
     scene.add(hatObject);
     currentHatObject = hatObject;
     currentHatPath = modelPath;
@@ -1076,7 +1078,7 @@ renderer.domElement.addEventListener('mousemove', (event) => {
   function animate(time) {
   requestAnimationFrame(animate);
   camera.lookAt(lookAtTarget);
-
+controls.update();
   if (cloudMaterial) {
     cloudMaterial.uniforms.time.value = time * 0.001;
   }
