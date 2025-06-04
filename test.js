@@ -953,23 +953,6 @@ window.loadOutfit = function () {
   showNotification('Outfit loaded!');
 };
 
-window.clearOutfit = function () {
-  if (!mannequin) return;
-
-  mannequin.traverse((child) => {
-    if (child.isMesh && child.material) {
-      const materials = Array.isArray(child.material) ? child.material : [child.material];
-      materials.forEach((mat) => {
-        if (mat.name && isClothing(mat.name)) {
-          child.visible = false;
-        }
-      });
-    }
-  });
-
-  console.log("Outfit cleared.");
-  showNotification('Outfit cleared!');
-};
 
 window.randomOutfit = function() {
   clearAllClothing();
@@ -1031,6 +1014,9 @@ window.clearAllClothing = function() {
     currentShoesPath = null;
   }
     window.pantsAreOn = false;
+
+      console.log("Outfit cleared.");
+  showNotification('Outfit cleared!');
 };
 
 
