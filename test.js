@@ -93,6 +93,7 @@ let cloudMaterial;
 let beachScene, rockModel;
 let cloud, cloud2, cloud3;
 let currentBackground = "room";
+let isAutoRotating = false;
 
 function init() {
 
@@ -143,17 +144,19 @@ function init() {
  const controls = new OrbitControls(camera, renderer.domElement);
  controls.target.set(9, 1, 1);
  controls.update();
-//controls.minPolarAngle = Math.PI / 2; // 90 degrees
-//controls.maxPolarAngle = Math.PI / 2;
+controls.minPolarAngle = Math.PI / 2; // 90 degrees
+controls.maxPolarAngle = Math.PI / 2;
 
 controls.enableZoom = false;     
 controls.enablePan = false;
-controls.autoRotate = false;
-
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 controls.rotateSpeed = 0.5;
 
+window.toggleAutoRotate =function() {
+  isAutoRotating = !isAutoRotating;
+  controls.autoRotate = isAutoRotating;
+}
 
   const cameraPositions = {
     default: {
