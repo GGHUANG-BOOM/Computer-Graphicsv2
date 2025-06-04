@@ -823,24 +823,22 @@ function createSpotlight() {
 window.toggleSpotlight = function() {
   if (!spotlightEnabled) {
     if (!spotlight) {
-      createSpotlight();
+    createSpotlight();
     }
-    spotlight.visible = true;
+  spotlight.visible = true;
     spotlightEnabled = true;
-    
     light.intensity = 0.3;
     dirLight.intensity = 0.2;
   } else {
     if (spotlight) {
       spotlight.visible = false;
-    }
-    spotlightEnabled = false;
-    if (currentBackground === 'bedroom') {
-      light.intensity = 0.6;
-      dirLight.intensity = 0.4;
-    } else {
+    }  spotlightEnabled = false; 
+    if (currentBackground !== 'bedroom') {
       light.intensity = 1;
       dirLight.intensity = 0.8;
+    } else {
+      light.intensity = 0.2;
+      dirLight.intensity = 0.1;
     }
   }
   
@@ -856,69 +854,78 @@ window.setBackground = function(backgroundType) {
   
   if (backgroundType === 'bedroom') {
     if (bedroomModel) {
- scene.remove(bedroomModel);
+      scene.remove(bedroomModel);
       bedroomModel = null;
     }
     
-    if (scene.userData.bedroomLight) {
-    scene.remove(scene.userData.bedroomLight);
-   scene.userData.bedroomLight = null;
-    }
-    if (scene.userData.bedroomCeiling) {
-   scene.remove(scene.userData.bedroomCeiling);
-  scene.userData.bedroomCeiling = null;
-    }
-    const gltfLoader = new GLTFLoader();
-     gltfLoader.load('bedroom.glb', (gltf) => {
-      bedroomModel = gltf.scene;
-        bedroomModel.scale.set(1.4, 1.4, 1.4);
-      bedroomModel.position.set(0, 0, 0);
-        scene.add(bedroomModel);
-    });
-    
-       scene.background = new THREE.Color(0xf0f0f0);
-      light.intensity = 0.6;
-        dirLight.intensity = 0.4;
-    
-    const bedroomCeilingLight = new THREE.SpotLight(0xfff8dc, 1.2);
-    bedroomCeilingLight.position.set(0, 4.5, 0);
-        bedroomCeilingLight.target.position.set(0, 1, 0);
-           bedroomCeilingLight.angle = Math.PI / 4;
-        bedroomCeilingLight.penumbra = 0.3;
-        bedroomCeilingLight.decay = 0.8;
-        bedroomCeilingLight.distance = 8;
-       scene.add(bedroomCeilingLight);
-     scene.add(bedroomCeilingLight.target);
-    scene.userData.bedroomCeiling = bedroomCeilingLight;
-    
-    const fillLight = new THREE.DirectionalLight(0xffffff, 0.3);
-    fillLight.position.set(2, 2, 1);
-    scene.add(fillLight);
-    scene.userData.bedroomLight = fillLight;
-    camera.position.set(-3.5, 2, 0);
-    
-  } else {
- if (bedroomModel) {
-   scene.remove(bedroomModel);
-    bedroomModel = null;
-    }
     if (scene.userData.bedroomLight) {
       scene.remove(scene.userData.bedroomLight);
       scene.userData.bedroomLight = null;
     }
     if (scene.userData.bedroomCeiling) {
-  scene.remove(scene.userData.bedroomCeiling);
-   scene.userData.bedroomCeiling = null;
+      scene.remove(scene.userData.bedroomCeiling);
+      scene.userData.bedroomCeiling = null;
+    }
+    const gltfLoader = new GLTFLoader();
+    gltfLoader.load('bedroom.glb', (gltf) => {
+      bedroomModel = gltf.scene;
+      bedroomModel.scale.set(1.4, 1.4, 1.4);
+      bedroomModel.position.set(0, 0, 0);
+      scene.add(bedroomModel);
+    });
+    
+    scene.background = new THREE.Color(0x2a2a2a);
+    
+    light.intensity = 0.2;
+    dirLight.intensity = 0.1;
+    
+    const bedroomCeilingLight = new THREE.SpotLight(0xffffff, 1); 
+    bedroomCeilingLight.position.set(0, 5, 0);
+    bedroomCeilingLight.target.position.set(0, 0, 0);
+    bedroomCeilingLight.target.updateMatrixWorld();
+    bedroomCeilingLight.angle = Math.PI / 3; 
+    bedroomCeilingLight.penumbra = 0.4; 
+    bedroomCeilingLight.decay = 1;
+    bedroomCeilingLight.distance = 12; 
+    bedroomCeilingLight.castShadow = true;  
+    scene.add(bedroomCeilingLight);
+    scene.add(bedroomCeilingLight.target);
+    scene.userData.bedroomCeiling = bedroomCeilingLight;
+    const fillLight = new THREE.DirectionalLight(0xffffff, 0.15);
+    fillLight.position.set(2, 2, 1);
+    scene.add(fillLight);
+    scene.userData.bedroomLight = fillLight;
+
+    
+    
+    camera.position.set(-4, 2.7, 1.5); 
+   
+  } else {
+    if (bedroomModel) {
+      scene.remove(bedroomModel);
+      bedroomModel = null;
+    }
+    if (scene.userData.bedroomLight) {
+      scene.remove(scene.userData.bedroomLight);
+      scene.userData.bedroomLight = null;
+    }
+    if (scene.userData.chairLight) {
+  scene.remove(scene.userData.chairLight);
+  scene.userData.chairLight = null;
+}
+    if (scene.userData.bedroomCeiling) {
+      scene.remove(scene.userData.bedroomCeiling);
+      scene.userData.bedroomCeiling = null;
     }
     camera.position.set(-5, 2, 0);
-     scene.background = new THREE.Color(0x333333);
-   light.intensity = 1;
-   dirLight.intensity = 0.8;
+    scene.background = new THREE.Color(0x333333);
+    light.intensity = 1;
+    dirLight.intensity = 0.8;
     
     if (backgroundType === 'room') {
-   scene.background = new THREE.Color(0x8B7355);
+      scene.background = new THREE.Color(0x8B7355);
     } else if (backgroundType === 'street') {
-    scene.background = new THREE.Color(0x87CEEB);
+      scene.background = new THREE.Color(0x87CEEB);
     }
   }
 };
