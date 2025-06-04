@@ -773,16 +773,16 @@ window.wearShoes = function(modelPath) {
   gltfLoader.load(modelPath, (gltf) => {
     const rightShoe = gltf.scene;
     rightShoe.userData.type = 'shoes';
-    rightShoe.scale.set(0.875, 0.9, 1);
-    rightShoe.position.set(9, 0.035, 1.25);
-    rightShoe.rotation.set(0, -Math.PI / 2, 0);
+    rightShoe.scale.set(0.875, 1.1, 1);
+    rightShoe.position.set(8.99, 0.035, 1.26);
+    rightShoe.rotation.set(0, -Math.PI / 2 -0.2, 0);
 
 
     const leftShoe = rightShoe.clone();
     leftShoe.userData.type = 'shoes';
-    leftShoe.scale.set(-0.875, 0.9, 1);
-    leftShoe.position.set(9, 0.035, 0.84);
-    leftShoe.rotation.set(0, -Math.PI / 2, 0); 
+    leftShoe.scale.set(-0.875, 1.1, 1);
+    leftShoe.position.set(8.99, 0.035, 0.83);
+    leftShoe.rotation.set(0, -Math.PI / 2+0.2, 0); 
 
 
     scene.add(rightShoe);
@@ -821,17 +821,17 @@ window.wearShoes2 = function(modelPath) {
    
     const rightShoe = gltf.scene;
     rightShoe.userData.type = 'shoes';
-    rightShoe.scale.set(1 , 1.1, 0.95);
-  rightShoe.position.set(8.99, -0.02, 1.27);
-    rightShoe.rotation.set(0, Math.PI / 2-0.3, 0);
+    rightShoe.scale.set(1 , 1.1, 1.1);
+  rightShoe.position.set(8.99, -0.02, 0.825);
+    rightShoe.rotation.set(0, Math.PI / 2+0.2, 0);
  
    
    
     const leftShoe = rightShoe.clone();
     leftShoe.userData.type = 'shoes';
-     leftShoe.scale.set(1, 1.1, 0.95);
-     leftShoe.position.set(8.98, -0.02, 0.82);
-    leftShoe.rotation.set(0, Math.PI / 2+0.3, 0); 
+     leftShoe.scale.set(1, 1.1, 1.1);
+     leftShoe.position.set(8.99, -0.02, 1.26);
+    leftShoe.rotation.set(0, Math.PI / 2-0.2, 0); 
     leftShoe.scale.x *= -1;
 
 
@@ -873,17 +873,17 @@ window.wearShoes3 = function(modelPath) {
     rightShoe.userData.type = 'shoes';
    
    
-    rightShoe.scale.set(1.3, 1.2, 1.15);
-      rightShoe.position.set(9, -0.02, 1.28);
-     rightShoe.rotation.set(0, Math.PI / 2-0.3, 0);
+    rightShoe.scale.set(1.3, 1.2, 1.22);
+      rightShoe.position.set(9.01, 0.01, 1.27);
+     rightShoe.rotation.set(0, Math.PI / 2-0.2, 0);
    
    const leftShoe = rightShoe.clone();
     leftShoe.userData.type = 'shoes';
-     leftShoe.scale.set(1.3, 1.2, 1.15);
-    leftShoe.position.set(9, -0.02, 0.81);
+     leftShoe.scale.set(1.3, 1.2, 1.22);
+    leftShoe.position.set(9.01, 0.01, 0.82);
     leftShoe.rotation.y = -0.2;
     leftShoe.scale.x *= -1;
-    leftShoe.rotation.set(0, Math.PI / 2+0.3, 0); 
+    leftShoe.rotation.set(0, Math.PI / 2+0.2, 0); 
 
     scene.add(rightShoe);
     scene.add(leftShoe);
