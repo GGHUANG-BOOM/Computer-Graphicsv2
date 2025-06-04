@@ -143,8 +143,8 @@ function init() {
  const controls = new OrbitControls(camera, renderer.domElement);
  controls.target.set(9, 1, 1);
  controls.update();
-controls.minPolarAngle = Math.PI / 2; // 90 degrees
-controls.maxPolarAngle = Math.PI / 2;
+//controls.minPolarAngle = Math.PI / 2; // 90 degrees
+//controls.maxPolarAngle = Math.PI / 2;
 
 controls.enableZoom = false;     
 controls.enablePan = false;
@@ -266,6 +266,7 @@ mtlLoader.load('./A-pose HP.mtl', (materials) => {
 
   const guiContainer = gui.domElement;
   guiContainer.style.position = 'absolute';
+  guiContainer.style.top = '700px';
   guiContainer.style.right = '10px';
   guiContainer.style.zIndex = '10';
   guiContainer.style.fontFamily = 'input-mono-narrow, monospace';
@@ -273,18 +274,6 @@ mtlLoader.load('./A-pose HP.mtl', (materials) => {
   guiContainer.style.fontSize = '12px';
   guiContainer.classList.add('gui-right');
   guiContainer.classList.add('animate');
-
-  function handleResize() {
-
-    const windowHeight = window.innerHeight;    
-    const guiHeight = guiContainer.offsetHeight;
-    const maxTop = windowHeight - guiHeight - 20;
-    
-    guiContainer.style.top = Math.min(450, maxTop) + 'px';
-  }
-
-  handleResize();
-  window.addEventListener('resize', handleResize);
 
   gui.addColor(guiSettings, 'modelColor').name('Model Color').onChange((value) => {
     for (const name of mannequinMaterials) {
@@ -373,7 +362,7 @@ mtlLoader.load('./A-pose HP.mtl', (materials) => {
       }
     });
 
-      object.position.set(9,0.1,1);
+      object.position.set(9,0.01,1);
   object.rotation.y= Math.PI/2;
       scene.add(object);
       mannequin = object;
@@ -665,7 +654,7 @@ window.wearHat = function(modelPath) {
 
     hatObject.userData.type = 'hat';
     hatObject.scale.set(0.1094, 0.1, 0.13);
-     hatObject.position.set(9, 1.58, 1.04);
+     hatObject.position.set(9, 1.61, 1.04);
     hatObject.rotation.y = Math.PI / 2;
  scene.add(hatObject);
 
@@ -709,8 +698,8 @@ window.wearHat = function(modelPath) {
    
     hatObject.userData.type = 'hat';
  
-    hatObject.scale.set(0.915, 0.9, 1.15);
-  hatObject.position.set(9.05, 1.57, 1.04);
+    hatObject.scale.set(0.905, 0.9, 0.97);
+  hatObject.position.set(9.02, 1.60, 1.04);
    hatObject.rotation.y=Math.PI/2;
     scene.add(hatObject);
     currentHatObject = hatObject;
@@ -746,7 +735,7 @@ if (currentHatObject) {
 
 
     hatObject.scale.set(0.9, 0.9, 0.8);
-    hatObject.position.set(8.97, 1.57, 1.04);
+    hatObject.position.set(8.97, 1.60, 1.04);
     hatObject.rotation.y=Math.PI/2;
     scene.add(hatObject);
     currentHatObject = hatObject;
@@ -980,8 +969,7 @@ window.loadOutfit = function () {
 
 
 window.randomOutfit = function() {
-  const skipNotification = true;
-  clearAllClothing(skipNotification);
+  clearAllClothing();
   const shirts = [
      () => wearShirt(),      
     () => wearShirt2(),     
@@ -1013,12 +1001,10 @@ window.randomOutfit = function() {
   setTimeout(randomPants, 100);
   setTimeout(randomHat, 150);
   setTimeout(randomShoes, 200);
-
-  showNotification('Generated outfit!');
 };
 
 
-window.clearAllClothing = function(skipNotification = false) {
+window.clearAllClothing = function() {
   if (!mannequin) return;
 
   mannequin.traverse((child) => {
@@ -1044,9 +1030,7 @@ window.clearAllClothing = function(skipNotification = false) {
     window.pantsAreOn = false;
 
       console.log("Outfit cleared.");
-  if (!skipNotification) {
-    showNotification('Outfit cleared!');
-  }
+  showNotification('Outfit cleared!');
 };
 
 
