@@ -148,7 +148,7 @@ function init() {
 
 controls.enableZoom = false;     
 controls.enablePan = false;
-
+controls.autoRotate = false;
 
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
@@ -212,7 +212,24 @@ camera.lookAt(lookAtTarget);
 
   updateCamera();
 };
-
+let autoRotate = false;
+let cameraRotationAngle = 0;
+const cameraRadius = 4; 
+const cameraHeight = 2; 
+window.toggleAutoRotate = function() {
+  autoRotate = !autoRotate;
+  const btn = document.querySelector('[onclick="toggleAutoRotate()"]');
+  btn.textContent = autoRotate ? 'Stop Rotation' : 'Auto Rotate';
+  
+   if (autoRotate) {
+    const dx = camera.position.x - lookAtTarget.x;
+    const dz = camera.position.z - lookAtTarget.z;
+    cameraRotationAngle = Math.atan2(dz, dx);
+  } else {
+    camera.position.set(11.8, 1.34, 1.52); 
+    controls.update();
+  }
+};
 
   
 
@@ -1110,10 +1127,19 @@ function showNotification(message) {
 
 
 
+
 // Animation loop
   function animate(time) {
   requestAnimationFrame(animate);
   camera.lookAt(lookAtTarget);
+if (autoRotate) {
+    cameraRotationAngle += 0.01;
+    camera.position.x = Math.cos(cameraRotationAngle) * cameraRadius;
+    camera.position.z = Math.sin(cameraRotationAngle) * cameraRadius;
+    camera.position.y = cameraHeight;
+    camera.lookAt(lookAtTarget);
+  }
+
 controls.update();
   if (cloudMaterial) {
     cloudMaterial.uniforms.time.value = time * 0.001;
