@@ -300,6 +300,8 @@ body {
   width: 152px !important;
   font: 12px input-mono-narrow, monospace !important;
   transform: translateX(120%);
+  max-height: 80vh;
+  overflow-y: auto;
 }
 
 .lil-gui.animate {
