@@ -254,7 +254,7 @@ camera.lookAt(lookAtTarget);
  
 
  const mtlLoader = new MTLLoader();
-mtlLoader.load('./A-pose HP.mtl', (materials) => {
+mtlLoader.load('./Mannequin/A-pose HP.mtl', (materials) => {
   materials.preload();
 
   const mannequinMaterials = [
@@ -329,7 +329,7 @@ mtlLoader.load('./A-pose HP.mtl', (materials) => {
   const objLoader = new OBJLoader();
   objLoader.setMaterials(materials);
 
-  objLoader.load('./A-pose HP.obj', (object) => {
+  objLoader.load('./Mannequin/A-pose HP.obj', (object) => {
     console.log(' Mannequin loaded');
     const box3 = new THREE.Box3().setFromObject(object);
     const center = new THREE.Vector3();
@@ -1307,7 +1307,7 @@ scene.add(cloudGroup);
 
 
   const gltfLoader = new GLTFLoader();
-  gltfLoader.load('bedroom.glb', (gltf) => {
+  gltfLoader.load('Bed Scene/bedroom.glb', (gltf) => {
     bedroomModel = gltf.scene;
     bedroomModel.scale.set(1.4, 1.4, 1.4);
     bedroomModel.position.set(7, 0.1, -1);
