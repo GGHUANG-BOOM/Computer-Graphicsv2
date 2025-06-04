@@ -2,7 +2,6 @@ import * as THREE from './three.module.js';
 import { MTLLoader } from './MTLLoader.js';
 import { OBJLoader } from './OBJLoader.js';
 import { GLTFLoader } from './GLTFLoader.js';
-//import { mannequincontrols } from './mannequincontrols.js';
 import { Water } from './objects/Water2.js';
 import { Sky } from './objects/Sky.js';
 import {GUI}  from './lil-gui.module.min.js';
@@ -1107,13 +1106,31 @@ window.Beach = function () {
         scene.add(rockModel);
       });
     });
+const palmLoader = new GLTFLoader();
+palmLoader.load('beach Scene/uploads_files_5795644_3D_palm_tree_in_a_sty_0118154444_texture.glb', function(palmGltf) {
+  const palmTree = palmGltf.scene;
 
+
+  palmTree.scale.set(2, 5, 2); 
+  palmTree.position.set(7, 2, -5); 
+  palmTree.rotation.y = Math.PI / 4; 
+
+  
+  palmTree.traverse((child) => {
+    if (child.isMesh) {
+      child.castShadow = true;
+      child.receiveShadow = true;
+    }
+  });
+
+  scene.add(palmTree);
+});
    
 
    
 
     // Water
-    const waterGeometry = new THREE.PlaneGeometry(25, 25);
+    const waterGeometry = new THREE.PlaneGeometry(25, 21);
     const waterNormals = new THREE.TextureLoader().load('Textures/Water_2_M_Normal.jpg', function (texture) {
       texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
       texture.repeat.set(4, 4);
