@@ -143,11 +143,11 @@ function init() {
  const controls = new OrbitControls(camera, renderer.domElement);
  controls.target.set(9, 1, 1);
  controls.update();
-//controls.minPolarAngle = Math.PI / 2; // 90 degrees
-//controls.maxPolarAngle = Math.PI / 2;
+controls.minPolarAngle = Math.PI / 2; // 90 degrees
+controls.maxPolarAngle = Math.PI / 2;
 
-//controls.enableZoom = false;     
-//controls.enablePan = false;
+controls.enableZoom = false;     
+controls.enablePan = false;
 
 
 controls.enableDamping = true;
@@ -832,16 +832,16 @@ window.wearShoes2 = function(modelPath) {
    
     const rightShoe = gltf.scene;
     rightShoe.userData.type = 'shoes';
-    rightShoe.scale.set(1.1 , 1.1, 1.1);
-  rightShoe.position.set(9, -0.02, 1.27);
+    rightShoe.scale.set(1 , 1.1, 0.95);
+  rightShoe.position.set(8.99, -0.02, 1.27);
     rightShoe.rotation.set(0, Math.PI / 2-0.3, 0);
  
    
    
     const leftShoe = rightShoe.clone();
     leftShoe.userData.type = 'shoes';
-     leftShoe.scale.set(1.1, 1.1, 1.1);
-     leftShoe.position.set(9, -0.02, 0.82);
+     leftShoe.scale.set(1, 1.1, 0.95);
+     leftShoe.position.set(8.98, -0.02, 0.82);
     leftShoe.rotation.set(0, Math.PI / 2+0.3, 0); 
     leftShoe.scale.x *= -1;
 
@@ -884,14 +884,14 @@ window.wearShoes3 = function(modelPath) {
     rightShoe.userData.type = 'shoes';
    
    
-    rightShoe.scale.set(1.4, 1.2, 1.1);
-      rightShoe.position.set(8.99, -0.02, 1.28);
+    rightShoe.scale.set(1.3, 1.2, 1.1);
+      rightShoe.position.set(9, -0.02, 1.28);
      rightShoe.rotation.set(0, Math.PI / 2-0.3, 0);
    
    const leftShoe = rightShoe.clone();
     leftShoe.userData.type = 'shoes';
-     leftShoe.scale.set(1.4, 1.2, 1.1);
-    leftShoe.position.set(8.99, -0.02, 0.81);
+     leftShoe.scale.set(1.3, 1.2, 1.1);
+    leftShoe.position.set(9, -0.02, 0.81);
     leftShoe.rotation.y = -0.2;
     leftShoe.scale.x *= -1;
     leftShoe.rotation.set(0, Math.PI / 2+0.3, 0); 
@@ -1154,6 +1154,7 @@ window.Room = function () {
   // Remove beach stuff
   if (sky) scene.remove(sky);
   if (water) scene.remove(water);
+  if (bedroomModel) scene.remove(bedroomModel);
   if (sandMesh) scene.remove(sandMesh);
   if (beachScene) scene.remove(beachScene);
   if (rockModel) scene.remove(rockModel);
@@ -1172,6 +1173,7 @@ window.Beach = function () {
   currentBackground = "beach";
 
   if (ground) scene.remove(ground);
+  if (bedroomModel) scene.remove(bedroomModel);
 
   
 
@@ -1393,7 +1395,8 @@ window.Beach = function () {
   gltfLoader.load('bedroom.glb', (gltf) => {
     bedroomModel = gltf.scene;
     bedroomModel.scale.set(1.4, 1.4, 1.4);
-    bedroomModel.position.set(7, 0.005, 0);
+    bedroomModel.position.set(7, 0.005, -1);
+    bedroomModel.rotation.y =Math.PI /2;
     scene.add(bedroomModel);
   });
 
