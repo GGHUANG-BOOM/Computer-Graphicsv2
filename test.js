@@ -1131,13 +1131,13 @@ function showNotification(message) {
 // Animation loop
   function animate(time) {
   requestAnimationFrame(animate);
-  camera.lookAt(lookAtTarget);
+  camera.lookAt(9, 1, 1);
 if (autoRotate) {
     cameraRotationAngle += 0.01;
     camera.position.x = Math.cos(cameraRotationAngle) * cameraRadius;
     camera.position.z = Math.sin(cameraRotationAngle) * cameraRadius;
     camera.position.y = cameraHeight;
-    camera.lookAt(0,1,0);
+    camera.lookAt(9, 1, 1);
   }
 
 controls.update();
