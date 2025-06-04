@@ -90,7 +90,8 @@ let bedroomModel = null;
 let sky, water, sandMesh, ground;
 let cloudMaterial;
 let beachScene, rockModel;
-let cloud, cloud2, cloud3;
+let cloudGroup;
+let palmTree,palmTree2;
 let currentBackground = "room";
 let isAutoRotating = false;
 
@@ -993,9 +994,9 @@ window.Room = function () {
   if (sandMesh) scene.remove(sandMesh);
   if (beachScene) scene.remove(beachScene);
   if (rockModel) scene.remove(rockModel);
-  if (cloud) scene.remove(cloud);
-  if (cloud2) scene.remove(cloud2);
-  if (cloud3) scene.remove(cloud3);
+ if (cloudGroup) scene.remove(cloudGroup);
+  if (palmTree) scene.remove(palmTree);
+  if (palmTree2) scene.remove(palmTree2);
    if (ground) scene.add(ground);
   // Add room ground
   
@@ -1108,7 +1109,7 @@ window.Beach = function () {
     });
 const palmLoader = new GLTFLoader();
 palmLoader.load('beach Scene/uploads_files_5795644_3D_palm_tree_in_a_sty_0118154444_texture.glb', function(palmGltf) {
-  const palmTree = palmGltf.scene;
+   palmTree = palmGltf.scene;
 
 
   palmTree.scale.set(2, 5, 2); 
@@ -1124,6 +1125,23 @@ palmLoader.load('beach Scene/uploads_files_5795644_3D_palm_tree_in_a_sty_0118154
   });
 
   scene.add(palmTree);
+
+   palmTree2 = palmTree.clone(true);
+  palmTree2.position.set(5.2, 2, 8); 
+  palmTree2.rotation.y = -Math.PI / 6;
+
+  
+  palmTree2.traverse((child) => {
+    if (child.isMesh) {
+      child.castShadow = true;
+      child.receiveShadow = true;
+    }
+  });
+
+  
+  scene.add(palmTree2);
+
+
 });
    
 
@@ -1207,21 +1225,47 @@ palmLoader.load('beach Scene/uploads_files_5795644_3D_palm_tree_in_a_sty_0118154
     }
   });
 
-  const cloudGeometry = new THREE.PlaneGeometry(10, 5);
-  const cloudGeometry2 = new THREE.PlaneGeometry(30, 10);
-  cloud = new THREE.Mesh(cloudGeometry, cloudMaterial);
-  cloud2 = new THREE.Mesh(cloudGeometry, cloudMaterial);
-  cloud3 = new THREE.Mesh(cloudGeometry2, cloudMaterial);
+  const baseCloudPositions = [
+  { x: -35, y: 13, z: -5 },
+  { x: -35, y: 14, z: -7 },
+  { x: -35, y: 15, z: -30 }
+];
 
-  cloud.rotation.y = Math.PI / 2;
-  cloud.position.set(-35, 13, -5);
-  cloud2.rotation.y = Math.PI / 2;
-  cloud2.position.set(-35, 14, -7);
-  cloud3.position.set(-35, 15, -30);
-  cloud3.rotation.y = Math.PI / 2;
-  scene.add(cloud);
-  scene.add(cloud2);
-  scene.add(cloud3);
+
+const cloudGeometries = [
+  new THREE.PlaneGeometry(10, 5),
+  new THREE.PlaneGeometry(20, 7),
+  new THREE.PlaneGeometry(30, 10),
+];
+
+ cloudGroup = new THREE.Group(); 
+
+for (let i = 0; i < baseCloudPositions.length; i++) {
+  const base = baseCloudPositions[i];
+
+  
+  for (let j = 0; j < 3; j++) {
+    const geo = cloudGeometries[Math.floor(Math.random() * cloudGeometries.length)];
+    const cloudMesh = new THREE.Mesh(geo, cloudMaterial);
+
+    
+    const offsetX = (Math.random() - 0.5) * 10;
+    const offsetY = (Math.random() - 0.5) * 2;
+    const offsetZ = (Math.random() - 0.5) * 10;
+
+    cloudMesh.position.set(
+      base.x + offsetX,
+      base.y + offsetY,
+      base.z + offsetZ
+    );
+
+    cloudMesh.rotation.y = Math.PI / 2; 
+    cloudMesh.renderOrder = 1; 
+    cloudGroup.add(cloudMesh);
+  }
+}
+
+scene.add(cloudGroup);
 };
   window.Bedroom = function () {
   if (currentBackground === 'bedroom') return;
@@ -1234,9 +1278,10 @@ palmLoader.load('beach Scene/uploads_files_5795644_3D_palm_tree_in_a_sty_0118154
   if (rockModel) scene.remove(rockModel);
   if (water) scene.remove(water);
   if (sky) scene.remove(sky);
-  if (cloud) scene.remove(cloud);
-  if (cloud2) scene.remove(cloud2);
-  if (cloud3) scene.remove(cloud3);
+  if (cloudGroup) scene.remove(cloudGroup);
+  if (palmTree) scene.remove(palmTree);
+  if (palmTree2) scene.remove(palmTree2);
+  
 
   
   if (bedroomModel) scene.remove(bedroomModel);
