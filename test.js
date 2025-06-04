@@ -362,7 +362,7 @@ mtlLoader.load('./A-pose HP.mtl', (materials) => {
       }
     });
 
-      object.position.set(9,-0.02,1);
+      object.position.set(9,0.1,1);
   object.rotation.y= Math.PI/2;
       scene.add(object);
       mannequin = object;
@@ -873,13 +873,13 @@ window.wearShoes3 = function(modelPath) {
     rightShoe.userData.type = 'shoes';
    
    
-    rightShoe.scale.set(1.3, 1.2, 1.1);
+    rightShoe.scale.set(1.3, 1.2, 1.15);
       rightShoe.position.set(9, -0.02, 1.28);
      rightShoe.rotation.set(0, Math.PI / 2-0.3, 0);
    
    const leftShoe = rightShoe.clone();
     leftShoe.userData.type = 'shoes';
-     leftShoe.scale.set(1.3, 1.2, 1.1);
+     leftShoe.scale.set(1.3, 1.2, 1.15);
     leftShoe.position.set(9, -0.02, 0.81);
     leftShoe.rotation.y = -0.2;
     leftShoe.scale.x *= -1;
@@ -1379,7 +1379,7 @@ window.Beach = function () {
   gltfLoader.load('bedroom.glb', (gltf) => {
     bedroomModel = gltf.scene;
     bedroomModel.scale.set(1.4, 1.4, 1.4);
-    bedroomModel.position.set(7, 0.005, -1);
+    bedroomModel.position.set(7, 0.1, -1);
     bedroomModel.rotation.y =Math.PI /2;
     scene.add(bedroomModel);
   });
@@ -1407,8 +1407,8 @@ window.Beach = function () {
   scene.add(fillLight);
   scene.userData.bedroomLight = fillLight;
 
-  // Camera
-  camera.position.set(-4, 2.7, 1.5);
+  
+  
 };
 
 }
