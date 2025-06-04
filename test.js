@@ -6,6 +6,7 @@ import { GLTFLoader } from './GLTFLoader.js';
 import { Water } from './objects/Water2.js';
 import { Sky } from './objects/Sky.js';
 import {GUI}  from './lil-gui.module.min.js';
+import { OrbitControls } from './OrbitControls.js';
 
 
 // Page Navigation
@@ -85,7 +86,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
-
+let mannequin = null;
+let hatPivot = new THREE.Group();
+let mannequinGroup = new THREE.Group();
 let sky, water, sandMesh, ground;
 let cloudMaterial;
 let beachScene, rockModel;
@@ -138,7 +141,20 @@ function init() {
   const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
   renderer.setSize(window.innerWidth, window.innerHeight);
   document.body.appendChild(renderer.domElement);
- 
+ const controls = new OrbitControls(camera, renderer.domElement);
+ controls.target.set(9, 1, 1);
+ controls.update();
+controls.minPolarAngle = Math.PI / 2; // 90 degrees
+controls.maxPolarAngle = Math.PI / 2;
+
+controls.enableZoom = true;     
+controls.enablePan = false;
+
+
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+controls.rotateSpeed = 0.5;
+
 
   const cameraPositions = {
     default: {
@@ -168,12 +184,12 @@ function init() {
 lookAtTarget.copy(cameraPositions.default.target);
 camera.lookAt(lookAtTarget);
 
- window.moveCameraToPosition = function(positionKey, duration = 1000) {
-  const targetPosition = cameraPositions[positionKey].position;
-  const targetLookAt = cameraPositions[positionKey].target;
-  
+ window.moveCameraToPosition = function (positionKey, duration = 1000) {
+  const targetPosition = cameraPositions[positionKey].position.clone();
+  const targetLookAt = cameraPositions[positionKey].target.clone();
+
   const startPosition = camera.position.clone();
-  const startTarget = lookAtTarget.clone();
+  const startTarget = controls.target.clone(); 
   const startTime = Date.now();
 
   function updateCamera() {
@@ -182,9 +198,13 @@ camera.lookAt(lookAtTarget);
     const progress = Math.min(elapsed / duration, 1);
     const easeProgress = progress * (2 - progress); 
 
-    camera.position.lerpVectors(startPosition, targetPosition, easeProgress);
-    lookAtTarget.lerpVectors(startTarget, targetLookAt, easeProgress);
-    camera.lookAt(lookAtTarget);
+ 
+    const newPosition = startPosition.clone().lerp(targetPosition, easeProgress);
+    const newTarget = startTarget.clone().lerp(targetLookAt, easeProgress);
+
+    camera.position.copy(newPosition);
+    controls.target.copy(newTarget);
+    controls.update();
 
     if (progress < 1) {
       requestAnimationFrame(updateCamera);
@@ -195,7 +215,7 @@ camera.lookAt(lookAtTarget);
 };
 
 
-  let mannequin, hatAnchor, shoesAnchor;
+  
 
 
   function isClothing(name) {
@@ -228,16 +248,14 @@ camera.lookAt(lookAtTarget);
  
  
 
-  const mtlLoader = new MTLLoader();
-    mtlLoader.load('./A-pose HP.mtl', (materials) => {
-    materials.preload();
+ const mtlLoader = new MTLLoader();
+mtlLoader.load('./A-pose HP.mtl', (materials) => {
+  materials.preload();
 
   const mannequinMaterials = [
     'Converted_buxiugang',
     'Converted_PVC_FurnGrad_Charcoal_Gray',
   ];
-
-
 
   const guiSettings = {
     modelColor: "#919191"
@@ -272,11 +290,9 @@ camera.lookAt(lookAtTarget);
     const mat = materials.materials[materialName];
 
     if (mannequinMaterials.includes(materialName)) {
-
       mat.color.set(guiSettings.modelColor);
       mat.map = null;
     } else {
-    
       if (mat.map) {
         mat.map.wrapS = THREE.RepeatWrapping;
         mat.map.wrapT = THREE.RepeatWrapping;
@@ -287,88 +303,74 @@ camera.lookAt(lookAtTarget);
         mat.bumpMap.wrapS = THREE.RepeatWrapping;
         mat.bumpMap.wrapT = THREE.RepeatWrapping;
         mat.bumpMap.repeat.set(1, 1);
-
       }
     }
 
-   mat.needsUpdate = true;
+    mat.needsUpdate = true;
   }
- 
-   
-    const objLoader = new OBJLoader();
-    objLoader.setMaterials(materials);
 
+  const objLoader = new OBJLoader();
+  objLoader.setMaterials(materials);
 
-    objLoader.load('./A-pose HP.obj', (object) => {
-      const box3 = new THREE.Box3().setFromObject(object);
-      const center = new THREE.Vector3();
-      const size = new THREE.Vector3();
-      box3.getCenter(center);
-      box3.getSize(size);
+  objLoader.load('./A-pose HP.obj', (object) => {
+    console.log(' Mannequin loaded');
+    const box3 = new THREE.Box3().setFromObject(object);
+    const center = new THREE.Vector3();
+    const size = new THREE.Vector3();
+    box3.getCenter(center);
+    box3.getSize(size);
 
+    const scaleFactor = 2 / size.length();
+    const tra = new THREE.Matrix4().makeTranslation(-center.x, -center.y, -center.z);
+    const sca = new THREE.Matrix4().makeScale(scaleFactor, scaleFactor, scaleFactor);
+    object.applyMatrix4(tra);
+    object.applyMatrix4(sca);
 
-      const scaleFactor = 2 / size.length();
-      const tra = new THREE.Matrix4().makeTranslation(-center.x, -center.y, -center.z);
-      const sca = new THREE.Matrix4().makeScale(scaleFactor, scaleFactor, scaleFactor);
-      object.applyMatrix4(tra);
-      object.applyMatrix4(sca);
+    object.traverse((child) => {
+      if (child.isMesh) {
+        child.castShadow = true;
+        const mat = child.material;
 
+        const storeOriginalMaps = (material) => {
+          if (!material.originalMap) {
+            material.originalMap = material.map;
+            material.originalBumpMap = material.bumpMap;
+            material.originalNormalMap = material.normalMap;
+          }
+        };
 
-
-
-
-      
-      object.traverse((child) => {
-        if (child.isMesh) {
-          child.castShadow = true;
-          const mat = child.material;
-     
-          const storeOriginalMaps = (material) => {
-            if (!material.originalMap) {
-              material.originalMap = material.map;
-              material.originalBumpMap = material.bumpMap;
-              material.originalNormalMap = material.normalMap;
-     
-            }
-          };
-     
-          if (Array.isArray(mat)) {
-            mat.forEach((m) => {
-              if (isClothing(m.name)) {
-                child.visible = false;
-                storeOriginalMaps(m);
-                m.map = null;
-                m.bumpMap = null;
-                m.normalMap = null;
-                m.needsUpdate = true;
-              }
-            });
-          } else {
-            if (isClothing(mat.name)) {
+        if (Array.isArray(mat)) {
+          mat.forEach((m) => {
+            if (isClothing(m.name)) {
               child.visible = false;
-              storeOriginalMaps(mat);
-              mat.map = null;
-              mat.bumpMap = null;
-              mat.normalMap = null;
-              mat.needsUpdate = true;
+              storeOriginalMaps(m);
+              m.map = null;
+              m.bumpMap = null;
+              m.normalMap = null;
+              m.needsUpdate = true;
             }
+          });
+        } else {
+          if (isClothing(mat.name)) {
+            child.visible = false;
+            storeOriginalMaps(mat);
+            mat.map = null;
+            mat.bumpMap = null;
+            mat.normalMap = null;
+            mat.needsUpdate = true;
           }
         }
-      });
-
-      
-  object.add(shoesAnchor);
-  object.position.set(9,-0.02,1);
-  object.rotation.y= Math.PI/2;
-   
-       scene.add(object);
-       mannequin = object;
-
-
-      
+      }
     });
+
+      object.position.set(9,-0.02,1);
+  object.rotation.y= Math.PI/2;
+      scene.add(object);
+      mannequin = object;
   });
- 
+});
+
+
 
   
 
@@ -627,38 +629,46 @@ camera.lookAt(lookAtTarget);
 
 
 
-  let currentHatPath = null;
-  let currentHatObject = null;
-console.log('Mannequin:', mannequin);
+let currentHatPath = null;
+let currentHatObject = null;
+
 window.wearHat = function(modelPath) {
-  if (!modelPath || !mannequin) return;
+  if (!modelPath) return;
 
   if (currentHatPath === modelPath && currentHatObject) {
-    hatAnchor.remove(currentHatObject);
+     scene.remove(currentHatObject);
     currentHatPath = null;
     currentHatObject = null;
     return;
   }
 
   if (currentHatObject) {
-    hatAnchor.remove(currentHatObject);
-    currentHatPath = null;
+    scene.remove(currentHatObject);
     currentHatObject = null;
+    currentHatPath = null;
   }
 
   const gltfLoader = new GLTFLoader();
   gltfLoader.load(modelPath, (gltf) => {
-    const hat = gltf.scene;
-    hat.userData.type = 'hat';
-    hat.scale.set(0.1094, 0.1, 0.13);
-    hat.position.set(0, 1.59, 0.04); // local to mannequin head
-    hat.rotation.y = Math.PI / 2;
+    console.log(' Hat GLB loaded:', gltf.scene);
+    const hatObject = gltf.scene;
 
-      mannequin.add(hat);
-    currentHatObject = hat;
+    hatObject.userData.type = 'hat';
+    hatObject.scale.set(0.1094, 0.1, 0.13);
+     hatObject.position.set(9, 1.58, 1.04);
+    hatObject.rotation.y = Math.PI / 2;
+ scene.add(hatObject);
+
+  
+   
+   
+
+    currentHatObject = hatObject;
     currentHatPath = modelPath;
   });
 };
+
+
 
 
   window.wearHat2 = function(modelPath) {
@@ -725,7 +735,7 @@ if (currentHatObject) {
     hatObject.userData.type = 'hat';
 
 
-    hatObject.scale.set(0.8, 0.9, 1.4);
+    hatObject.scale.set(0.9, 0.9, 0.8);
     hatObject.position.set(8.97, 1.57, 1.04);
     hatObject.rotation.y=Math.PI/2;
     scene.add(hatObject);
@@ -865,13 +875,13 @@ window.wearShoes3 = function(modelPath) {
    
    
     rightShoe.scale.set(1.4, 1.2, 1.1);
-      rightShoe.position.set(9, -0.02, 1.28);
+      rightShoe.position.set(8.99, -0.02, 1.28);
      rightShoe.rotation.set(0, Math.PI / 2-0.3, 0);
    
    const leftShoe = rightShoe.clone();
     leftShoe.userData.type = 'shoes';
      leftShoe.scale.set(1.4, 1.2, 1.1);
-    leftShoe.position.set(9, -0.02, 0.82);
+    leftShoe.position.set(8.99, -0.02, 0.81);
     leftShoe.rotation.y = -0.2;
     leftShoe.scale.x *= -1;
     leftShoe.rotation.set(0, Math.PI / 2+0.3, 0); 
@@ -1098,48 +1108,13 @@ function showNotification(message) {
 }
 
 
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
 
-let isDragging = false;
-let prevX = 0;
-let canRotate = false; 
-
-renderer.domElement.addEventListener('mousedown', (event) => {
-  
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-  
-  raycaster.setFromCamera(mouse, camera);
-  
-  
-  const intersects = raycaster.intersectObject(mannequin, true);
-
-  if (intersects.length > 0) {
-    canRotate = true;
-    isDragging = true;
-    prevX = event.clientX;
-  }
-});
-
-renderer.domElement.addEventListener('mouseup', () => {
-  isDragging = false;
-  canRotate = false;
-});
-
-renderer.domElement.addEventListener('mousemove', (event) => {
-  if (isDragging && canRotate && mannequin) {
-    const deltaX = event.clientX - prevX;
-    mannequin.rotation.y += deltaX * 0.01;
-    prevX = event.clientX;
-  }
-});
 
 // Animation loop
   function animate(time) {
   requestAnimationFrame(animate);
   camera.lookAt(lookAtTarget);
-
+controls.update();
   if (cloudMaterial) {
     cloudMaterial.uniforms.time.value = time * 0.001;
   }
