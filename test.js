@@ -87,6 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 let mannequin = null;
+let bedroomModel = null;
 let sky, water, sandMesh, ground;
 let cloudMaterial;
 let beachScene, rockModel;
@@ -142,11 +143,11 @@ function init() {
  const controls = new OrbitControls(camera, renderer.domElement);
  controls.target.set(9, 1, 1);
  controls.update();
-controls.minPolarAngle = Math.PI / 2; // 90 degrees
-controls.maxPolarAngle = Math.PI / 2;
+//controls.minPolarAngle = Math.PI / 2; // 90 degrees
+//controls.maxPolarAngle = Math.PI / 2;
 
-controls.enableZoom = true;     
-controls.enablePan = false;
+//controls.enableZoom = false;     
+//controls.enablePan = false;
 
 
 controls.enableDamping = true;
@@ -1155,6 +1156,7 @@ window.Beach = function () {
   currentBackground = "beach";
 
   if (ground) scene.remove(ground);
+
   
 
   // Sky setup
@@ -1350,6 +1352,61 @@ window.Beach = function () {
   scene.add(cloud2);
   scene.add(cloud3);
 };
+  window.Bedroom = function () {
+  if (currentBackground === 'bedroom') return;
+  currentBackground = 'bedroom';
+
   
+  if (ground) scene.remove(ground);
+  if (beachScene) scene.remove(beachScene);
+  if (sandMesh) scene.remove(sandMesh);
+  if (rockModel) scene.remove(rockModel);
+  if (water) scene.remove(water);
+  if (sky) scene.remove(sky);
+  if (cloud) scene.remove(cloud);
+  if (cloud2) scene.remove(cloud2);
+  if (cloud3) scene.remove(cloud3);
+
+  
+  if (bedroomModel) scene.remove(bedroomModel);
+  if (scene.userData.bedroomLight) scene.remove(scene.userData.bedroomLight);
+  if (scene.userData.bedroomCeiling) scene.remove(scene.userData.bedroomCeiling);
+
+
+  const gltfLoader = new GLTFLoader();
+  gltfLoader.load('bedroom.glb', (gltf) => {
+    bedroomModel = gltf.scene;
+    bedroomModel.scale.set(1.4, 1.4, 1.4);
+    bedroomModel.position.set(7, 0.005, 0);
+    scene.add(bedroomModel);
+  });
+
+  
+  scene.background = new THREE.Color(0x2a2a2a);
+  light.intensity = 0.2;
+  dirLight.intensity = 0.1;
+
+  const ceilingLight = new THREE.SpotLight(0xffffff, 1);
+  ceilingLight.position.set(0, 5, 0);
+  ceilingLight.target.position.set(0, 0, 0);
+  ceilingLight.target.updateMatrixWorld();
+  ceilingLight.angle = Math.PI / 3;
+  ceilingLight.penumbra = 0.4;
+  ceilingLight.decay = 1;
+  ceilingLight.distance = 12;
+  ceilingLight.castShadow = true;
+  scene.add(ceilingLight);
+  scene.add(ceilingLight.target);
+  scene.userData.bedroomCeiling = ceilingLight;
+
+  const fillLight = new THREE.DirectionalLight(0xffffff, 0.15);
+  fillLight.position.set(2, 2, 1);
+  scene.add(fillLight);
+  scene.userData.bedroomLight = fillLight;
+
+  // Camera
+  camera.position.set(-4, 2.7, 1.5);
+};
+
 }
 

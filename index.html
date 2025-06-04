@@ -36,11 +36,6 @@
   <div id="editor-page" class="page hidden">
     <div id="gui" class="gui-left">
       <details>
-        <summary> Presets</summary>
-        <button class="btnGUI" onclick="loadPreset(1)">Preset 1</button>
-        <button class="btnGUI" onclick="loadPreset(2)">Preset 2</button>
-      </details>
-      <details>
         <summary> Shirts</summary>
         <button class="btnGUI with-preview" onclick="wearShirt()">
         <img src="thumbs/shirt1.png" alt="T-Shirt" class="preview-img">
@@ -118,7 +113,7 @@
         <summary> Background</summary>
         <button class="btnGUI"onclick="Room()">Default</button>
         <button class="btnGUI"onclick="Beach()">Beach</button>
-        <button class="btnGUI">Bedroom</button>
+        <button class="btnGUI" onclick="Bedroom()">Bedroom</button>
       </details>
       <details>
         <summary> Outfit</summary>
@@ -127,6 +122,12 @@
         <button class="btnGUI" onclick="loadOutfit()">Load</button>
         <button class="btnGUI" onclick="clearAllClothing()">Clear</button>
       </details>
+
+       <details>
+        <summary> Camera</summary>
+        <button class="btnGUI">Auto Drag</button>
+        <button class="btnGUI" onclick="toggleSpotlight()">Spotlight ON</button>
+      </details>  
     </div>
 
     <canvas id="three-canvas"></canvas>
