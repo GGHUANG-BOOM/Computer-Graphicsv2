@@ -1,7 +1,7 @@
 import * as THREE from './three.module.js';
-import { MTLLoader } from './MTLLoader.js';
-import { OBJLoader } from './OBJLoader.js';
-import { GLTFLoader } from './GLTFLoader.js';
+import { MTLLoader } from './Loaders/MTLLoader.js';
+import { OBJLoader } from './Loaders/OBJLoader.js';
+import { GLTFLoader } from './Loaders/GLTFLoader.js';
 import { Water } from './objects/Water2.js';
 import { Sky } from './objects/Sky.js';
 import {GUI}  from './lil-gui.module.min.js';
@@ -736,13 +736,13 @@ window.wearShoes3 = function(modelPath) {
    
    
     rightShoe.scale.set(1.3, 1.2, 1.22);
-      rightShoe.position.set(9.01, 0.01, 1.27);
+      rightShoe.position.set(9.01, 0.001, 1.27);
      rightShoe.rotation.set(0, Math.PI / 2-0.2, 0);
    
    const leftShoe = rightShoe.clone();
     leftShoe.userData.type = 'shoes';
      leftShoe.scale.set(1.3, 1.2, 1.22);
-    leftShoe.position.set(9.01, 0.01, 0.82);
+    leftShoe.position.set(9.01, 0.001, 0.82);
     leftShoe.rotation.y = -0.2;
     leftShoe.scale.x *= -1;
     leftShoe.rotation.set(0, Math.PI / 2+0.2, 0); 
