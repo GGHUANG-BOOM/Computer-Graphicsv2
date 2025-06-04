@@ -1137,7 +1137,7 @@ if (autoRotate) {
     camera.position.x = Math.cos(cameraRotationAngle) * cameraRadius;
     camera.position.z = Math.sin(cameraRotationAngle) * cameraRadius;
     camera.position.y = cameraHeight;
-    camera.lookAt(lookAtTarget);
+    camera.lookAt(0,1,0);
   }
 
 controls.update();
