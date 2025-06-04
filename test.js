@@ -1280,7 +1280,7 @@ window.Beach = function () {
     scene.add(water);
 
     const sunDirection = new THREE.Vector3().subVectors(sun, water.position).normalize();
-    water.material.uniforms['sunDirection'].value.copy(sunDirection);
+    
   });
 
   // Cloud shader setup
