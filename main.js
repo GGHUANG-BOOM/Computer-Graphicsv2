@@ -775,8 +775,18 @@ window.saveOutfit = function () {
 
   const outfitData = {
     parts: [],
-    hatPath: currentHatPath || null,
-    shoePath: currentShoesPath || null  
+    hat: currentHatObject ? {
+      path: currentHatPath,
+      position: currentHatObject.position.toArray(),
+      rotation: currentHatObject.rotation.toArray(),
+      scale: currentHatObject.scale.toArray()
+    } : null,
+    shoes: currentShoeObjects.length > 0 ? currentShoeObjects.map(shoe => ({
+      path: currentShoesPath,
+      position: shoe.position.toArray(),
+      rotation: shoe.rotation.toArray(),
+      scale: shoe.scale.toArray()
+    })) : []
   };
 
   mannequin.traverse((child) => {
@@ -794,6 +804,7 @@ window.saveOutfit = function () {
 };
 
 
+
 window.loadOutfit = function () {
   if (!mannequin) return;
 
@@ -806,7 +817,6 @@ window.loadOutfit = function () {
 
   const outfitData = JSON.parse(savedData);
 
-  
   outfitData.parts.forEach((savedChild) => {
     mannequin.traverse((child) => {
       if (child.isMesh && child.name === savedChild.name) {
@@ -816,18 +826,46 @@ window.loadOutfit = function () {
   });
 
   
-  if (outfitData.hatPath) {
-    wearHat(outfitData.hatPath);
+  if (outfitData.hat) {
+    const gltfLoader = new GLTFLoader();
+    gltfLoader.load(outfitData.hat.path, (gltf) => {
+      const hat = gltf.scene;
+      hat.userData.type = 'hat';
+      hat.position.fromArray(outfitData.hat.position);
+      hat.rotation.fromArray(outfitData.hat.rotation);
+      hat.scale.fromArray(outfitData.hat.scale);
+      scene.add(hat);
+      currentHatObject = hat;
+      currentHatPath = outfitData.hat.path;
+    });
   }
 
   
-  if (outfitData.shoePath) {
-    wearShoes(outfitData.shoePath); 
+  if (outfitData.shoes && outfitData.shoes.length === 2) {
+    const gltfLoader = new GLTFLoader();
+    gltfLoader.load(outfitData.shoes[0].path, (gltf) => {
+      const rightShoe = gltf.scene;
+      rightShoe.userData.type = 'shoes';
+      rightShoe.position.fromArray(outfitData.shoes[0].position);
+      rightShoe.rotation.fromArray(outfitData.shoes[0].rotation);
+      rightShoe.scale.fromArray(outfitData.shoes[0].scale);
+
+      const leftShoe = rightShoe.clone();
+      leftShoe.position.fromArray(outfitData.shoes[1].position);
+      leftShoe.rotation.fromArray(outfitData.shoes[1].rotation);
+      leftShoe.scale.fromArray(outfitData.shoes[1].scale);
+
+      scene.add(rightShoe);
+      scene.add(leftShoe);
+      currentShoeObjects = [rightShoe, leftShoe];
+      currentShoesPath = outfitData.shoes[0].path;
+    });
   }
 
   console.log('Outfit loaded:', outfitData);
   showNotification('Outfit loaded!');
 };
+
 
 
 window.randomOutfit = function() {
@@ -1166,7 +1204,7 @@ palmLoader.load('beach Scene/uploads_files_5795644_3D_palm_tree_in_a_sty_0118154
 
     // Water
     const waterGeometry = new THREE.PlaneGeometry(25, 21);
-    const waterNormals = new THREE.TextureLoader().load('Textures/Water_2_M_Normal.jpg', function (texture) {
+    const waterNormals = new THREE.TextureLoader().load('./Mannequin/Textures/Water_2_M_Normal.jpg', function (texture) {
       texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
       texture.repeat.set(4, 4);
     });
