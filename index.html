@@ -18,16 +18,15 @@
         <div class="arrow">←</div>
         <div class="side-content">
             <h3>Credits</h3>
-            <p>Gordan Huang:</p>
-            <p>Backend Loading, Models(Mannequin, Shirt, Pants), Beach Background</p>
+            <p>Gordon Huang:</p>
+            <p>Backend, Models(Mannequin, Shirt, Pants)</p>
             <br>
             <p>Tong Ian Hoi Tsun:</p> 
             <p>Menu Design, User Interface, Animations</p>
             <br>
             <p>Kynan Abdul:</p> 
-            <p>Models(Hat, Shoes), Bedroom background , Extra Features</p>
+            <p>Models(Hat, Shoes), Camera, Extra Features</p>
             <br>
-            <p>For full credits see contribution doc</p>
             <p>© 2025 All Rights Reserved</p>
         </div>
     </div>
@@ -36,11 +35,11 @@
   <!-- Editor Page -->
   <div id="editor-page" class="page hidden">
     <div id="gui" class="gui-left">
-      <!--<details>
+      <details>
         <summary> Presets</summary>
         <button class="btnGUI" onclick="loadPreset(1)">Preset 1</button>
         <button class="btnGUI" onclick="loadPreset(2)">Preset 2</button>
-      </details> -->
+      </details>
       <details>
         <summary> Shirts</summary>
         <button class="btnGUI with-preview" onclick="wearShirt()">
@@ -123,16 +122,10 @@
       </details>
       <details>
         <summary> Outfit</summary>
-        <button class="btnGUI" onclick="randomOutfit()">Random</button>
         <button class="btnGUI" onclick="saveOutfit()">Save</button>
         <button class="btnGUI" onclick="loadOutfit()">Load</button>
-        <button class="btnGUI" onclick="clearOutfit()">Clear</button>
+        <button class="btnGUI" onclick="clearAllClothing()">Clear</button>
       </details>
-      <details>
-        <summary> Camera</summary>
-        <button class="btnGUI">Auto Drag</button>
-        <button class="btnGUI" onclick="toggleSpotlight()">Spotlight ON</button>
-      </details>  
     </div>
 
     <canvas id="three-canvas"></canvas>
