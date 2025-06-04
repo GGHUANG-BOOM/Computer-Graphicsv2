@@ -266,7 +266,6 @@ mtlLoader.load('./A-pose HP.mtl', (materials) => {
 
   const guiContainer = gui.domElement;
   guiContainer.style.position = 'absolute';
-  guiContainer.style.top = '700px';
   guiContainer.style.right = '10px';
   guiContainer.style.zIndex = '10';
   guiContainer.style.fontFamily = 'input-mono-narrow, monospace';
@@ -274,6 +273,18 @@ mtlLoader.load('./A-pose HP.mtl', (materials) => {
   guiContainer.style.fontSize = '12px';
   guiContainer.classList.add('gui-right');
   guiContainer.classList.add('animate');
+
+  function handleResize() {
+
+    const windowHeight = window.innerHeight;    
+    const guiHeight = guiContainer.offsetHeight;
+    const maxTop = windowHeight - guiHeight - 20;
+    
+    guiContainer.style.top = Math.min(450, maxTop) + 'px';
+  }
+
+  handleResize();
+  window.addEventListener('resize', handleResize);
 
   gui.addColor(guiSettings, 'modelColor').name('Model Color').onChange((value) => {
     for (const name of mannequinMaterials) {
@@ -969,7 +980,8 @@ window.loadOutfit = function () {
 
 
 window.randomOutfit = function() {
-  clearAllClothing();
+  const skipNotification = true;
+  clearAllClothing(skipNotification);
   const shirts = [
      () => wearShirt(),      
     () => wearShirt2(),     
@@ -1001,10 +1013,12 @@ window.randomOutfit = function() {
   setTimeout(randomPants, 100);
   setTimeout(randomHat, 150);
   setTimeout(randomShoes, 200);
+
+  showNotification('Generated outfit!');
 };
 
 
-window.clearAllClothing = function() {
+window.clearAllClothing = function(skipNotification = false) {
   if (!mannequin) return;
 
   mannequin.traverse((child) => {
@@ -1030,7 +1044,9 @@ window.clearAllClothing = function() {
     window.pantsAreOn = false;
 
       console.log("Outfit cleared.");
-  showNotification('Outfit cleared!');
+  if (!skipNotification) {
+    showNotification('Outfit cleared!');
+  }
 };
 
 
