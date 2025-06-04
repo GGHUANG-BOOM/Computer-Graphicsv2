@@ -1039,7 +1039,7 @@ window.Beach = function () {
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.2;
 
-  // Load beach GLB scene
+
   const loader = new GLTFLoader();
   loader.load('beach Scene/uploads_files_5954063_beach+scene.glb', function (gltf) {
     beachScene = gltf.scene;
