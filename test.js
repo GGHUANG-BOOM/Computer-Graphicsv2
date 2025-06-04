@@ -87,8 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 let mannequin = null;
-let hatPivot = new THREE.Group();
-let mannequinGroup = new THREE.Group();
 let sky, water, sandMesh, ground;
 let cloudMaterial;
 let beachScene, rockModel;
@@ -912,11 +910,15 @@ function showNotification(message) {
 window.saveOutfit = function () {
   if (!mannequin) return;
 
-  const outfitData = [];
+  const outfitData = {
+    parts: [],
+    hatPath: currentHatPath || null,
+    shoePath: currentShoesPath || null  
+  };
 
   mannequin.traverse((child) => {
     if (child.isMesh && child.material) {
-      outfitData.push({
+      outfitData.parts.push({
         name: child.name,
         visible: child.visible
       });
@@ -927,6 +929,7 @@ window.saveOutfit = function () {
   console.log('Outfit saved:', outfitData);
   showNotification('Outfit saved!');
 };
+
 
 window.loadOutfit = function () {
   if (!mannequin) return;
@@ -940,14 +943,24 @@ window.loadOutfit = function () {
 
   const outfitData = JSON.parse(savedData);
 
-  mannequin.traverse((child) => {
-    if (child.isMesh && child.material) {
-      const savedChild = outfitData.find(item => item.name === child.name);
-      if (savedChild) {
+  
+  outfitData.parts.forEach((savedChild) => {
+    mannequin.traverse((child) => {
+      if (child.isMesh && child.name === savedChild.name) {
         child.visible = savedChild.visible;
       }
-    }
+    });
   });
+
+  
+  if (outfitData.hatPath) {
+    wearHat(outfitData.hatPath);
+  }
+
+  
+  if (outfitData.shoePath) {
+    wearShoes(outfitData.shoePath); 
+  }
 
   console.log('Outfit loaded:', outfitData);
   showNotification('Outfit loaded!');
